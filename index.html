@@ -134,6 +134,9 @@ html += `
 - Payment
 </button>
 
+<button onclick="deletePerson(${index})">
+🗑 Delete
+</button>
 </div>
 `;
 
@@ -195,6 +198,24 @@ localStorage.setItem("people", JSON.stringify(people));
 renderPeople();
 
 }
+
+function deletePerson(index){
+
+if(confirm("Delete this person?")){
+
+people.splice(index,1);
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
+}
+
 renderPeople();
 
 </script>
