@@ -946,6 +946,147 @@ JSON.stringify(people)
     
 </script>
 
+<div id="moneyModal"
+style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+justify-content:center;
+align-items:center;
+z-index:999;
+">
+
+<div
+style="
+background:white;
+width:320px;
+padding:20px;
+border-radius:20px;
+">
+
+<h2 id="moneyTitle">
+Amount
+</h2>
+
+<input
+type="number"
+id="moneyInput"
+placeholder="0"
+style="
+width:100%;
+padding:15px;
+font-size:24px;
+border:2px solid #ddd;
+border-radius:12px;
+margin-top:15px;
+">
+
+<button
+id="saveMoneyBtn"
+class="big-btn depot-btn">
+
+Save
+
+</button>
+
+<button
+id="closeMoneyBtn"
+class="big-btn paid-btn">
+
+Cancel
+
+</button>
+
+</div>
+
+</div>
+
+let operationType = "";
+
+document.getElementById(
+"depotBtn"
+).onclick = function(){
+
+operationType = "Depot";
+
+document.getElementById(
+"moneyTitle"
+).innerText =
+"🟢 Add Depot";
+
+document.getElementById(
+"moneyModal"
+).style.display =
+"flex";
+
+};
+
+document.getElementById(
+"paidBtn"
+).onclick = function(){
+
+operationType = "Paid";
+
+document.getElementById(
+"moneyTitle"
+).innerText =
+"🔴 Add Paid";
+
+document.getElementById(
+"moneyModal"
+).style.display =
+"flex";
+
+};
+
+document.getElementById(
+"closeMoneyBtn"
+).onclick = function(){
+
+document.getElementById(
+"moneyModal"
+).style.display =
+"none";
+
+};
+
+document.getElementById(
+"saveMoneyBtn"
+).onclick = function(){
+
+let amount =
+document.getElementById(
+"moneyInput"
+).value;
+
+if(!amount) return;
+
+person.operations.unshift({
+
+type:operationType,
+
+amount:Number(amount),
+
+date:new Date()
+.toLocaleDateString()
+
+});
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+    
+<script>
+    
 </body>
 
 </html>    
