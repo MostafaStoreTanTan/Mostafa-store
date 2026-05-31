@@ -459,6 +459,23 @@ renderPeople();
 
 }
 
+function deleteNote(index){
+
+if(confirm("Delete note?")){
+
+people[index].note = "";
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
+}
+
 function openDatePicker(index){
 
 document
