@@ -102,8 +102,18 @@ Karni
 
 <input type="text" id="name" placeholder="Person Name">
 
-<button class="btn" onclick="addPerson()">
-+ Add Person
+<button class="btn" onclick="exportData()">
+💾 Export Backup
+</button>
+
+<input
+type="file"
+id="importFile"
+style="display:none"
+onchange="importData(event)">
+
+<button class="btn" onclick="document.getElementById('importFile').click()">
+📂 Import Backup
 </button>
 
 <div style="display:flex;gap:5px;margin-top:10px;">
