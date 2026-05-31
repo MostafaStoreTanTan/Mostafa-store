@@ -228,7 +228,15 @@ return;
 html += `
 <div class="person">
 
-<h3>👤 ${person.name}</h3>
+<h3>
+${person.favorite ? "⭐" : "☆"}
+👤 ${person.name}
+
+<button onclick="toggleFavorite(${index})">
+⭐
+</button>
+
+</h3>
 
 <p>💰 Balance: ${person.balance} MAD</p>
 
