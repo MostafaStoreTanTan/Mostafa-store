@@ -132,6 +132,8 @@ Karni
 
 let people = JSON.parse(localStorage.getItem("people")) || [];
 
+let currentTab = "all";
+  
 function renderPeople(){
 
 document.getElementById("peopleCount").innerText = people.length;
