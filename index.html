@@ -147,6 +147,10 @@ html += `
 
 <p>💰 Balance: ${person.balance} MAD</p>
 
+${person.dueDate ? `
+<p>📅 Due Date: ${person.dueDate}</p>
+` : ""}
+
 <button onclick="addDebt(${index})">
 + Debt
 </button>
