@@ -137,6 +137,15 @@ html += `
 <button onclick="deletePerson(${index})">
 🗑 Delete
 </button>
+
+<h4>History</h4>
+
+${person.history ?
+person.history.map(item =>
+`<p>${item}</p>`
+).join("")
+: ""}
+
 </div>
 `;
 
