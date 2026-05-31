@@ -277,7 +277,29 @@ renderPeople();
 
 }
 
-} 
+}
+
+function editHistory(personIndex, historyIndex){
+
+let newText = prompt(
+"Edit operation",
+people[personIndex].history[historyIndex]
+);
+
+if(newText === null || newText.trim() === ""){
+return;
+}
+
+people[personIndex].history[historyIndex] = newText;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
 
 function editPerson(index){
 
