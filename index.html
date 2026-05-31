@@ -142,11 +142,16 @@ html += `
 📝 Note
 </button>
 
+${person.note ? `<p>📝 ${person.note}</p>` : ""}
+
 <h4>History</h4>
 
 ${person.history ?
-person.history.map(item =>
-`<p>${item}</p>`
+person.history.map((item,i) =>
+`<p>
+${item}
+<button onclick="deleteHistory(${index},${i})">❌</button>
+</p>`
 ).join("")
 : ""}
 
@@ -194,7 +199,8 @@ people[index].history = [];
 }
 
 people[index].history.push(
-"➕ Debt: " + amount + " MAD"
+"➕ Debt: " + amount + " MAD | " +
+new Date().toLocaleString()
 );
 
 localStorage.setItem("people", JSON.stringify(people));
@@ -216,7 +222,8 @@ people[index].history = [];
 }
 
 people[index].history.push(
-"➖ Payment: " + amount + " MAD"
+"➖ Payment: " + amount + " MAD | " +
+new Date().toLocaleString()
 );
 
 if(people[index].balance < 0){
