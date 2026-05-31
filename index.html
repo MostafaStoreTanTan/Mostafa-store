@@ -78,7 +78,10 @@ box-sizing:border-box;
 Karni
 </div>
 
-<div class="cards">
+<div class="card">
+<p>Total Amount</p>
+<div class="value" id="totalAmount">0 MAD</div>
+</div>
 
 <div class="card">
 <p>People</p>
@@ -103,6 +106,15 @@ function renderPeople(){
 
 document.getElementById("peopleCount").innerText = people.length;
 
+  let total = 0;
+
+people.forEach(person => {
+total += person.balance;
+});
+
+document.getElementById("totalAmount").innerText =
+total + " MAD";
+  
 let html = "";
 
 people.forEach((person,index)=>{
