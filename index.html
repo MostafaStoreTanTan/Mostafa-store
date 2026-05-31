@@ -27,7 +27,7 @@ padding-bottom:100px;
 .header{
 background:#0F766E;
 color:white;
-padding:30px 20px;
+padding:28px 20px;
 text-align:center;
 font-size:42px;
 font-weight:800;
@@ -48,6 +48,7 @@ border-radius:18px;
 padding:15px;
 text-align:center;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
+cursor:pointer;
 }
 
 .stat-number{
@@ -57,9 +58,29 @@ color:#0F766E;
 }
 
 .stat-label{
-margin-top:5px;
 font-size:14px;
 color:#666;
+margin-top:5px;
+}
+
+.big-btn{
+width:calc(100% - 30px);
+margin:0 15px 10px;
+padding:16px;
+border:none;
+border-radius:18px;
+font-size:18px;
+font-weight:bold;
+color:white;
+cursor:pointer;
+}
+
+.route-btn{
+background:#2563eb;
+}
+
+.calendar-btn{
+background:#0F766E;
 }
 
 .search-box{
@@ -97,108 +118,6 @@ cursor:pointer;
 padding:15px;
 }
 
-.person-card{
-background:white;
-padding:15px;
-border-radius:18px;
-margin-bottom:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.person-name{
-font-size:22px;
-font-weight:bold;
-margin-bottom:5px;
-}
-
-.person-balance{
-font-size:24px;
-font-weight:bold;
-color:#0F766E;
-margin-bottom:8px;
-}
-
-.person-info{
-font-size:14px;
-color:#666;
-margin-top:5px;
-}
-
-.person-actions{
-display:flex;
-gap:8px;
-margin-top:12px;
-flex-wrap:wrap;
-}
-
-.person-actions button{
-padding:10px 14px;
-border:none;
-border-radius:10px;
-cursor:pointer;
-}
-
-.profile-btn{
-background:#2563eb;
-color:white;
-}
-
-.favorite-btn{
-background:#fbbf24;
-}
-
-.fab{
-position:fixed;
-right:20px;
-bottom:20px;
-width:70px;
-height:70px;
-border:none;
-border-radius:50%;
-background:#14B8A6;
-color:white;
-font-size:40px;
-font-weight:bold;
-}
-
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.45);
-justify-content:center;
-align-items:center;
-padding:20px;
-}
-
-.modal-content{
-background:white;
-width:100%;
-max-width:450px;
-padding:20px;
-border-radius:20px;
-}
-
-.modal-content input,
-.modal-content textarea{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:1px solid #ddd;
-border-radius:12px;
-}
-
-.save-btn{
-width:100%;
-padding:14px;
-border:none;
-border-radius:12px;
-background:#14B8A6;
-color:white;
-font-size:16px;
-font-weight:bold;
-}
-
 </style>
 
 </head>
@@ -212,7 +131,8 @@ font-weight:bold;
 <div class="dashboard">
 
 <div class="stat-card">
-<div class="stat-number" id="totalAmount">
+<div class="stat-number"
+id="totalAmount">
 0
 </div>
 <div class="stat-label">
@@ -221,7 +141,8 @@ font-weight:bold;
 </div>
 
 <div class="stat-card">
-<div class="stat-number" id="peopleCount">
+<div class="stat-number"
+id="peopleCount">
 0
 </div>
 <div class="stat-label">
@@ -230,7 +151,8 @@ font-weight:bold;
 </div>
 
 <div class="stat-card">
-<div class="stat-number" id="overdueCount">
+<div class="stat-number"
+id="overdueCount">
 0
 </div>
 <div class="stat-label">
@@ -239,7 +161,8 @@ font-weight:bold;
 </div>
 
 <div class="stat-card">
-<div class="stat-number" id="todayCount">
+<div class="stat-number"
+id="todayCount">
 0
 </div>
 <div class="stat-label">
@@ -247,7 +170,42 @@ font-weight:bold;
 </div>
 </div>
 
+<div class="stat-card">
+<div class="stat-number"
+id="upcomingCount">
+0
 </div>
+<div class="stat-label">
+🟡 Upcoming
+</div>
+</div>
+
+<div class="stat-card"
+onclick="location.href='route.html'">
+
+<div class="stat-number"
+id="routeCount">
+0
+</div>
+
+<div class="stat-label">
+🗺️ Route
+</div>
+
+</div>
+
+</div>
+
+<a href="calendar.html">
+
+<button
+class="big-btn calendar-btn">
+
+📅 Calendar
+
+</button>
+
+</a>
 
 <div class="search-box">
 
@@ -317,6 +275,11 @@ placeholder="Phone Number">
 type="date"
 id="personDueDate">
 
+<input
+type="text"
+id="personLocation"
+placeholder="Google Maps Link">
+
 <textarea
 id="personNote"
 placeholder="First Note">
@@ -332,6 +295,139 @@ Save Customer
 
 </div>
 
+<style>
+
+.person-card{
+background:white;
+padding:15px;
+border-radius:18px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.person-top{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.person-photo{
+width:60px;
+height:60px;
+border-radius:50%;
+background:#ddd;
+overflow:hidden;
+flex-shrink:0;
+}
+
+.person-photo img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.person-data{
+flex:1;
+}
+
+.person-name{
+font-size:20px;
+font-weight:bold;
+}
+
+.person-balance{
+font-size:22px;
+font-weight:bold;
+color:#0F766E;
+margin-top:5px;
+}
+
+.person-info{
+font-size:14px;
+color:#666;
+margin-top:4px;
+}
+
+.person-actions{
+display:flex;
+gap:8px;
+margin-top:12px;
+flex-wrap:wrap;
+}
+
+.profile-btn{
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 14px;
+border-radius:10px;
+}
+
+.favorite-btn{
+background:#fbbf24;
+border:none;
+padding:10px 14px;
+border-radius:10px;
+}
+
+.fab{
+position:fixed;
+right:20px;
+bottom:20px;
+width:70px;
+height:70px;
+border:none;
+border-radius:50%;
+background:#14B8A6;
+color:white;
+font-size:40px;
+font-weight:bold;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.modal-content{
+background:white;
+width:100%;
+max-width:450px;
+padding:20px;
+border-radius:20px;
+}
+
+.modal-content h2{
+margin-bottom:15px;
+}
+
+.modal-content input,
+.modal-content textarea{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:1px solid #ddd;
+border-radius:12px;
+}
+
+.save-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#14B8A6;
+color:white;
+font-size:16px;
+font-weight:bold;
+}
+
+</style>  
+
 <script>
 
 let people =
@@ -339,8 +435,7 @@ JSON.parse(
 localStorage.getItem("people")
 ) || [];
 
-let currentTab =
-"all";
+let currentTab = "all";
 
 function savePeople(){
 
@@ -369,18 +464,14 @@ document.getElementById(
 
 }
 
-document
-.getElementById(
+document.getElementById(
 "savePersonBtn"
-)
-.onclick = function(){
+).onclick = function(){
 
 let name =
-document
-.getElementById(
+document.getElementById(
 "personName"
-)
-.value.trim();
+).value.trim();
 
 if(!name){
 
@@ -397,24 +488,23 @@ people.unshift({
 name:name,
 
 phone:
-document
-.getElementById(
+document.getElementById(
 "personPhone"
-)
-.value,
+).value,
 
 dueDate:
-document
-.getElementById(
+document.getElementById(
 "personDueDate"
-)
-.value,
+).value,
+
+location:
+document.getElementById(
+"personLocation"
+).value,
 
 rating:0,
 
 favorite:false,
-
-location:"",
 
 photo:"",
 
@@ -423,11 +513,9 @@ operations:[],
 conversation:[],
 
 notes:[
-document
-.getElementById(
+document.getElementById(
 "personNote"
-)
-.value
+).value
 ]
 
 });
@@ -436,7 +524,7 @@ savePeople();
 
 closeModal();
 
-location.reload();
+renderPeople();
 
 };
 
@@ -456,10 +544,9 @@ let todayCount = 0;
 let upcoming = 0;
 
 let search =
-document
-.getElementById("search")
-.value
-.toLowerCase();
+document.getElementById(
+"search"
+).value.toLowerCase();
 
 people.forEach(person=>{
 
@@ -510,24 +597,34 @@ upcoming++;
 
 });
 
-document
-.getElementById("totalAmount")
-.innerText =
+document.getElementById(
+"totalAmount"
+).innerText =
 totalAmount + " MAD";
 
-document
-.getElementById("peopleCount")
-.innerText =
+document.getElementById(
+"peopleCount"
+).innerText =
 people.length;
 
-document
-.getElementById("overdueCount")
-.innerText =
+document.getElementById(
+"overdueCount"
+).innerText =
 overdue;
 
-document
-.getElementById("todayCount")
-.innerText =
+document.getElementById(
+"todayCount"
+).innerText =
+todayCount;
+
+document.getElementById(
+"upcomingCount"
+).innerText =
+upcoming;
+
+document.getElementById(
+"routeCount"
+).innerText =
 todayCount;
 
 people.forEach(
@@ -585,17 +682,54 @@ let stars =
 person.rating || 0
 );
 
+let lastNote = "";
+
+if(
+person.notes &&
+person.notes.length
+){
+lastNote =
+person.notes[
+person.notes.length - 1
+];
+}
+
 html += `
 
 <div class="person-card">
 
+<div class="person-top">
+
+<div class="person-photo">
+
+${
+person.photo
+?
+`<img src="${person.photo}">`
+:
+""
+}
+
+</div>
+
+<div class="person-data">
+
 <div class="person-name">
+
 ${stars}
 ${person.name}
+
 </div>
 
 <div class="person-balance">
-${person.realBalance} MAD
+
+${person.realBalance}
+MAD
+
+</div>
+
+</div>
+
 </div>
 
 <div class="person-info">
@@ -626,18 +760,34 @@ person.location
 ""
 }
 
+${
+lastNote
+?
+`
+<div class="person-info">
+📝 ${lastNote}
+</div>
+`
+:
+""
+}
+
 <div class="person-actions">
 
 <button
 class="profile-btn"
 onclick="openProfile(${index})">
+
 👤 Profile
+
 </button>
 
 <button
 class="favorite-btn"
 onclick="toggleFavorite(${index})">
+
 ⭐
+
 </button>
 
 </div>
@@ -648,9 +798,9 @@ onclick="toggleFavorite(${index})">
 
 });
 
-document
-.getElementById("peopleList")
-.innerHTML =
+document.getElementById(
+"peopleList"
+).innerHTML =
 html;
 
 }
@@ -705,16 +855,16 @@ renderPeople();
 
 });
 
-document
-.getElementById("search")
-.addEventListener(
+document.getElementById(
+"search"
+).addEventListener(
 "input",
 renderPeople
 );
 
 renderPeople();
-  
+
 </script>
 
 </body>
-</html>
+</html>  
