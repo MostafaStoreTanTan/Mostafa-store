@@ -49,6 +49,24 @@ background:#14B8A6;
 color:white;
 font-size:18px;
 cursor:pointer;
+margin-top:10px;
+}
+
+.person{
+background:white;
+padding:15px;
+margin-top:10px;
+border-radius:12px;
+box-shadow:0 2px 6px rgba(0,0,0,.1);
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:1px solid #ddd;
+border-radius:10px;
+box-sizing:border-box;
 }
 
 </style>
@@ -63,20 +81,111 @@ Karni
 <div class="cards">
 
 <div class="card">
-<p>Total Amount</p>
-<div class="value">0 MAD</div>
-</div>
-
-<div class="card">
 <p>People</p>
-<div class="value">0</div>
+<div class="value" id="peopleCount">0</div>
 </div>
 
-<button class="btn">
+<input type="text" id="name" placeholder="Person Name">
+
+<button class="btn" onclick="addPerson()">
 + Add Person
 </button>
 
+<div id="peopleList"></div>
+
 </div>
+
+<script>
+
+let people = JSON.parse(localStorage.getItem("people")) || [];
+
+function renderPeople(){
+
+document.getElementById("peopleCount").innerText = people.length;
+
+let html = "";
+
+people.forEach((person,index)=>{
+
+html += `
+<div class="person">
+
+<h3>👤 ${person.name}</h3>
+
+<p>💰 Balance: ${person.balance} MAD</p>
+
+<button onclick="addDebt(${index})">
++ Debt
+</button>
+
+<button onclick="addPayment(${index})">
+- Payment
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("peopleList").innerHTML = html;
+
+}
+
+function addPerson(){
+
+const name = document.getElementById("name").value;
+
+if(name === ""){
+alert("Enter a name");
+return;
+}
+
+people.push({
+name:name,
+balance:0
+});
+
+localStorage.setItem("people", JSON.stringify(people));
+
+document.getElementById("name").value = "";
+
+renderPeople();
+
+}
+function addDebt(index){
+
+let amount = prompt("Debt Amount");
+
+if(!amount) return;
+
+people[index].balance += Number(amount);
+
+localStorage.setItem("people", JSON.stringify(people));
+
+renderPeople();
+
+}
+
+function addPayment(index){
+
+let amount = prompt("Payment Amount");
+
+if(!amount) return;
+
+people[index].balance -= Number(amount);
+
+if(people[index].balance < 0){
+people[index].balance = 0;
+}
+
+localStorage.setItem("people", JSON.stringify(people));
+
+renderPeople();
+
+}
+renderPeople();
+
+</script>
 
 </body>
 </html>
