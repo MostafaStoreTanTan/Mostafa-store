@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Customer Profile</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+padding:15px;
+}
+
+.header{
+background:#0F766E;
+color:white;
+padding:20px;
+border-radius:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:18px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.name{
+font-size:28px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.balance{
+font-size:24px;
+font-weight:bold;
+color:#0F766E;
+margin-bottom:10px;
+}
+
+.info{
+margin-bottom:8px;
+color:#555;
+}
+
+.note{
+background:#fff8dc;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.history-item{
+background:white;
+padding:15px;
+border-radius:15px;
+margin-bottom:10px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.call-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:#16a34a;
+color:white;
+font-size:18px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.back-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:#2563eb;
+color:white;
+font-size:18px;
+font-weight:bold;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+👤 Customer Profile
+</div>
+
+<div class="card">
+
+<div id="customerInfo"></div>
+
+<a id="callLink">
+<button class="call-btn">
+📞 Call Customer
+</button>
+</a>
+
+<button
+class="back-btn"
+onclick="window.location.href='index.html'">
+⬅ Back
+</button>
+
+</div>
+
+<h2 style="margin-bottom:10px;">
+📜 History
+</h2>
+
+<div id="historyList"></div>
+
+<script>
+
+let people =
+JSON.parse(
+localStorage.getItem("people")
+) || [];
+
+let selectedIndex =
+localStorage.getItem(
+"selectedCustomer"
+);
+
+let person =
+people[selectedIndex];
+
+if(!person){
+
+document.body.innerHTML =
+"<h2>Customer Not Found</h2>";
+
+}else{
+
+let stars = "";
+
+for(
+let i = 0;
+i < (person.rating || 0);
+i++
+){
+stars += "⭐";
+}
+
+document
+.getElementById("customerInfo")
+.innerHTML = `
+
+<div class="name">
+${person.name}
+</div>
+
+<div class="balance">
+${person.balance} MAD
+</div>
+
+<div class="info">
+📞 ${person.phone || "-"}
+</div>
+
+<div class="info">
+📅 Due Date:
+${person.dueDate || "-"}
+</div>
+
+<div class="info">
+⭐ Rating:
+${stars || "No Rating"}
+</div>
+
+${
+person.notes &&
+person.notes.length
+?
+`
+<div class="note">
+📝 ${person.notes[0]}
+</div>
+`
+:
+""
+}
+
+`;
+
+document
+.getElementById("callLink")
+.href =
+"tel:" + (person.phone || "");
+
+let historyHtml = "";
+
+if(
+person.history &&
+person.history.length
+){
+
+person.history
+.slice()
+.reverse()
+.forEach(item=>{
+
+historyHtml += `
+
+<div class="history-item">
+
+<div>
+💰 ${item.amount} MAD
+</div>
+
+<div>
+📌 ${item.type}
+</div>
+
+<div>
+📅 ${item.date}
+</div>
+
+<div>
+🕒 ${item.time}
+</div>
+
+</div>
+
+`;
+
+});
+
+}else{
+
+historyHtml = `
+
+<div class="history-item">
+No Operations Yet
+</div>
+
+`;
+
+}
+
+document
+.getElementById("historyList")
+.innerHTML = historyHtml;
+
+}
+
+</script>
+
+</body>
+</html>  
