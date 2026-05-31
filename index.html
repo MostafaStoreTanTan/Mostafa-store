@@ -631,6 +631,34 @@ alert("Backup restored successfully!");
 reader.readAsText(file);
 
 }
+
+function addToRoute(index){
+
+let route =
+JSON.parse(
+localStorage.getItem("todayRoute")
+) || [];
+
+let exists =
+route.some(person =>
+person.name === people[index].name
+);
+
+if(exists){
+alert("Already in Route!");
+return;
+}
+
+route.push(people[index]);
+
+localStorage.setItem(
+"todayRoute",
+JSON.stringify(route)
+);
+
+alert("Added to Route ✅");
+
+}
   
 renderPeople();
   
