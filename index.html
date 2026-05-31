@@ -124,10 +124,21 @@ total += person.balance;
 
 document.getElementById("totalAmount").innerText =
 total + " MAD";
-  
+
 let html = "";
 
+let search = document.getElementById("search")
+? document.getElementById("search").value.toLowerCase()
+: "";
+
 people.forEach((person,index)=>{
+
+if(
+search &&
+!person.name.toLowerCase().includes(search)
+){
+return;
+}
 
 html += `
 <div class="person">
