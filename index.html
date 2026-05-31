@@ -158,6 +158,7 @@ ${person.history ?
 person.history.map((item,i) =>
 `<p>
 ${item}
+<button onclick="editHistory(${index},${i})">✏️</button>
 <button onclick="deleteHistory(${index},${i})">❌</button>
 </p>`
 ).join("")
