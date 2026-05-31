@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Karni v2</title>
+<title>Karni v3</title>
 
 <style>
 
@@ -16,48 +16,61 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#f4f7fa;
+background:#f4f7fb;
 padding-bottom:100px;
 }
 
 .header{
 background:#0F766E;
 color:white;
-padding:25px;
+padding:22px;
 text-align:center;
 font-size:30px;
 font-weight:bold;
-box-shadow:0 3px 10px rgba(0,0,0,.15);
 }
 
 .dashboard{
 padding:15px;
 display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
 }
 
-.card{
+.stat-card{
 background:white;
-padding:18px;
 border-radius:18px;
-box-shadow:0 3px 10px rgba(0,0,0,.08);
+padding:15px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.card-title{
-font-size:14px;
-color:#666;
-margin-bottom:8px;
-}
-
-.card-value{
-font-size:28px;
+.stat-number{
+font-size:24px;
 font-weight:bold;
 color:#0F766E;
 }
 
+.stat-label{
+font-size:13px;
+color:#666;
+margin-top:5px;
+}
+
+.route-btn{
+width:calc(100% - 30px);
+margin:0 15px 15px;
+padding:16px;
+border:none;
+border-radius:18px;
+background:#2563eb;
+color:white;
+font-size:18px;
+font-weight:bold;
+}
+
 .search-box{
 padding:0 15px;
+margin-bottom:10px;
 }
 
 .search-box input{
@@ -67,10 +80,25 @@ border:none;
 border-radius:15px;
 background:white;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
-font-size:16px;
 }
 
-.people-section{
+.tabs{
+display:flex;
+overflow:auto;
+gap:8px;
+padding:0 15px 15px;
+}
+
+.tab-btn{
+padding:10px 15px;
+border:none;
+border-radius:15px;
+background:white;
+white-space:nowrap;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.people-list{
 padding:15px;
 }
 
@@ -82,16 +110,10 @@ margin-bottom:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.person-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:10px;
-}
-
 .person-name{
 font-size:20px;
 font-weight:bold;
+margin-bottom:5px;
 }
 
 .person-balance{
@@ -100,46 +122,24 @@ font-weight:bold;
 color:#0F766E;
 }
 
-.note{
+.person-info{
 margin-top:5px;
 color:#666;
 font-size:14px;
 }
 
-.date{
-margin-top:5px;
-font-size:14px;
-color:#555;
-}
-
-.actions{
+.person-actions{
 display:flex;
 flex-wrap:wrap;
-gap:6px;
+gap:5px;
 margin-top:12px;
 }
 
-.actions button{
+.person-actions button{
 padding:8px 12px;
 border:none;
 border-radius:10px;
 cursor:pointer;
-}
-
-.btn-debt{
-background:#dbeafe;
-}
-
-.btn-payment{
-background:#dcfce7;
-}
-
-.btn-route{
-background:#fef3c7;
-}
-
-.btn-more{
-background:#ececec;
 }
 
 .fab{
@@ -154,15 +154,13 @@ background:#14B8A6;
 color:white;
 font-size:35px;
 font-weight:bold;
-cursor:pointer;
-box-shadow:0 5px 15px rgba(0,0,0,.2);
 }
 
 .modal{
 display:none;
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.5);
+background:rgba(0,0,0,.45);
 justify-content:center;
 align-items:center;
 padding:20px;
@@ -171,7 +169,7 @@ padding:20px;
 .modal-content{
 background:white;
 width:100%;
-max-width:400px;
+max-width:450px;
 padding:20px;
 border-radius:20px;
 }
@@ -184,31 +182,36 @@ margin-bottom:15px;
 .modal-content textarea{
 width:100%;
 padding:12px;
-margin-bottom:12px;
+margin-bottom:10px;
 border:1px solid #ddd;
 border-radius:12px;
 }
 
-.modal-buttons{
+.stars{
 display:flex;
-gap:10px;
+gap:5px;
+margin-bottom:15px;
+font-size:28px;
+}
+
+.star{
+cursor:pointer;
+color:#ccc;
+}
+
+.star.active{
+color:#fbbf24;
 }
 
 .save-btn{
-flex:1;
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
 background:#14B8A6;
 color:white;
-border:none;
-padding:12px;
-border-radius:12px;
-}
-
-.cancel-btn{
-flex:1;
-background:#eee;
-border:none;
-padding:12px;
-border-radius:12px;
+font-size:16px;
+font-weight:bold;
 }
 
 </style>
@@ -217,61 +220,98 @@ border-radius:12px;
 <body>
 
 <div class="header">
-Karni v2
+Karni v3
 </div>
 
 <div class="dashboard">
 
-<div class="card">
-<div class="card-title">Total Amount</div>
-<div class="card-value" id="totalAmount">0 MAD</div>
+<div class="stat-card">
+<div class="stat-number" id="totalAmount">0</div>
+<div class="stat-label">Amount</div>
 </div>
 
-<div class="card">
-<div class="card-title">People</div>
-<div class="card-value" id="peopleCount">0</div>
+<div class="stat-card">
+<div class="stat-number" id="peopleCount">0</div>
+<div class="stat-label">People</div>
 </div>
 
-<div class="card">
-<div class="card-title">Route Today</div>
-<div class="card-value" id="routeCount">0</div>
+<div class="stat-card">
+<div class="stat-number" id="routeCount">0</div>
+<div class="stat-label">Route</div>
 </div>
 
-<div class="card">
-<div class="card-title">Collected</div>
-<div class="card-value" id="collectedAmount">0</div>
+<div class="stat-card">
+<div class="stat-number" id="overdueCount">0</div>
+<div class="stat-label">Overdue</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number" id="todayCount">0</div>
+<div class="stat-label">Today</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-number" id="upcomingCount">0</div>
+<div class="stat-label">Upcoming</div>
 </div>
 
 </div>
+
+<a href="route.html">
+<button class="route-btn">
+🗺️ Open Route Map
+</button>
+</a>
 
 <div class="search-box">
 <input
 type="text"
 id="search"
-placeholder="🔍 Search person...">
+placeholder="Search Customer">
 </div>
 
-<div class="people-section" id="peopleList">
+<div class="tabs">
+
+<button class="tab-btn">📋 All</button>
+
+<button class="tab-btn">⭐ Favorites</button>
+
+<button class="tab-btn">🔴 Overdue</button>
+
+<button class="tab-btn">🟢 Today</button>
+
+<button class="tab-btn">🟡 Upcoming</button>
+
 </div>
 
-<button class="fab" onclick="openModal()">
+<div
+class="people-list"
+id="peopleList">
+</div>
+
+<button
+class="fab"
+onclick="openModal()">
 +
 </button>
 
-<div class="modal" id="personModal">
+<div
+class="modal"
+id="personModal">
 
 <div class="modal-content">
 
-<h2>Add Person</h2>
+<h2>Add Customer</h2>
 
 <input
 type="text"
 id="personName"
-placeholder="Person Name">
+placeholder="Name">
 
-<textarea
-id="personNote"
-placeholder="Note"></textarea>
+<input
+type="tel"
+id="personPhone"
+placeholder="Phone Number">
 
 <input
 type="number"
@@ -280,23 +320,28 @@ placeholder="Initial Balance">
 
 <input
 type="date"
-id="personDate">
+id="personDueDate">
 
-<div class="modal-buttons">
+<textarea
+id="personNote"
+placeholder="First Note">
+</textarea>
+
+<div class="stars">
+
+<span class="star">★</span>
+<span class="star">★</span>
+<span class="star">★</span>
+<span class="star">★</span>
+<span class="star">★</span>
+
+</div>
 
 <button
 class="save-btn"
-onclick="addPerson()">
-Save
+id="savePersonBtn">
+Save Customer
 </button>
-
-<button
-class="cancel-btn"
-onclick="closeModal()">
-Cancel
-</button>
-
-</div>
 
 </div>
 
@@ -305,71 +350,139 @@ Cancel
 <script>
 
 let people =
-JSON.parse(localStorage.getItem("people")) || [];
+JSON.parse(
+localStorage.getItem("people")
+) || [];
+
+let selectedRating = 0;
+let currentTab = "all";
+
+const stars =
+document.querySelectorAll(".star");
+
+stars.forEach((star,index)=>{
+
+star.onclick = function(){
+
+selectedRating = index + 1;
+
+stars.forEach((s,i)=>{
+
+if(i <= index){
+s.classList.add("active");
+}else{
+s.classList.remove("active");
+}
+
+});
+
+};
+
+});
 
 function savePeople(){
+
 localStorage.setItem(
 "people",
 JSON.stringify(people)
 );
+
 }
 
 function openModal(){
+
 document.getElementById("personModal")
 .style.display = "flex";
+
 }
 
 function closeModal(){
+
 document.getElementById("personModal")
 .style.display = "none";
+
 }
 
-function addPerson(){
+document
+.getElementById("savePersonBtn")
+.onclick = function(){
 
-let name =
+const name =
 document.getElementById("personName")
 .value.trim();
 
 if(name === ""){
-alert("Enter person name");
+alert("Enter customer name");
 return;
 }
 
-let note =
-document.getElementById("personNote")
-.value;
+people.unshift({
 
-let balance =
-Number(
+name:name,
+
+phone:
+document.getElementById("personPhone")
+.value,
+
+balance:Number(
 document.getElementById("personBalance")
 .value
-) || 0;
+) || 0,
 
-let dueDate =
-document.getElementById("personDate")
-.value;
+dueDate:
+document.getElementById("personDueDate")
+.value,
 
-people.unshift({
-name:name,
-note:note,
-balance:balance,
-dueDate:dueDate,
+rating:selectedRating,
+
 favorite:false,
-history:[]
+
+notes:[
+document.getElementById("personNote")
+.value
+],
+
+history:[],
+
+createdAt:
+new Date().toISOString()
+
 });
 
 savePeople();
-
-document.getElementById("personName").value="";
-document.getElementById("personNote").value="";
-document.getElementById("personBalance").value="";
-document.getElementById("personDate").value="";
 
 closeModal();
 
 renderPeople();
 
-}
+};
+
+document
+.querySelectorAll(".tab-btn")
+.forEach((btn,index)=>{
+
+btn.onclick = function(){
+
+if(index === 0)
+currentTab = "all";
+
+if(index === 1)
+currentTab = "favorites";
+
+if(index === 2)
+currentTab = "overdue";
+
+if(index === 3)
+currentTab = "today";
+
+if(index === 4)
+currentTab = "upcoming";
+
+renderPeople();
+
+};
+
+});
 
 function renderPeople(){
 
@@ -377,15 +490,14 @@ let html = "";
 
 let totalAmount = 0;
 
-people.forEach(person=>{
-totalAmount += person.balance;
-});
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
 
-document.getElementById("totalAmount")
-.innerText = totalAmount + " MAD";
-
-document.getElementById("peopleCount")
-.innerText = people.length;
+let overdue = 0;
+let todayCounter = 0;
+let upcoming = 0;
 
 let route =
 JSON.parse(
@@ -395,6 +507,62 @@ localStorage.getItem("todayRoute")
 document.getElementById("routeCount")
 .innerText = route.length;
 
+people.sort((a,b)=>{
+
+if(a.favorite && !b.favorite)
+return -1;
+
+if(!a.favorite && b.favorite)
+return 1;
+
+return 0;
+
+});
+
+people.forEach(person=>{
+
+totalAmount += person.balance;
+
+if(person.balance > 0){
+
+if(
+person.dueDate &&
+person.dueDate < today
+){
+overdue++;
+}
+
+else if(
+person.dueDate === today
+){
+todayCounter++;
+}
+
+else if(
+person.dueDate > today
+){
+upcoming++;
+}
+
+}
+
+});
+
+document.getElementById("totalAmount")
+.innerText = totalAmount;
+
+document.getElementById("peopleCount")
+.innerText = people.length;
+
+document.getElementById("overdueCount")
+.innerText = overdue;
+
+document.getElementById("todayCount")
+.innerText = todayCounter;
+
+document.getElementById("upcomingCount")
+.innerText = upcoming;
+
 let search =
 document.getElementById("search")
 .value.toLowerCase();
@@ -403,20 +571,67 @@ people.forEach((person,index)=>{
 
 if(
 search &&
-!person.name.toLowerCase()
+!person.name
+.toLowerCase()
 .includes(search)
 ){
 return;
+}
+
+if(
+currentTab === "favorites" &&
+!person.favorite
+){
+return;
+}
+
+if(
+currentTab === "overdue" &&
+!(
+person.balance > 0 &&
+person.dueDate &&
+person.dueDate < today
+)
+){
+return;
+}
+
+if(
+currentTab === "today" &&
+!(
+person.balance > 0 &&
+person.dueDate === today
+)
+){
+return;
+}
+
+if(
+currentTab === "upcoming" &&
+!(
+person.balance > 0 &&
+person.dueDate > today
+)
+){
+return;
+}
+
+let starsHtml = "";
+
+for(
+let i = 0;
+i < person.rating;
+i++
+){
+starsHtml += "⭐";
 }
 
 html += `
 
 <div class="person-card">
 
-<div class="person-header">
-
 <div class="person-name">
-${person.favorite ? "⭐" : ""}
+${starsHtml}
 ${person.name}
 </div>
 
@@ -424,21 +639,15 @@ ${person.name}
 ${person.balance} MAD
 </div>
 
+<div class="person-info">
+📞 ${person.phone || "-"}
 </div>
 
-${person.note ?
+${
+person.dueDate
+?
 `
-<div class="note">
-📝 ${person.note}
-</div>
-`
-:
-""
-}
-
-${person.dueDate ?
-`
-<div class="date">
+<div class="person-info">
 📅 ${person.dueDate}
 </div>
 `
@@ -446,42 +655,39 @@ ${person.dueDate ?
 ""
 }
 
-<div class="actions">
+${
+person.notes &&
+person.notes[0]
+?
+`
+<div class="person-info">
+📝 ${person.notes[0]}
+</div>
+`
+:
+""
+}
 
-<button
-class="btn-debt"
-onclick="addDebt(${index})">
+<div class="person-actions">
+
+<button onclick="addDebt(${index})">
 + Debt
 </button>
 
-<button
-class="btn-payment"
-onclick="addPayment(${index})">
+<button onclick="addPayment(${index})">
 - Payment
 </button>
 
-<button
-class="btn-route"
-onclick="addToRoute(${index})">
-📍 Route
-</button>
-
-<button
-class="btn-more"
-onclick="toggleFavorite(${index})">
+<button onclick="toggleFavorite(${index})">
 ⭐
 </button>
 
-<button
-class="btn-more"
-onclick="editPerson(${index})">
-✏️
+<button onclick="addToRoute(${index})">
+📍 Route
 </button>
 
-<button
-class="btn-more"
-onclick="deletePerson(${index})">
-🗑
+<button onclick="openProfile(${index})">
+👤 Profile
 </button>
 
 </div>
@@ -507,6 +713,20 @@ if(!amount) return;
 people[index].balance +=
 Number(amount);
 
+people[index].history.push({
+
+type:"Debt",
+
+amount:Number(amount),
+
+date:
+new Date().toLocaleDateString(),
+
+time:
+new Date().toLocaleTimeString()
+
+});
+
 savePeople();
 
 renderPeople();
@@ -529,45 +749,19 @@ people[index].balance < 0
 people[index].balance = 0;
 }
 
-savePeople();
+people[index].history.push({
 
-renderPeople();
+type:"Payment",
 
-}
+amount:Number(amount),
 
-function deletePerson(index){
+date:
+new Date().toLocaleDateString(),
 
-if(
-confirm("Delete this person?")
-){
+time:
+new Date().toLocaleTimeString()
 
-people.splice(index,1);
-
-savePeople();
-
-renderPeople();
-
-}
-
-}
-
-function editPerson(index){
-
-let newName =
-prompt(
-"Edit Name",
-people[index].name
-);
-
-if(
-newName === null ||
-newName.trim()===""
-){
-return;
-}
-
-people[index].name =
-newName;
+});
 
 savePeople();
 
@@ -610,9 +804,7 @@ localStorage.setItem(
 JSON.stringify(route)
 );
 
-renderPeople();
-
-alert("Added To Route ✅");
+alert("Added To Route");
 
 }
 
@@ -623,9 +815,21 @@ document
 renderPeople
 );
 
+function openProfile(index){
+
+localStorage.setItem(
+"selectedCustomer",
+index
+);
+
+window.location.href =
+"person.html";
+
+}
+
 renderPeople();
 
-</script>  
+</script>
 
 </body>
 </html>
