@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,39 +8,100 @@
 
 <style>
 
-body{
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Arial,sans-serif;
-padding:15px;
+}
 
+body{
+padding:15px;
 background-image:url('file_00000000cb10722fbac9c57b53750eb9.png');
 background-size:cover;
 background-position:center;
 background-attachment:fixed;
 }
 
-h1{
+.header{
 text-align:center;
+margin-bottom:15px;
+}
+
+.header h1{
+font-size:42px;
+font-weight:bold;
+color:#111;
+}
+
+.stats{
+display:flex;
+background:white;
+border-radius:20px;
+padding:15px 5px;
+box-shadow:0 4px 15px rgba(0,0,0,.15);
 margin-bottom:25px;
+}
+
+.stat{
+flex:1;
+text-align:center;
+border-right:1px solid #eee;
+}
+
+.stat:last-child{
+border:none;
+}
+
+.number{
+font-size:30px;
+font-weight:bold;
+}
+
+.label{
+margin-top:5px;
+font-size:14px;
+color:#666;
+}
+
+.green{
+color:#4caf50;
+}
+
+.blue{
+color:#2196f3;
+}
+
+.gray{
+color:#999;
 }
 
 .route{
 position:relative;
-max-width:400px;
+max-width:450px;
 margin:auto;
-min-height:2500px;
+padding-bottom:40px;
 }
 
-.line{
-display:none;
+.road{
+position:absolute;
+left:50%;
+top:120px;
+transform:translateX(-50%);
+width:18px;
+height:2200px;
+background:#36445d;
+border-radius:50px;
+z-index:1;
 }
 
 .depot{
-width:120px;
+width:180px;
 margin:auto;
-background:#222;
-color:white;
-padding:15px;
-border-radius:15px;
+background:white;
+padding:18px;
+border-radius:18px;
+box-shadow:0 4px 15px rgba(0,0,0,.12);
 text-align:center;
 font-weight:bold;
 position:relative;
@@ -48,14 +109,14 @@ z-index:2;
 }
 
 .stop{
-width:140px;
+width:170px;
 background:white;
-padding:12px;
-border-radius:15px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
-margin-top:35px;
+padding:15px;
+border-radius:18px;
+box-shadow:0 4px 15px rgba(0,0,0,.12);
 position:relative;
 z-index:2;
+margin-top:70px;
 }
 
 .left{
@@ -67,44 +128,97 @@ margin-left:auto;
 }
 
 .circle{
-width:45px;
-height:45px;
-border-radius:50%;
-background:#2196f3;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
 position:absolute;
 top:50%;
 transform:translateY(-50%);
+width:50px;
+height:50px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:22px;
+font-weight:bold;
 }
 
 .left .circle{
-right:-95px;
+right:-92px;
 }
 
 .right .circle{
-left:-95px;
+left:-92px;
 }
 
 .visited{
-background:#4caf50 !important;
+background:#4caf50;
+}
+
+.current{
+background:#2196f3;
+}
+
+.pending{
+background:#9e9e9e;
 }
 
 .name{
+font-size:26px;
 font-weight:bold;
-font-size:18px;
+margin-bottom:10px;
+}
+
+.status{
+font-size:20px;
+font-weight:bold;
+}
+
+.status.vis{
+color:#4caf50;
+}
+
+.status.cur{
+color:#2196f3;
+}
+
+.status.pen{
+color:#888;
 }
 
 .btn{
-margin-top:10px;
-padding:8px 12px;
+margin-top:12px;
+padding:10px 15px;
 border:none;
-border-radius:8px;
-background:green;
+border-radius:25px;
+background:#4caf50;
 color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.legend{
+margin-top:30px;
+background:white;
+padding:15px;
+border-radius:15px;
+display:flex;
+justify-content:space-around;
+flex-wrap:wrap;
+gap:10px;
+box-shadow:0 4px 15px rgba(0,0,0,.12);
+}
+
+.finish{
+width:100%;
+margin-top:20px;
+padding:18px;
+border:none;
+border-radius:18px;
+background:#2196f3;
+color:white;
+font-size:22px;
+font-weight:bold;
 }
 
 </style>
@@ -112,28 +226,80 @@ color:white;
 
 <body>
 
-<h1>🗺️ Route Map</h1>
+<div class="header">
+<h1>🗺️ Route</h1>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<div class="number" id="totalCount">0</div>
+<div class="label">Total</div>
+</div>
+
+<div class="stat">
+<div class="number green" id="visitedCount">0</div>
+<div class="label">Visited</div>
+</div>
+
+<div class="stat">
+<div class="number blue">1</div>
+<div class="label">Current</div>
+</div>
+
+<div class="stat">
+<div class="number gray" id="pendingCount">0</div>
+<div class="label">Pending</div>
+</div>
+
+</div>
 
 <div class="route">
 
+<div class="road"></div>
+
 <div class="depot">
 🏠 Depot
+<br>
+<span style="font-size:13px;color:#666;">
+Start
+</span>
 </div>
 
 <div id="routeMap"></div>
 
 </div>
 
+<div class="legend">
+<span>🟢 Visited</span>
+<span>🔵 Current</span>
+<span>⚪ Pending</span>
+</div>
+
+<button class="finish">
+Finish Route
+</button>
+
 <script>
 
 let route =
-JSON.parse(
-localStorage.getItem("todayRoute")
-) || [];
+JSON.parse(localStorage.getItem("todayRoute")) || [];
 
 function renderRoute(){
 
 let html = "";
+
+let visitedCount =
+route.filter(x=>x.visited).length;
+
+document.getElementById("totalCount").innerText =
+route.length;
+
+document.getElementById("visitedCount").innerText =
+visitedCount;
+
+document.getElementById("pendingCount").innerText =
+route.length - visitedCount;
 
 route.forEach((person,index)=>{
 
@@ -142,28 +308,51 @@ index % 2 === 0
 ? "left"
 : "right";
 
-let visited =
-person.visited
-? "visited"
-: "";
+let state = "pending";
+let statusText = "Pending";
+let statusClass = "pen";
+
+if(person.visited){
+
+state = "visited";
+statusText = "Visited";
+statusClass = "vis";
+
+}else if(index === visitedCount){
+
+state = "current";
+statusText = "Current";
+statusClass = "cur";
+
+}
 
 html += `
 
 <div class="stop ${side}">
 
-<div class="circle ${visited}">
+<div class="circle ${state}">
 ${index+1}
 </div>
 
 <div class="name">
-👤 ${person.name}
+${person.name}
 </div>
 
-<button
+<div class="status ${statusClass}">
+${statusText}
+</div>
+
+${
+!person.visited
+?
+`<button
 class="btn"
 onclick="markVisited(${index})">
-🟢 Visited
-</button>
+✓ Mark Visited
+</button>`
+:
+""
+}
 
 </div>
 
@@ -171,8 +360,7 @@ onclick="markVisited(${index})">
 
 });
 
-document.getElementById("routeMap")
-.innerHTML = html;
+document.getElementById("routeMap").innerHTML = html;
 
 }
 
@@ -194,4 +382,4 @@ renderRoute();
 </script>
 
 </body>
-</htmlYP>
+</html>
