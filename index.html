@@ -283,17 +283,6 @@ if(confirm("Delete this operation?")){
 
 people[personIndex].history.splice(historyIndex,1);
 
-localStorage.setItem(
-"people",
-JSON.stringify(people)
-);
-
-renderPeople();
-
-}
-
-}
-
 function editPerson(index){
 
 let newName = prompt(
