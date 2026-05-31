@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Today's Route</title>
+<title>Route Map</title>
 
 <style>
 
@@ -16,32 +16,97 @@ padding:15px;
 
 h1{
 text-align:center;
-margin-bottom:20px;
+margin-bottom:25px;
 }
 
-.client{
-background:white;
+.route{
+position:relative;
+max-width:400px;
+margin:auto;
+}
+
+.line{
+position:absolute;
+left:50%;
+top:80px;
+width:6px;
+height:100%;
+background:#cfcfcf;
+transform:translateX(-50%);
+border-radius:10px;
+}
+
+.depot{
+width:120px;
+margin:auto;
+background:#222;
+color:white;
 padding:15px;
-margin-top:10px;
-border-radius:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.1);
+border-radius:15px;
+text-align:center;
+font-weight:bold;
+position:relative;
+z-index:2;
 }
 
-button{
+.stop{
+width:140px;
+background:white;
+padding:12px;
+border-radius:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
+margin-top:35px;
+position:relative;
+z-index:2;
+}
+
+.left{
+margin-right:auto;
+}
+
+.right{
+margin-left:auto;
+}
+
+.circle{
+width:45px;
+height:45px;
+border-radius:50%;
+background:#2196f3;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+}
+
+.left .circle{
+right:-60px;
+}
+
+.right .circle{
+left:-60px;
+}
+
+.visited{
+background:#4caf50 !important;
+}
+
+.name{
+font-weight:bold;
+font-size:18px;
+}
+
+.btn{
+margin-top:10px;
 padding:8px 12px;
 border:none;
 border-radius:8px;
 background:green;
 color:white;
-margin-top:10px;
-cursor:pointer;
-}
-
-.depot{
-background:#222;
-color:white;
-text-align:center;
-font-weight:bold;
 }
 
 </style>
@@ -49,9 +114,19 @@ font-weight:bold;
 
 <body>
 
-<h1>📍 Today's Route</h1>
+<h1>🗺️ Route Map</h1>
 
-<div id="routeList"></div>
+<div class="route">
+
+<div class="line"></div>
+
+<div class="depot">
+🏠 Depot
+</div>
+
+<div id="routeMap"></div>
+
+</div>
 
 <script>
 
@@ -62,39 +137,45 @@ localStorage.getItem("todayRoute")
 
 function renderRoute(){
 
-let html = `
-<div class="client depot">
-🏠 Depot
-</div>
-`;
+let html = "";
 
 route.forEach((person,index)=>{
 
-let color =
-person.visited ?
-"#d4edda" :
-"white";
+let side =
+index % 2 === 0
+? "left"
+: "right";
+
+let visited =
+person.visited
+? "visited"
+: "";
 
 html += `
-<div
-class="client"
-style="background:${color};"
->
 
-<h3>
-📍 ${index + 1}. ${person.name}
-</h3>
+<div class="stop ${side}">
 
-<button onclick="markVisited(${index})">
+<div class="circle ${visited}">
+${index+1}
+</div>
+
+<div class="name">
+👤 ${person.name}
+</div>
+
+<button
+class="btn"
+onclick="markVisited(${index})">
 🟢 Visited
 </button>
 
 </div>
+
 `;
 
 });
 
-document.getElementById("routeList")
+document.getElementById("routeMap")
 .innerHTML = html;
 
 }
