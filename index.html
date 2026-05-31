@@ -176,6 +176,14 @@ if(!amount) return;
 
 people[index].balance += Number(amount);
 
+if(!people[index].history){
+people[index].history = [];
+}
+
+people[index].history.push(
+"➕ Debt: " + amount + " MAD"
+);
+
 localStorage.setItem("people", JSON.stringify(people));
 
 renderPeople();
@@ -189,6 +197,14 @@ let amount = prompt("Payment Amount");
 if(!amount) return;
 
 people[index].balance -= Number(amount);
+
+if(!people[index].history){
+people[index].history = [];
+}
+
+people[index].history.push(
+"➖ Payment: " + amount + " MAD"
+);
 
 if(people[index].balance < 0){
 people[index].balance = 0;
