@@ -233,12 +233,12 @@ html += `
 <div class="person">
 
 <h3>
-${person.favorite ? "⭐" : "☆"}
-👤 ${person.name}
 
-<button onclick="toggleFavorite(${index})">
-⭐
+<button onclick="toggleFavorite(${index})" style="border:none;background:none;font-size:28px;cursor:pointer;">
+${person.favorite ? "⭐" : "☆"}
 </button>
+
+👤 ${person.name}
 
 </h3>
 
