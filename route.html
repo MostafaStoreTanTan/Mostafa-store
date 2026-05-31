@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Route Map</title>
+<title>Route Map v2</title>
 
 <style>
 
@@ -16,209 +16,179 @@ font-family:Arial,sans-serif;
 }
 
 body{
+background:#f4f7fa;
 padding:15px;
-background-image:url('file_00000000cb10722fbac9c57b53750eb9.png');
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
+padding-bottom:100px;
 }
 
 .header{
+background:#0F766E;
+color:white;
+padding:20px;
+border-radius:20px;
 text-align:center;
+font-size:28px;
+font-weight:bold;
 margin-bottom:15px;
 }
 
-.header h1{
-font-size:42px;
-font-weight:bold;
-color:#111;
-}
-
 .stats{
-display:flex;
-background:white;
-border-radius:20px;
-padding:15px 5px;
-box-shadow:0 4px 15px rgba(0,0,0,.15);
-margin-bottom:25px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-bottom:20px;
 }
 
 .stat{
-flex:1;
+background:white;
+padding:15px;
+border-radius:15px;
 text-align:center;
-border-right:1px solid #eee;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.stat:last-child{
-border:none;
-}
-
-.number{
-font-size:30px;
+.stat-number{
+font-size:24px;
 font-weight:bold;
 }
 
-.label{
-margin-top:5px;
-font-size:14px;
-color:#666;
+.total{
+color:#111;
 }
 
-.green{
-color:#4caf50;
+.visited{
+color:#16a34a;
 }
 
-.blue{
-color:#2196f3;
+.current{
+color:#2563eb;
 }
 
-.gray{
-color:#999;
+.pending{
+color:#9ca3af;
 }
 
-.route{
-position:relative;
-max-width:450px;
+.route-container{
+max-width:700px;
 margin:auto;
-padding-bottom:40px;
-}
-
-.road{
-position:absolute;
-left:50%;
-top:120px;
-transform:translateX(-50%);
-width:18px;
-height:2200px;
-background:#36445d;
-border-radius:50px;
-z-index:1;
 }
 
 .depot{
-width:180px;
-margin:auto;
-background:white;
-padding:18px;
-border-radius:18px;
-box-shadow:0 4px 15px rgba(0,0,0,.12);
-text-align:center;
-font-weight:bold;
-position:relative;
-z-index:2;
-}
-
-.stop{
-width:170px;
 background:white;
 padding:15px;
 border-radius:18px;
-box-shadow:0 4px 15px rgba(0,0,0,.12);
-position:relative;
-z-index:2;
-margin-top:70px;
+margin-bottom:15px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.left{
-margin-right:auto;
+.stop-card{
+background:white;
+border-radius:18px;
+padding:15px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+display:flex;
+align-items:center;
+gap:15px;
 }
 
-.right{
-margin-left:auto;
-}
-
-.circle{
-position:absolute;
-top:50%;
-transform:translateY(-50%);
-width:50px;
-height:50px;
+.stop-number{
+width:45px;
+height:45px;
 border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
+font-weight:bold;
 color:white;
-font-size:22px;
-font-weight:bold;
+font-size:18px;
+flex-shrink:0;
 }
 
-.left .circle{
-right:-92px;
+.number-visited{
+background:#16a34a;
 }
 
-.right .circle{
-left:-92px;
+.number-current{
+background:#2563eb;
 }
 
-.visited{
-background:#4caf50;
+.number-pending{
+background:#9ca3af;
 }
 
-.current{
-background:#2196f3;
+.stop-info{
+flex:1;
 }
 
-.pending{
-background:#9e9e9e;
-}
-
-.name{
-font-size:26px;
-font-weight:bold;
-margin-bottom:10px;
-}
-
-.status{
+.stop-name{
 font-size:20px;
 font-weight:bold;
+margin-bottom:5px;
 }
 
-.status.vis{
-color:#4caf50;
+.stop-balance{
+color:#0F766E;
+font-weight:bold;
+margin-bottom:5px;
 }
 
-.status.cur{
-color:#2196f3;
+.stop-note{
+font-size:13px;
+color:#666;
+margin-bottom:5px;
 }
 
-.status.pen{
-color:#888;
+.stop-status{
+font-weight:bold;
 }
 
-.btn{
-margin-top:12px;
+.status-visited{
+color:#16a34a;
+}
+
+.status-current{
+color:#2563eb;
+}
+
+.status-pending{
+color:#9ca3af;
+}
+
+.visit-btn{
 padding:10px 15px;
 border:none;
-border-radius:25px;
-background:#4caf50;
+border-radius:10px;
+background:#16a34a;
 color:white;
-font-size:15px;
 font-weight:bold;
-cursor:pointer;
 }
 
 .legend{
-margin-top:30px;
 background:white;
 padding:15px;
 border-radius:15px;
 display:flex;
 justify-content:space-around;
-flex-wrap:wrap;
-gap:10px;
-box-shadow:0 4px 15px rgba(0,0,0,.12);
+margin-top:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.finish{
+.finish-btn{
 width:100%;
-margin-top:20px;
-padding:18px;
+margin-top:15px;
+padding:16px;
 border:none;
-border-radius:18px;
-background:#2196f3;
+border-radius:15px;
+background:#9ca3af;
 color:white;
-font-size:22px;
+font-size:18px;
 font-weight:bold;
+}
+
+.finished{
+background:#16a34a !important;
 }
 
 </style>
@@ -227,48 +197,40 @@ font-weight:bold;
 <body>
 
 <div class="header">
-<h1>🗺️ Route</h1>
+🗺️ Route Map
 </div>
 
 <div class="stats">
 
 <div class="stat">
-<div class="number" id="totalCount">0</div>
-<div class="label">Total</div>
+<div class="stat-number total" id="totalCount">0</div>
+<div>Total</div>
 </div>
 
 <div class="stat">
-<div class="number green" id="visitedCount">0</div>
-<div class="label">Visited</div>
+<div class="stat-number visited" id="visitedCount">0</div>
+<div>Visited</div>
 </div>
 
 <div class="stat">
-<div class="number blue">1</div>
-<div class="label">Current</div>
+<div class="stat-number current" id="currentCount">0</div>
+<div>Current</div>
 </div>
 
 <div class="stat">
-<div class="number gray" id="pendingCount">0</div>
-<div class="label">Pending</div>
+<div class="stat-number pending" id="pendingCount">0</div>
+<div>Pending</div>
 </div>
 
 </div>
 
-<div class="route">
-
-<div class="road"></div>
+<div class="route-container">
 
 <div class="depot">
-🏠 Depot
-<br>
-<span style="font-size:13px;color:#666;">
-Start
-</span>
+🏠 Depot Start
 </div>
 
-<div id="routeMap"></div>
-
-</div>
+<div id="routeList"></div>
 
 <div class="legend">
 <span>🟢 Visited</span>
@@ -276,80 +238,128 @@ Start
 <span>⚪ Pending</span>
 </div>
 
-<button class="finish">
+<button
+class="finish-btn"
+id="finishBtn">
 Finish Route
 </button>
+
+</div>
 
 <script>
 
 let route =
-JSON.parse(localStorage.getItem("todayRoute")) || [];
+JSON.parse(
+localStorage.getItem("todayRoute")
+) || [];
 
 function renderRoute(){
 
 let html = "";
 
 let visitedCount =
-route.filter(x=>x.visited).length;
+route.filter(
+person => person.visited
+).length;
 
-document.getElementById("totalCount").innerText =
-route.length;
+document.getElementById("totalCount")
+.innerText = route.length;
 
-document.getElementById("visitedCount").innerText =
-visitedCount;
+document.getElementById("visitedCount")
+.innerText = visitedCount;
 
-document.getElementById("pendingCount").innerText =
+document.getElementById("currentCount")
+.innerText =
+route.length > visitedCount
+? 1
+: 0;
+
+document.getElementById("pendingCount")
+.innerText =
 route.length - visitedCount;
 
 route.forEach((person,index)=>{
 
-let side =
-index % 2 === 0
-? "left"
-: "right";
+let stateClass =
+"number-pending";
 
-let state = "pending";
-let statusText = "Pending";
-let statusClass = "pen";
+let statusClass =
+"status-pending";
+
+let statusText =
+"Pending";
 
 if(person.visited){
 
-state = "visited";
-statusText = "Visited";
-statusClass = "vis";
+stateClass =
+"number-visited";
 
-}else if(index === visitedCount){
+statusClass =
+"status-visited";
 
-state = "current";
-statusText = "Current";
-statusClass = "cur";
+statusText =
+"Visited";
+
+}
+else if(index === visitedCount){
+
+stateClass =
+"number-current";
+
+statusClass =
+"status-current";
+
+statusText =
+"Current";
 
 }
 
 html += `
 
-<div class="stop ${side}">
+<div class="stop-card">
 
-<div class="circle ${state}">
+<div class="stop-number ${stateClass}">
 ${index+1}
 </div>
 
-<div class="name">
+<div class="stop-info">
+
+<div class="stop-name">
 ${person.name}
 </div>
 
-<div class="status ${statusClass}">
+<div class="stop-balance">
+💰 ${person.balance || 0} MAD
+</div>
+
+${
+person.note
+?
+`
+<div class="stop-note">
+📝 ${person.note}
+</div>
+`
+:
+""
+}
+
+<div class="stop-status ${statusClass}">
 ${statusText}
+</div>
+
 </div>
 
 ${
 !person.visited
 ?
-`<button
-class="btn"
+`
+<button
+class="visit-btn"
 onclick="markVisited(${index})">
-✓ Mark Visited
-</button>`
+✓ Visit
+</button>
+`
 :
 ""
 }
@@ -360,7 +370,34 @@ onclick="markVisited(${index})">
 
 });
 
-document.getElementById("routeMap").innerHTML = html;
+document.getElementById("routeList")
+.innerHTML = html;
+
+let finishBtn =
+document.getElementById("finishBtn");
+
+if(
+route.length > 0 &&
+visitedCount === route.length
+){
+
+finishBtn.classList.add(
+"finished"
+);
+
+finishBtn.innerText =
+"✓ Route Finished";
+
+}else{
+
+finishBtn.classList.remove(
+"finished"
+);
+
+finishBtn.innerText =
+"Finish Route";
+
+}
 
 }
 
@@ -376,6 +413,35 @@ JSON.stringify(route)
 renderRoute();
 
 }
+
+document
+.getElementById("finishBtn")
+.onclick = function(){
+
+if(route.length === 0){
+alert("Route is empty");
+return;
+}
+
+let visitedCount =
+route.filter(
+person => person.visited
+).length;
+
+if(
+visitedCount !== route.length
+){
+alert(
+"Visit all customers first"
+);
+return;
+}
+
+alert(
+"Route Completed Successfully ✅"
+);
+
+};
 
 renderRoute();
 
