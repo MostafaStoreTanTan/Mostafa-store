@@ -142,7 +142,7 @@ html += `
 📝 Note
 </button>
 
-<p>${person.note || ""}</p>
+<p>${person.note}</p>
 
 <h4>History</h4>
 
@@ -247,27 +247,9 @@ JSON.stringify(people)
 renderPeople();
 
 }
-  
-function editNote(index){
-
-let note = prompt(
-"Write a note",
-people[index].note || ""
-);
-
-if(note === null) return;
-
-people[index].note = note;
-
-localStorage.setItem(
-"people",
-JSON.stringify(people)
-);
-
-renderPeople();
 
 }
-  
+
 renderPeople();
 
 </script>
