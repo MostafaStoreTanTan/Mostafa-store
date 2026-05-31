@@ -138,10 +138,14 @@ function renderPeople(){
 
 document.getElementById("peopleCount").innerText = people.length;
 
-  let total = 0;
+let total = 0;
 
 people.forEach(person => {
 total += person.balance;
+});
+
+people.sort((a,b) => {
+return (b.favorite === true) - (a.favorite === true);
 });
 
 document.getElementById("totalAmount").innerText =
