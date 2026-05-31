@@ -566,6 +566,25 @@ menu.style.display = "none";
 
 }
 
+function exportData(){
+
+const data = JSON.stringify(people);
+
+const blob = new Blob(
+[data],
+{type:"application/json"}
+);
+
+const a = document.createElement("a");
+
+a.href = URL.createObjectURL(blob);
+
+a.download = "karni-backup.json";
+
+a.click();
+
+}
+
 renderPeople();
   
 </script>
