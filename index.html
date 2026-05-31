@@ -98,9 +98,22 @@ Karni
 <div class="value" id="peopleCount">0</div>
 </div>
 
-<input type="text" id="search" placeholder="🔍 Search person..." onkeyup="renderPeople()">
+<input
+type="text"
+id="search"
+placeholder="🔍 Search person..."
+onkeyup="renderPeople()">
 
-<input type="text" id="name" placeholder="Person Name">
+<input
+type="text"
+id="name"
+placeholder="Person Name">
+
+<button class="btn" onclick="addPerson()">
++ Add Person
+</button>
+
+<hr style="margin:20px 0;border:none;border-top:2px solid #ddd;">
 
 <button class="btn" onclick="exportData()">
 💾 Export Backup
@@ -112,10 +125,13 @@ id="importFile"
 style="display:none"
 onchange="importData(event)">
 
-<button class="btn" onclick="document.getElementById('importFile').click()">
+<button class="btn"
+onclick="document.getElementById('importFile').click()">
 📂 Import Backup
 </button>
 
+<div id="peopleList"></div>
+  
 <div style="display:flex;gap:5px;margin-top:10px;">
 
 <button onclick="currentTab='overdue';renderPeople()">
