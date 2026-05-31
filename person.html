@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>Customer Profile</title>
@@ -86,11 +85,10 @@ flex:1;
 padding:14px;
 border:none;
 border-radius:12px;
-color:white;
-font-size:16px;
-font-weight:bold;
 text-decoration:none;
 text-align:center;
+font-weight:bold;
+color:white;
 }
 
 .call-btn{
@@ -127,11 +125,6 @@ text-align:center;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.summary-title{
-font-size:14px;
-color:#666;
-}
-
 .summary-value{
 font-size:22px;
 font-weight:bold;
@@ -150,40 +143,21 @@ color:#dc2626;
 color:#2563eb;
 }
 
-.calendar-box{
-text-align:center;
-}
-
-.calendar-month{
-font-size:26px;
+.section-title{
+font-size:22px;
 font-weight:bold;
-color:#0F766E;
-}
-
-.calendar-day{
-font-size:75px;
-font-weight:bold;
-margin:10px 0;
-}
-
-.calendar-year{
-font-size:20px;
-color:#666;
+margin-bottom:15px;
 }
 
 .big-btn{
 width:100%;
-padding:16px;
+padding:15px;
 border:none;
 border-radius:15px;
 font-size:18px;
 font-weight:bold;
 color:white;
-margin-top:12px;
-}
-
-.calendar-btn{
-background:#0F766E;
+margin-top:10px;
 }
 
 .depot-btn{
@@ -194,10 +168,8 @@ background:#16a34a;
 background:#dc2626;
 }
 
-.section-title{
-font-size:22px;
-font-weight:bold;
-margin-bottom:15px;
+.calendar-btn{
+background:#0F766E;
 }
 
 .operation-item{
@@ -212,12 +184,22 @@ background:#f8fafc;
 padding:15px;
 border-radius:15px;
 margin-top:10px;
+border-left:5px solid #0F766E;
 }
 
 .note-date{
-margin-top:8px;
 font-size:13px;
 color:#666;
+margin-top:8px;
+}
+
+.delete-note{
+background:#dc2626;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+margin-top:10px;
 }
 
 </style>
@@ -298,9 +280,7 @@ id="editLocationBtn">
 <div class="summary">
 
 <div class="summary-card">
-<div class="summary-title">
 Depot
-</div>
 <div
 class="summary-value depot-color"
 id="totalDepot">
@@ -309,9 +289,7 @@ id="totalDepot">
 </div>
 
 <div class="summary-card">
-<div class="summary-title">
 Paid
-</div>
 <div
 class="summary-value paid-color"
 id="totalPaid">
@@ -320,9 +298,7 @@ id="totalPaid">
 </div>
 
 <div class="summary-card">
-<div class="summary-title">
 Balance
-</div>
 <div
 class="summary-value balance-color"
 id="currentBalance">
@@ -332,31 +308,22 @@ id="currentBalance">
 
 </div>
 
-<div class="card calendar-box">
+<div class="card">
 
-<div
-class="calendar-month"
-id="calendarMonth">
-JUN
+<div class="section-title">
+📅 Payment Date
 </div>
 
-<div
-class="calendar-day"
-id="calendarDay">
-01
-</div>
-
-<div
-class="calendar-year"
-id="calendarYear">
-2026
-</div>
-
-<button
-class="big-btn calendar-btn"
-id="changeDateBtn">
-📅 Change Date
-</button>
+<input
+type="date"
+id="paymentDate"
+style="
+width:100%;
+padding:15px;
+border:1px solid #ddd;
+border-radius:12px;
+font-size:18px;
+">
 
 </div>
 
@@ -386,9 +353,7 @@ id="paidBtn">
 📜 Operations
 </div>
 
-<div id="operationsList">
-
-</div>
+<div id="operationsList"></div>
 
 </div>
 
@@ -404,9 +369,7 @@ id="addNoteBtn">
 ➕ Add Note
 </button>
 
-<div id="notesList">
-
-</div>
+<div id="notesList"></div>
 
 </div>
 
@@ -465,6 +428,11 @@ document.getElementById(
 "📞 " +
 (person.phone || "-");
 
+document.getElementById(
+"paymentDate"
+).value =
+person.dueDate || "";
+
 let stars =
 "⭐".repeat(
 person.rating || 0
@@ -499,181 +467,6 @@ document.getElementById(
 `<img src="${person.photo}">`;
 
 }
-
-let totalDepot = 0;
-let totalPaid = 0;
-
-person.operations.forEach(op=>{
-
-if(op.type === "Depot"){
-totalDepot += Number(op.amount);
-}
-
-if(op.type === "Paid"){
-totalPaid += Number(op.amount);
-}
-
-});
-
-let balance =
-totalDepot - totalPaid;
-
-document.getElementById(
-"totalDepot"
-).innerText =
-totalDepot + " MAD";
-
-document.getElementById(
-"totalPaid"
-).innerText =
-totalPaid + " MAD";
-
-document.getElementById(
-"currentBalance"
-).innerText =
-balance + " MAD";
-
-renderOperations();
-renderNotes();
-
-function renderOperations(){
-
-let html = "";
-
-if(
-person.operations.length === 0
-){
-
-html = `
-
-<div class="operation-item">
-No Operations Yet
-</div>
-
-`;
-
-}
-
-person.operations.forEach(op=>{
-
-html += `
-
-<div class="operation-item">
-
-<b>
-${op.type==="Depot"
-?"🟢 Depot"
-:"🔴 Paid"}
-</b>
-
-<br><br>
-
-${op.amount} MAD
-
-<br><br>
-
-📅 ${op.date}
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"operationsList"
-).innerHTML =
-html;
-
-}
-
-function renderNotes(){
-
-let html = "";
-
-if(
-person.notes.length === 0
-){
-
-html = `
-
-<div class="note-item">
-No Notes Yet
-</div>
-
-`;
-
-}
-
-person.notes.forEach(note=>{
-
-html += `
-
-<div class="note-item">
-
-<b>
-📝 Note
-</b>
-
-<br><br>
-
-${note.text}
-
-<div class="note-date">
-
-📅 ${note.date}
-•
-🕒 ${note.time}
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"notesList"
-).innerHTML =
-html;
-
-}
-
-document.getElementById(
-"addNoteBtn"
-).onclick = function(){
-
-let text =
-prompt(
-"Write Note"
-);
-
-if(!text) return;
-
-person.notes.unshift({
-
-text:text,
-
-date:new Date()
-.toLocaleDateString(),
-
-time:new Date()
-.toLocaleTimeString()
-
-});
-
-people[selectedIndex] =
-person;
-
-localStorage.setItem(
-"people",
-JSON.stringify(people)
-);
-
-location.reload();
-
-};
 
 document.getElementById(
 "photoContainer"
@@ -726,7 +519,7 @@ document.getElementById(
 let name =
 prompt(
 "Name",
-person.name
+person.name || ""
 );
 
 if(!name) return;
@@ -752,7 +545,7 @@ document.getElementById(
 let phone =
 prompt(
 "Phone",
-person.phone
+person.phone || ""
 );
 
 if(!phone) return;
@@ -798,12 +591,27 @@ JSON.stringify(people)
 };
 
 document.getElementById(
+"paymentDate"
+).onchange = function(){
+
+person.dueDate =
+this.value;
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+};
+
+document.getElementById(
 "openLocationBtn"
 ).onclick = function(){
 
-if(
-!person.location
-){
+if(!person.location){
 
 alert(
 "No Location Saved"
@@ -818,7 +626,41 @@ person.location,
 "_blank"
 );
 
-};
+};    
+
+let totalDepot = 0;
+let totalPaid = 0;
+
+person.operations.forEach(op=>{
+
+if(op.type === "Depot"){
+totalDepot += Number(op.amount);
+}
+
+if(op.type === "Paid"){
+totalPaid += Number(op.amount);
+}
+
+});
+
+document.getElementById(
+"totalDepot"
+).innerText =
+totalDepot + " MAD";
+
+document.getElementById(
+"totalPaid"
+).innerText =
+totalPaid + " MAD";
+
+document.getElementById(
+"currentBalance"
+).innerText =
+(totalDepot - totalPaid)
++ " MAD";
+
+renderOperations();
+renderNotes();
 
 document.getElementById(
 "depotBtn"
@@ -888,188 +730,75 @@ location.reload();
 
 };
 
-document.getElementById(
-"changeDateBtn"
-).onclick = function(){
+function renderOperations(){
 
-let date =
-prompt(
-"YYYY-MM-DD",
-person.dueDate || ""
-);
+let html = "";
 
-if(!date) return;
+if(
+person.operations.length === 0
+){
 
-person.dueDate =
-date;
-
-let parts =
-date.split("-");
-
-if(parts.length === 3){
-
-document.getElementById(
-"calendarYear"
-).innerText =
-parts[0];
-
-document.getElementById(
-"calendarDay"
-).innerText =
-parts[2];
-
-let months = [
-"JAN","FEB","MAR",
-"APR","MAY","JUN",
-"JUL","AUG","SEP",
-"OCT","NOV","DEC"
-];
-
-document.getElementById(
-"calendarMonth"
-).innerText =
-months[
-Number(parts[1]) - 1
-];
+html =
+'<div class="operation-item">No Operations Yet</div>';
 
 }
 
-people[selectedIndex] =
-person;
+person.operations.forEach(
+(op,index)=>{
 
-localStorage.setItem(
-"people",
-JSON.stringify(people)
+html += `
+
+<div class="operation-item">
+
+<b>
+
+${op.type==="Depot"
+?"🟢 Depot"
+:"🔴 Paid"}
+
+</b>
+
+<br><br>
+
+${op.amount} MAD
+
+<br><br>
+
+📅 ${op.date}
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"operationsList"
+).innerHTML =
+html;
+
+}
+
+document.getElementById(
+"addNoteBtn"
+).onclick = function(){
+
+let text =
+prompt(
+"Write Note"
 );
 
-};
-    
-</script>
+if(!text) return;
 
-<div id="moneyModal"
-style="
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.5);
-justify-content:center;
-align-items:center;
-z-index:999;
-">
+person.notes.unshift({
 
-<div
-style="
-background:white;
-width:320px;
-padding:20px;
-border-radius:20px;
-">
-
-<h2 id="moneyTitle">
-Amount
-</h2>
-
-<input
-type="number"
-id="moneyInput"
-placeholder="0"
-style="
-width:100%;
-padding:15px;
-font-size:24px;
-border:2px solid #ddd;
-border-radius:12px;
-margin-top:15px;
-">
-
-<button
-id="saveMoneyBtn"
-class="big-btn depot-btn">
-
-Save
-
-</button>
-
-<button
-id="closeMoneyBtn"
-class="big-btn paid-btn">
-
-Cancel
-
-</button>
-
-</div>
-
-</div>
-
-let operationType = "";
-
-document.getElementById(
-"depotBtn"
-).onclick = function(){
-
-operationType = "Depot";
-
-document.getElementById(
-"moneyTitle"
-).innerText =
-"🟢 Add Depot";
-
-document.getElementById(
-"moneyModal"
-).style.display =
-"flex";
-
-};
-
-document.getElementById(
-"paidBtn"
-).onclick = function(){
-
-operationType = "Paid";
-
-document.getElementById(
-"moneyTitle"
-).innerText =
-"🔴 Add Paid";
-
-document.getElementById(
-"moneyModal"
-).style.display =
-"flex";
-
-};
-
-document.getElementById(
-"closeMoneyBtn"
-).onclick = function(){
-
-document.getElementById(
-"moneyModal"
-).style.display =
-"none";
-
-};
-
-document.getElementById(
-"saveMoneyBtn"
-).onclick = function(){
-
-let amount =
-document.getElementById(
-"moneyInput"
-).value;
-
-if(!amount) return;
-
-person.operations.unshift({
-
-type:operationType,
-
-amount:Number(amount),
+text:text,
 
 date:new Date()
-.toLocaleDateString()
+.toLocaleDateString(),
+
+time:new Date()
+.toLocaleTimeString()
 
 });
 
@@ -1084,9 +813,85 @@ JSON.stringify(people)
 location.reload();
 
 };
-    
-<script>
-    
+
+function renderNotes(){
+
+let html = "";
+
+if(
+person.notes.length === 0
+){
+
+html =
+'<div class="note-item">No Notes Yet</div>';
+
+}
+
+person.notes.forEach(
+(note,index)=>{
+
+html += `
+
+<div class="note-item">
+
+<b>
+📝 Note
+</b>
+
+<br><br>
+
+${note.text}
+
+<div class="note-date">
+
+📅 ${note.date}
+•
+🕒 ${note.time}
+
+</div>
+
+<button
+class="delete-note"
+onclick="deleteNote(${index})">
+
+🗑 Delete
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"notesList"
+).innerHTML =
+html;
+
+}
+
+function deleteNote(index){
+
+person.notes.splice(
+index,
+1
+);
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+}
+
+</script>
+
 </body>
 
 </html>    
