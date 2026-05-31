@@ -247,7 +247,13 @@ renderPeople();
 }
 
 function editNote(index){
-    alert("Note works");
+
+let note = prompt("Write a note");
+
+if(note === null) return;
+
+alert(note);
+
 }
   
 renderPeople();
