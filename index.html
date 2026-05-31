@@ -138,12 +138,6 @@ html += `
 🗑 Delete
 </button>
 
-<button onclick="editNote(${index})">
-📝 Note
-</button>
-
-<p>${person.note}</p>
-
 <h4>History</h4>
 
 ${person.history ?
@@ -173,8 +167,7 @@ return;
 people.push({
 name:name,
 balance:0,
-history:[],
-note:""
+history:[]
 });
 
 localStorage.setItem("people", JSON.stringify(people));
@@ -197,8 +190,7 @@ people[index].history = [];
 }
 
 people[index].history.push(
-"➖ Payment: " + amount + " MAD | " +
-new Date().toLocaleString()
+"➕ Debt: " + amount + " MAD"
 );
 
 localStorage.setItem("people", JSON.stringify(people));
