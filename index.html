@@ -244,22 +244,13 @@ localStorage.setItem(
 JSON.stringify(people)
 );
 
-renderPeople();
+
 
 }
 
 }
 
 function deletePerson(index){
-
-if(confirm("Delete this person?")){
-
-people.splice(index,1);
-
-localStorage.setItem(
-"people",
-JSON.stringify(people)
-);
 
 renderPeople();
 
