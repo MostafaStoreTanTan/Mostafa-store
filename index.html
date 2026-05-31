@@ -506,6 +506,20 @@ renderPeople();
 
 }
 
+function toggleFavorite(index){
+
+people[index].favorite =
+!people[index].favorite;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
 renderPeople();
   
 </script>
