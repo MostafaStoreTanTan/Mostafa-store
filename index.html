@@ -104,6 +104,26 @@ Karni
 + Add Person
 </button>
 
+<div style="display:flex;gap:5px;margin-top:10px;">
+
+<button onclick="currentTab='overdue';renderPeople()">
+🔴 Overdue
+</button>
+
+<button onclick="currentTab='today';renderPeople()">
+🟢 Today
+</button>
+
+<button onclick="currentTab='upcoming';renderPeople()">
+🟡 Upcoming
+</button>
+
+<button onclick="currentTab='all';renderPeople()">
+📋 All
+</button>
+
+</div>
+
 <div id="peopleList"></div>
 
 </div>
