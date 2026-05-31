@@ -147,8 +147,11 @@ ${person.note ? `<p>📝 ${person.note}</p>` : ""}
 <h4>History</h4>
 
 ${person.history ?
-person.history.map(item =>
-`<p>${item}</p>`
+person.history.map((item,i) =>
+`<p>
+${item}
+<button onclick="deleteHistory(${index},${i})">❌</button>
+</p>`
 ).join("")
 : ""}
 
