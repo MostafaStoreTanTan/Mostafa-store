@@ -190,7 +190,8 @@ people[index].history = [];
 }
 
 people[index].history.push(
-"➕ Debt: " + amount + " MAD"
+"➖ Payment: " + amount + " MAD | " +
+new Date().toLocaleString()
 );
 
 localStorage.setItem("people", JSON.stringify(people));
