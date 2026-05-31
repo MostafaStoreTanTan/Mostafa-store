@@ -147,6 +147,37 @@ total += person.balance;
 document.getElementById("totalAmount").innerText =
 total + " MAD";
 
+let today = new Date().toISOString().split("T")[0];
+
+let overdueCount = 0;
+let todayCount = 0;
+let upcomingCount = 0;
+
+people.forEach(person => {
+
+if(!person.dueDate) return;
+
+if(person.dueDate < today){
+overdueCount++;
+}
+else if(person.dueDate === today){
+todayCount++;
+}
+else{
+upcomingCount++;
+}
+
+});
+
+document.getElementById("overdueCount").innerText =
+overdueCount;
+
+document.getElementById("todayCount").innerText =
+todayCount;
+
+document.getElementById("upcomingCount").innerText =
+upcomingCount;
+
 let html = "";
 
 let search = document.getElementById("search")
