@@ -777,20 +777,26 @@ lastNote
 <button
 class="profile-btn"
 onclick="openProfile(${index})">
-
 👤 Profile
-
 </button>
 
 <button
 class="favorite-btn"
 onclick="toggleFavorite(${index})">
-
 ⭐
-
 </button>
 
-</div>
+<button
+style="
+background:#ef4444;
+color:white;
+border:none;
+padding:10px 14px;
+border-radius:10px;
+"
+onclick="deleteCustomer(${index})">
+🗑 Delete
+</button>
 
 </div>
 
@@ -862,6 +868,24 @@ document.getElementById(
 renderPeople
 );
 
+function deleteCustomer(index){
+
+if(
+confirm(
+"Delete this customer?"
+)
+){
+
+people.splice(index,1);
+
+savePeople();
+
+renderPeople();
+
+}
+
+}
+  
 renderPeople();
 
 </script>
