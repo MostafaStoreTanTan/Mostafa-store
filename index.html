@@ -234,21 +234,27 @@ return;
 html += `
 <div class="person">
 
-<h3>
+<div onclick="togglePerson(${index})" style="cursor:pointer;">
 
-<button onclick="toggleFavorite(${index})" style="border:none;background:none;font-size:28px;cursor:pointer;">
-${person.favorite ? "⭐" : "☆"}
-</button>
+<h3 style="margin:0;display:flex;justify-content:space-between;align-items:center;">
 
-👤 ${person.name}
+<span>
+${person.favorite ? "⭐" : "☆"} ${person.name}
+</span>
+
+<span>
+${person.balance} MAD
+</span>
 
 </h3>
 
-<p>💰 Balance: ${person.balance} MAD</p>
-
 ${person.dueDate ? `
-<p>📅 Due Date: ${person.dueDate}</p>
+<p style="margin:5px 0;">
+📅 ${person.dueDate}
+</p>
 ` : ""}
+
+</div>
 
 <button onclick="addDebt(${index})">
 + Debt
