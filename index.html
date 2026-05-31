@@ -162,6 +162,38 @@ search &&
 return;
 }
 
+let today = new Date().toISOString().split("T")[0];
+
+if(currentTab === "overdue"){
+
+if(
+!person.dueDate ||
+person.dueDate >= today
+){
+return;
+}
+
+}
+
+if(currentTab === "today"){
+
+if(person.dueDate !== today){
+return;
+}
+
+}
+
+if(currentTab === "upcoming"){
+
+if(
+!person.dueDate ||
+person.dueDate <= today
+){
+return;
+}
+
+}
+
 html += `
 <div class="person">
 
