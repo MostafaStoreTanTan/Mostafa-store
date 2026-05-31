@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calendar</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#f4f7fb;
+padding:15px;
+}
+
+.header{
+background:#0F766E;
+color:white;
+padding:20px;
+border-radius:20px;
+text-align:center;
+font-size:28px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.section{
+background:white;
+padding:15px;
+border-radius:15px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.customer{
+padding:10px;
+border-bottom:1px solid #eee;
+}
+
+.customer:last-child{
+border-bottom:none;
+}
+
+.back-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:#2563eb;
+color:white;
+font-size:18px;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+📅 Calendar
+</div>
+
+<div class="section">
+<h2>🔴 Overdue</h2>
+<div id="overdueList"></div>
+</div>
+
+<div class="section">
+<h2>🟢 Today</h2>
+<div id="todayList"></div>
+</div>
+
+<div class="section">
+<h2>🟡 Upcoming</h2>
+<div id="upcomingList"></div>
+</div>
+
+<button
+class="back-btn"
+onclick="window.location.href='index.html'">
+⬅ Back
+</button>
+
+<script>
+
+let people =
+JSON.parse(
+localStorage.getItem("people")
+) || [];
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+let overdueHTML = "";
+let todayHTML = "";
+let upcomingHTML = "";
+
+people.forEach(person=>{
+
+if(
+!person.balance ||
+person.balance <= 0
+){
+return;
+}
+
+let item = `
+<div class="customer">
+<strong>${person.name}</strong><br>
+💰 ${person.balance} MAD<br>
+📅 ${person.dueDate || "-"}
+</div>
+`;
+
+if(
+person.dueDate &&
+person.dueDate < today
+){
+overdueHTML += item;
+}
+else if(
+person.dueDate === today
+){
+todayHTML += item;
+}
+else if(
+person.dueDate > today
+){
+upcomingHTML += item;
+}
+
+});
+
+document.getElementById(
+"overdueList"
+).innerHTML =
+overdueHTML || "No Customers";
+
+document.getElementById(
+"todayList"
+).innerHTML =
+todayHTML || "No Customers";
+
+document.getElementById(
+"upcomingList"
+).innerHTML =
+upcomingHTML || "No Customers";
+
+</script>
+
+</body>
+</html>
