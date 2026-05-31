@@ -248,8 +248,6 @@ ${person.dueDate ? `
 <p>📅 Due Date: ${person.dueDate}</p>
 ` : ""}
 
-<div id="menu-${index}" style="display:none;">
-
 <button onclick="addDebt(${index})">
 + Debt
 </button>
@@ -261,6 +259,8 @@ ${person.dueDate ? `
 <button onclick="toggleMenu(${index})">
 ⚙️ More
 </button>
+
+<div id="menu-${index}" style="display:none;">
 
 <button onclick="deletePerson(${index})">
 🗑 Delete
@@ -286,7 +286,7 @@ ${person.dueDate ? `
 type="date"
 id="date-${index}"
 style="display:none"
-onchange="saveDueDate(${index}, this.value)">
+onchange="saveDueDate(${index},this.value)">
 
 ${person.note ? `<p>📝 ${person.note}</p>` : ""}
 
