@@ -366,6 +366,27 @@ renderPeople();
 
 }
 
+function openDatePicker(index){
+
+document
+.getElementById(`date-${index}`)
+.showPicker();
+
+}
+
+function saveDueDate(index,date){
+
+people[index].dueDate = date;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
 renderPeople();
   
 </script>
