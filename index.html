@@ -127,7 +127,18 @@ total + " MAD";
   
 let html = "";
 
+let search = document.getElementById("search")
+? document.getElementById("search").value.toLowerCase()
+: "";
+
 people.forEach((person,index)=>{
+
+if(
+search &&
+!person.name.toLowerCase().includes(search)
+){
+return;
+}
 
 html += `
 <div class="person">
@@ -135,6 +146,7 @@ html += `
 <h3>👤 ${person.name}</h3>
 
 <p>💰 Balance: ${person.balance} MAD</p>
+`;
 
 <button onclick="addDebt(${index})">
 + Debt
