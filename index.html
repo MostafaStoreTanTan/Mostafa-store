@@ -294,6 +294,28 @@ renderPeople();
 
 }
 
+function editPerson(index){
+
+let newName = prompt(
+"Edit name",
+people[index].name
+);
+
+if(newName === null || newName.trim() === ""){
+return;
+}
+
+people[index].name = newName;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
 renderPeople();
 
 </script>
