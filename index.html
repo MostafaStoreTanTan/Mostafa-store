@@ -163,6 +163,16 @@ html += `
 📝 Note
 </button>
 
+<button onclick="openDatePicker(${index})">
+📅 Due Date
+</button>
+
+<input
+type="date"
+id="date-${index}"
+style="display:none"
+onchange="saveDueDate(${index}, this.value)">
+
 ${person.note ? `<p>📝 ${person.note}</p>` : ""}
 
 <h4>History</h4>
