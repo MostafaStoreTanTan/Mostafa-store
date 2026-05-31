@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Route Map v2</title>
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Route</title>
 
 <style>
 
@@ -16,7 +21,7 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#f4f7fa;
+background:#f4f7fb;
 padding:15px;
 padding-bottom:100px;
 }
@@ -24,25 +29,25 @@ padding-bottom:100px;
 .header{
 background:#0F766E;
 color:white;
-padding:20px;
+padding:25px;
 border-radius:20px;
 text-align:center;
-font-size:28px;
+font-size:35px;
 font-weight:bold;
 margin-bottom:15px;
 }
 
 .stats{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(2,1fr);
 gap:10px;
-margin-bottom:20px;
+margin-bottom:15px;
 }
 
-.stat{
+.stat-card{
 background:white;
 padding:15px;
-border-radius:15px;
+border-radius:18px;
 text-align:center;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
@@ -50,319 +55,234 @@ box-shadow:0 2px 8px rgba(0,0,0,.08);
 .stat-number{
 font-size:24px;
 font-weight:bold;
+color:#0F766E;
 }
 
-.total{
-color:#111;
+.route-list{
+margin-top:15px;
 }
 
-.visited{
-color:#16a34a;
-}
-
-.current{
-color:#2563eb;
-}
-
-.pending{
-color:#9ca3af;
-}
-
-.route-container{
-max-width:700px;
-margin:auto;
-}
-
-.depot{
+.route-item{
 background:white;
 padding:15px;
 border-radius:18px;
-margin-bottom:15px;
-text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.stop-card{
-background:white;
-border-radius:18px;
-padding:15px;
-margin-bottom:15px;
+margin-bottom:10px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 display:flex;
 align-items:center;
 gap:15px;
+cursor:pointer;
 }
 
-.stop-number{
-width:45px;
-height:45px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-color:white;
-font-size:18px;
-flex-shrink:0;
+.drag{
+font-size:25px;
+color:#666;
 }
 
-.number-visited{
-background:#16a34a;
-}
-
-.number-current{
-background:#2563eb;
-}
-
-.number-pending{
-background:#9ca3af;
-}
-
-.stop-info{
+.customer-info{
 flex:1;
 }
 
-.stop-name{
+.customer-name{
 font-size:20px;
 font-weight:bold;
-margin-bottom:5px;
 }
 
-.stop-balance{
+.customer-balance{
+margin-top:5px;
 color:#0F766E;
 font-weight:bold;
-margin-bottom:5px;
-}
-
-.stop-note{
-font-size:13px;
-color:#666;
-margin-bottom:5px;
-}
-
-.stop-status{
-font-weight:bold;
-}
-
-.status-visited{
-color:#16a34a;
-}
-
-.status-current{
-color:#2563eb;
-}
-
-.status-pending{
-color:#9ca3af;
-}
-
-.visit-btn{
-padding:10px 15px;
-border:none;
-border-radius:10px;
-background:#16a34a;
-color:white;
-font-weight:bold;
-}
-
-.legend{
-background:white;
-padding:15px;
-border-radius:15px;
-display:flex;
-justify-content:space-around;
-margin-top:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
 .finish-btn{
 width:100%;
-margin-top:15px;
 padding:16px;
 border:none;
 border-radius:15px;
-background:#9ca3af;
+background:#16a34a;
 color:white;
 font-size:18px;
 font-weight:bold;
-}
-
-.finished{
-background:#16a34a !important;
+margin-top:15px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="header">
-🗺️ Route Map
+🗺️ Route Today
 </div>
 
 <div class="stats">
 
-<div class="stat">
-<div class="stat-number total" id="totalCount">0</div>
-<div>Total</div>
+<div class="stat-card">
+
+<div
+class="stat-number"
+id="customerCount">
+0
 </div>
 
-<div class="stat">
-<div class="stat-number visited" id="visitedCount">0</div>
-<div>Visited</div>
-</div>
-
-<div class="stat">
-<div class="stat-number current" id="currentCount">0</div>
-<div>Current</div>
-</div>
-
-<div class="stat">
-<div class="stat-number pending" id="pendingCount">0</div>
-<div>Pending</div>
+<div>
+Customers
 </div>
 
 </div>
 
-<div class="route-container">
+<div class="stat-card">
 
-<div class="depot">
-🏠 Depot Start
+<div
+class="stat-number"
+id="totalBalance">
+0
 </div>
 
-<div id="routeList"></div>
+<div>
+Balance
+</div>
 
-<div class="legend">
-<span>🟢 Visited</span>
-<span>🔵 Current</span>
-<span>⚪ Pending</span>
+</div>
+
+</div>
+
+<div
+class="route-list"
+id="routeList">
 </div>
 
 <button
 class="finish-btn"
-id="finishBtn">
-Finish Route
+id="finishRouteBtn">
+
+✅ Finish Route
+
 </button>
 
-</div>
+ <script>
 
-<script>
-
-let route =
+let people =
 JSON.parse(
-localStorage.getItem("todayRoute")
+localStorage.getItem("people")
 ) || [];
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+let routePeople = [];
+
+people.forEach(person=>{
+
+if(
+person.dueDate === today
+){
+
+routePeople.push(person);
+
+}
+
+});
+
+let totalBalance = 0;
+
+routePeople.forEach(person=>{
+
+let depot = 0;
+let paid = 0;
+
+if(person.operations){
+
+person.operations.forEach(op=>{
+
+if(op.type === "Depot"){
+depot += Number(op.amount);
+}
+
+if(op.type === "Paid"){
+paid += Number(op.amount);
+}
+
+});
+
+}
+
+person.balance =
+depot - paid;
+
+totalBalance += person.balance;
+
+});
+
+document.getElementById(
+"customerCount"
+).innerText =
+routePeople.length;
+
+document.getElementById(
+"totalBalance"
+).innerText =
+totalBalance + " MAD";
+
+renderRoute();
 
 function renderRoute(){
 
 let html = "";
 
-let visitedCount =
-route.filter(
-person => person.visited
-).length;
+if(
+routePeople.length === 0
+){
 
-document.getElementById("totalCount")
-.innerText = route.length;
+html = `
 
-document.getElementById("visitedCount")
-.innerText = visitedCount;
+<div class="route-item">
 
-document.getElementById("currentCount")
-.innerText =
-route.length > visitedCount
-? 1
-: 0;
+<div class="customer-info">
 
-document.getElementById("pendingCount")
-.innerText =
-route.length - visitedCount;
+<div class="customer-name">
+No Customers Today
+</div>
 
-route.forEach((person,index)=>{
+</div>
 
-let stateClass =
-"number-pending";
+</div>
 
-let statusClass =
-"status-pending";
-
-let statusText =
-"Pending";
-
-if(person.visited){
-
-stateClass =
-"number-visited";
-
-statusClass =
-"status-visited";
-
-statusText =
-"Visited";
+`;
 
 }
-else if(index === visitedCount){
 
-stateClass =
-"number-current";
-
-statusClass =
-"status-current";
-
-statusText =
-"Current";
-
-}
+routePeople.forEach(
+(person,index)=>{
 
 html += `
 
-<div class="stop-card">
+<div
+class="route-item"
+onclick="openCustomer(${index})">
 
-<div class="stop-number ${stateClass}">
-${index+1}
+<div class="drag">
+☰
 </div>
 
-<div class="stop-info">
+<div class="customer-info">
 
-<div class="stop-name">
+<div class="customer-name">
+
 ${person.name}
-</div>
-
-<div class="stop-balance">
-💰 ${person.balance || 0} MAD
-</div>
-
-${
-person.note
-?
-`
-<div class="stop-note">
-📝 ${person.note}
-</div>
-`
-:
-""
-}
-
-<div class="stop-status ${statusClass}">
-${statusText}
-</div>
 
 </div>
 
-${
-!person.visited
-?
-`
-<button
-class="visit-btn"
-onclick="markVisited(${index})">
-✓ Visit
-</button>
-`
-:
-""
-}
+<div class="customer-balance">
+
+💰 ${person.balance} MAD
+
+</div>
+
+</div>
 
 </div>
 
@@ -370,82 +290,51 @@ onclick="markVisited(${index})">
 
 });
 
-document.getElementById("routeList")
-.innerHTML = html;
-
-let finishBtn =
-document.getElementById("finishBtn");
-
-if(
-route.length > 0 &&
-visitedCount === route.length
-){
-
-finishBtn.classList.add(
-"finished"
-);
-
-finishBtn.innerText =
-"✓ Route Finished";
-
-}else{
-
-finishBtn.classList.remove(
-"finished"
-);
-
-finishBtn.innerText =
-"Finish Route";
+document.getElementById(
+"routeList"
+).innerHTML =
+html;
 
 }
 
-}
+function openCustomer(index){
 
-function markVisited(index){
-
-route[index].visited = true;
+let realIndex =
+people.findIndex(
+p => p.name ===
+routePeople[index].name
+);
 
 localStorage.setItem(
-"todayRoute",
-JSON.stringify(route)
+"selectedCustomer",
+realIndex
 );
 
-renderRoute();
+window.location.href =
+"person.html";
 
 }
 
-document
-.getElementById("finishBtn")
-.onclick = function(){
-
-if(route.length === 0){
-alert("Route is empty");
-return;
-}
-
-let visitedCount =
-route.filter(
-person => person.visited
-).length;
+document.getElementById(
+"finishRouteBtn"
+).onclick = function(){
 
 if(
-visitedCount !== route.length
+confirm(
+"Finish Route?"
+)
 ){
+
 alert(
-"Visit all customers first"
+"Route Finished"
 );
-return;
+
 }
 
-alert(
-"Route Completed Successfully ✅"
-);
-
 };
-
-renderRoute();
 
 </script>
 
 </body>
-</html>
+
+</html> 
