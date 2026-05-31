@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Route</title>
+<title>Today's Route</title>
 
 <style>
 
@@ -16,6 +16,7 @@ padding:15px;
 
 h1{
 text-align:center;
+margin-bottom:20px;
 }
 
 .client{
@@ -24,6 +25,23 @@ padding:15px;
 margin-top:10px;
 border-radius:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:8px;
+background:green;
+color:white;
+margin-top:10px;
+cursor:pointer;
+}
+
+.depot{
+background:#222;
+color:white;
+text-align:center;
+font-weight:bold;
 }
 
 </style>
@@ -42,13 +60,35 @@ JSON.parse(
 localStorage.getItem("todayRoute")
 ) || [];
 
-let html = "";
+function renderRoute(){
+
+let html = `
+<div class="client depot">
+🏠 Depot
+</div>
+`;
 
 route.forEach((person,index)=>{
 
+let color =
+person.visited ?
+"#d4edda" :
+"white";
+
 html += `
-<div class="client">
-${index + 1}. ${person.name}
+<div
+class="client"
+style="background:${color};"
+>
+
+<h3>
+📍 ${index + 1}. ${person.name}
+</h3>
+
+<button onclick="markVisited(${index})">
+🟢 Visited
+</button>
+
 </div>
 `;
 
@@ -56,6 +96,23 @@ ${index + 1}. ${person.name}
 
 document.getElementById("routeList")
 .innerHTML = html;
+
+}
+
+function markVisited(index){
+
+route[index].visited = true;
+
+localStorage.setItem(
+"todayRoute",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+renderRoute();
 
 </script>
 
