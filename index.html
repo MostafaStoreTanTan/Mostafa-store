@@ -196,7 +196,7 @@ people[index].history = [];
 }
 
 people[index].history.push(
-"➖ Payment: " + amount + " MAD | " +
+"➕ Debt: " + amount + " MAD | " +
 new Date().toLocaleString()
 );
 
@@ -219,7 +219,8 @@ people[index].history = [];
 }
 
 people[index].history.push(
-"➖ Payment: " + amount + " MAD"
+"➖ Payment: " + amount + " MAD | " +
+new Date().toLocaleString()
 );
 
 if(people[index].balance < 0){
