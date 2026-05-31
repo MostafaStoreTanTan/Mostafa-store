@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Customer Profile</title>
 
@@ -35,16 +39,16 @@ text-align:center;
 }
 
 .photo{
-width:120px;
-height:120px;
+width:140px;
+height:140px;
 border-radius:50%;
-background:#ddd;
+background:#e5e7eb;
 margin:auto;
+overflow:hidden;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:50px;
-overflow:hidden;
+font-size:60px;
 cursor:pointer;
 }
 
@@ -55,41 +59,37 @@ object-fit:cover;
 }
 
 .name{
-font-size:32px;
+font-size:30px;
 font-weight:bold;
 margin-top:15px;
 }
 
 .rating{
-font-size:28px;
+font-size:30px;
 margin-top:10px;
-cursor:pointer;
-}
-
-.rating-text{
-font-size:18px;
-font-weight:bold;
-margin-top:5px;
 }
 
 .phone{
-margin-top:15px;
+margin-top:10px;
 font-size:18px;
+color:#666;
 }
 
-.actions{
+.action-row{
 display:flex;
 gap:10px;
 margin-top:15px;
 }
 
-.actions a{
+.action-btn{
 flex:1;
 padding:14px;
+border:none;
 border-radius:12px;
-text-decoration:none;
 color:white;
+font-size:16px;
 font-weight:bold;
+text-decoration:none;
 text-align:center;
 }
 
@@ -101,77 +101,123 @@ background:#16a34a;
 background:#22c55e;
 }
 
-.stats{
+.edit-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#2563eb;
+color:white;
+font-weight:bold;
+margin-top:10px;
+}
+
+.summary{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:10px;
 margin-bottom:15px;
 }
 
-.stat{
+.summary-card{
+background:white;
 padding:15px;
-border-radius:15px;
-color:white;
+border-radius:18px;
 text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-.green{
-background:#16a34a;
+.summary-title{
+font-size:14px;
+color:#666;
 }
 
-.red{
-background:#dc2626;
-}
-
-.blue{
-background:#2563eb;
-}
-
-.stat-value{
-font-size:28px;
+.summary-value{
+font-size:22px;
 font-weight:bold;
+margin-top:5px;
 }
 
-.calendar-card{
+.depot-color{
+color:#16a34a;
+}
+
+.paid-color{
+color:#dc2626;
+}
+
+.balance-color{
+color:#2563eb;
+}
+
+.calendar-box{
 text-align:center;
 }
 
 .calendar-month{
-font-size:18px;
+font-size:26px;
 font-weight:bold;
-color:#2563eb;
+color:#0F766E;
 }
 
 .calendar-day{
-font-size:60px;
+font-size:75px;
 font-weight:bold;
 margin:10px 0;
 }
 
 .calendar-year{
-font-size:18px;
+font-size:20px;
 color:#666;
 }
 
 .big-btn{
 width:100%;
-padding:15px;
+padding:16px;
 border:none;
-border-radius:12px;
+border-radius:15px;
 font-size:18px;
 font-weight:bold;
-cursor:pointer;
-margin-top:10px;
+color:white;
+margin-top:12px;
+}
+
+.calendar-btn{
+background:#0F766E;
 }
 
 .depot-btn{
 background:#16a34a;
-color:white;
 }
 
 .paid-btn{
 background:#dc2626;
-color:white;
+}
+
+.section-title{
+font-size:22px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.operation-item{
+background:#f8fafc;
+padding:15px;
+border-radius:15px;
+margin-top:10px;
+}
+
+.note-item{
+background:#f8fafc;
+padding:15px;
+border-radius:15px;
+margin-top:10px;
+}
+
+.note-date{
+margin-top:8px;
+font-size:13px;
+color:#666;
 }
 
 </style>
@@ -206,122 +252,175 @@ id="customerStars">
 </div>
 
 <div
-class="rating-text"
-id="ratingText">
-Excellent
-</div>
-
-<div
 class="phone"
 id="customerPhone">
 📞 -
 </div>
 
-<div class="actions">
+<div class="action-row">
 
 <a
 href="#"
 id="callLink"
-class="call-btn">
+class="action-btn call-btn">
 📞 Call
 </a>
 
 <a
 href="#"
 id="whatsappLink"
-class="whatsapp-btn">
+class="action-btn whatsapp-btn">
 💬 WhatsApp
 </a>
 
 </div>
 
+<button
+class="edit-btn"
+id="editNameBtn">
+✏️ Edit Name
+</button>
+
+<button
+class="edit-btn"
+id="editPhoneBtn">
+📞 Edit Phone
+</button>
+
+<button
+class="edit-btn"
+id="editLocationBtn">
+📍 Edit Location
+</button>
+
 </div>
 
-<div class="stats">
+<div class="summary">
 
-<div class="stat green">
-<div>Total Debt</div>
+<div class="summary-card">
+<div class="summary-title">
+Depot
+</div>
 <div
-class="stat-value"
-id="totalDebt">
+class="summary-value depot-color"
+id="totalDepot">
 0
 </div>
 </div>
 
-<div class="stat red">
-<div>Total Paid</div>
+<div class="summary-card">
+<div class="summary-title">
+Paid
+</div>
 <div
-class="stat-value"
+class="summary-value paid-color"
 id="totalPaid">
 0
 </div>
 </div>
 
-<div class="stat blue">
-<div>Balance</div>
+<div class="summary-card">
+<div class="summary-title">
+Balance
+</div>
 <div
-class="stat-value"
-id="balance">
+class="summary-value balance-color"
+id="currentBalance">
 0
 </div>
 </div>
 
 </div>
 
-<div class="card calendar-card">
+<div class="card calendar-box">
 
-<div class="calendar-month"
+<div
+class="calendar-month"
 id="calendarMonth">
 JUN
 </div>
 
-<div class="calendar-day"
+<div
+class="calendar-day"
 id="calendarDay">
-20
+01
 </div>
 
-<div class="calendar-year"
+<div
+class="calendar-year"
 id="calendarYear">
 2026
 </div>
 
 <button
-class="big-btn"
+class="big-btn calendar-btn"
 id="changeDateBtn">
-📅 Change Payment Date
+📅 Change Date
 </button>
-
-<input
-type="date"
-id="datePicker"
-style="display:none">
 
 </div>
 
 <div class="card">
 
+<div class="section-title">
+💵 Money
+</div>
+
 <button
 class="big-btn depot-btn"
-id="addDepotBtn">
-🟢 Depot
+id="depotBtn">
+🟢 Add Depot
 </button>
 
 <button
 class="big-btn paid-btn"
-id="addPaidBtn">
-🔴 Paid
+id="paidBtn">
+🔴 Add Paid
 </button>
 
 </div>
 
 <div class="card">
 
-<h2>
+<div class="section-title">
 📜 Operations
-</h2>
+</div>
 
 <div id="operationsList">
+
 </div>
+
+</div>
+
+<div class="card">
+
+<div class="section-title">
+📝 Notes
+</div>
+
+<button
+class="big-btn calendar-btn"
+id="addNoteBtn">
+➕ Add Note
+</button>
+
+<div id="notesList">
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="section-title">
+📍 Location
+</div>
+
+<button
+class="big-btn calendar-btn"
+id="openLocationBtn">
+📍 Open Location
+</button>
 
 </div>
 
@@ -351,20 +450,8 @@ if(!person.operations){
 person.operations = [];
 }
 
-if(!person.rating){
-person.rating = 5;
-}
-
-function savePerson(){
-
-people[selectedIndex] =
-person;
-
-localStorage.setItem(
-"people",
-JSON.stringify(people)
-);
-
+if(!person.notes){
+person.notes = [];
 }
 
 document.getElementById(
@@ -377,6 +464,16 @@ document.getElementById(
 ).innerText =
 "📞 " +
 (person.phone || "-");
+
+let stars =
+"⭐".repeat(
+person.rating || 0
+);
+
+document.getElementById(
+"customerStars"
+).innerText =
+stars || "☆☆☆☆☆";
 
 document.getElementById(
 "callLink"
@@ -394,80 +491,6 @@ document.getElementById(
 "https://wa.me/" +
 whatsappNumber;
 
-function renderRating(){
-
-let stars =
-"⭐".repeat(
-person.rating
-);
-
-document.getElementById(
-"customerStars"
-).innerText =
-stars;
-
-let text = "";
-
-switch(person.rating){
-
-case 1:
-text = "Very Bad";
-break;
-
-case 2:
-text = "Bad";
-break;
-
-case 3:
-text = "Average";
-break;
-
-case 4:
-text = "Good";
-break;
-
-case 5:
-text = "Excellent";
-break;
-
-}
-
-document.getElementById(
-"ratingText"
-).innerText =
-text;
-
-}
-
-renderRating();
-
-document.getElementById(
-"customerStars"
-).onclick = function(){
-
-let rating =
-prompt(
-"Rating 1-5",
-person.rating
-);
-
-if(
-!rating ||
-rating < 1 ||
-rating > 5
-){
-return;
-}
-
-person.rating =
-Number(rating);
-
-savePerson();
-
-renderRating();
-
-};
-
 if(person.photo){
 
 document.getElementById(
@@ -477,15 +500,188 @@ document.getElementById(
 
 }
 
+let totalDepot = 0;
+let totalPaid = 0;
+
+person.operations.forEach(op=>{
+
+if(op.type === "Depot"){
+totalDepot += Number(op.amount);
+}
+
+if(op.type === "Paid"){
+totalPaid += Number(op.amount);
+}
+
+});
+
+let balance =
+totalDepot - totalPaid;
+
+document.getElementById(
+"totalDepot"
+).innerText =
+totalDepot + " MAD";
+
+document.getElementById(
+"totalPaid"
+).innerText =
+totalPaid + " MAD";
+
+document.getElementById(
+"currentBalance"
+).innerText =
+balance + " MAD";
+
+renderOperations();
+renderNotes();
+
+function renderOperations(){
+
+let html = "";
+
+if(
+person.operations.length === 0
+){
+
+html = `
+
+<div class="operation-item">
+No Operations Yet
+</div>
+
+`;
+
+}
+
+person.operations.forEach(op=>{
+
+html += `
+
+<div class="operation-item">
+
+<b>
+${op.type==="Depot"
+?"🟢 Depot"
+:"🔴 Paid"}
+</b>
+
+<br><br>
+
+${op.amount} MAD
+
+<br><br>
+
+📅 ${op.date}
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"operationsList"
+).innerHTML =
+html;
+
+}
+
+function renderNotes(){
+
+let html = "";
+
+if(
+person.notes.length === 0
+){
+
+html = `
+
+<div class="note-item">
+No Notes Yet
+</div>
+
+`;
+
+}
+
+person.notes.forEach(note=>{
+
+html += `
+
+<div class="note-item">
+
+<b>
+📝 Note
+</b>
+
+<br><br>
+
+${note.text}
+
+<div class="note-date">
+
+📅 ${note.date}
+•
+🕒 ${note.time}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"notesList"
+).innerHTML =
+html;
+
+}
+
+document.getElementById(
+"addNoteBtn"
+).onclick = function(){
+
+let text =
+prompt(
+"Write Note"
+);
+
+if(!text) return;
+
+person.notes.unshift({
+
+text:text,
+
+date:new Date()
+.toLocaleDateString(),
+
+time:new Date()
+.toLocaleTimeString()
+
+});
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
 document.getElementById(
 "photoContainer"
 ).onclick = function(){
 
-document
-.getElementById(
+document.getElementById(
 "photoInput"
-)
-.click();
+).click();
 
 };
 
@@ -507,7 +703,13 @@ function(event){
 person.photo =
 event.target.result;
 
-savePerson();
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
 
 location.reload();
 
@@ -517,32 +719,211 @@ reader.readAsDataURL(file);
 
 };
 
-function renderCalendar(){
+document.getElementById(
+"editNameBtn"
+).onclick = function(){
 
-if(!person.dueDate){
+let name =
+prompt(
+"Name",
+person.name
+);
+
+if(!name) return;
+
+person.name = name;
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
 
 document.getElementById(
-"calendarDay"
-).innerText = "--";
+"editPhoneBtn"
+).onclick = function(){
+
+let phone =
+prompt(
+"Phone",
+person.phone
+);
+
+if(!phone) return;
+
+person.phone = phone;
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+document.getElementById(
+"editLocationBtn"
+).onclick = function(){
+
+let location =
+prompt(
+"Google Maps Link",
+person.location || ""
+);
+
+if(location === null)
+return;
+
+person.location =
+location;
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+};
+
+document.getElementById(
+"openLocationBtn"
+).onclick = function(){
+
+if(
+!person.location
+){
+
+alert(
+"No Location Saved"
+);
 
 return;
 
 }
 
-let parts =
-person.dueDate.split("-");
+window.open(
+person.location,
+"_blank"
+);
 
-const months = [
-"JAN","FEB","MAR",
-"APR","MAY","JUN",
-"JUL","AUG","SEP",
-"OCT","NOV","DEC"
-];
+};
+
+document.getElementById(
+"depotBtn"
+).onclick = function(){
+
+let amount =
+prompt(
+"Depot Amount"
+);
+
+if(!amount) return;
+
+person.operations.unshift({
+
+type:"Depot",
+
+amount:Number(amount),
+
+date:new Date()
+.toLocaleDateString()
+
+});
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+document.getElementById(
+"paidBtn"
+).onclick = function(){
+
+let amount =
+prompt(
+"Paid Amount"
+);
+
+if(!amount) return;
+
+person.operations.unshift({
+
+type:"Paid",
+
+amount:Number(amount),
+
+date:new Date()
+.toLocaleDateString()
+
+});
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+document.getElementById(
+"changeDateBtn"
+).onclick = function(){
+
+let date =
+prompt(
+"YYYY-MM-DD",
+person.dueDate || ""
+);
+
+if(!date) return;
+
+person.dueDate =
+date;
+
+let parts =
+date.split("-");
+
+if(parts.length === 3){
+
+document.getElementById(
+"calendarYear"
+).innerText =
+parts[0];
 
 document.getElementById(
 "calendarDay"
 ).innerText =
 parts[2];
+
+let months = [
+"JAN","FEB","MAR",
+"APR","MAY","JUN",
+"JUL","AUG","SEP",
+"OCT","NOV","DEC"
+];
 
 document.getElementById(
 "calendarMonth"
@@ -551,282 +932,20 @@ months[
 Number(parts[1]) - 1
 ];
 
-document.getElementById(
-"calendarYear"
-).innerText =
-parts[0];
-
 }
 
-renderCalendar();
+people[selectedIndex] =
+person;
 
-document.getElementById(
-"changeDateBtn"
-).onclick = function(){
-
-let picker =
-document.getElementById(
-"datePicker"
+localStorage.setItem(
+"people",
+JSON.stringify(people)
 );
-
-picker.value =
-person.dueDate || "";
-
-picker.showPicker();
 
 };
-
-document.getElementById(
-"datePicker"
-).onchange = function(){
-
-person.dueDate =
-this.value;
-
-savePerson();
-
-renderCalendar();
-
-};
-
-function renderOperations(){
-
-let html = "";
-
-let totalDebt = 0;
-let totalPaid = 0;
-
-person.operations.forEach(
-(op,index)=>{
-
-if(op.type === "Depot"){
-totalDebt += op.amount;
-}
-
-if(op.type === "Paid"){
-totalPaid += op.amount;
-}
-
-html += `
-
-<div style="
-background:white;
-padding:15px;
-margin-top:10px;
-border-radius:15px;
-border-left:6px solid ${
-op.type === "Depot"
-? "#16a34a"
-: "#dc2626"
-};
-">
-
-<h3>
-${op.type === "Depot"
-? "🟢 Depot"
-: "🔴 Paid"}
-</h3>
-
-<p>
-💰 ${op.amount} MAD
-</p>
-
-<p>
-📅 ${op.date}
-</p>
-
-<p>
-🕒 ${op.time}
-</p>
-
-<button
-onclick="editOperation(${index})">
-✏️ Edit
-</button>
-
-<button
-onclick="deleteOperation(${index})">
-🗑 Delete
-</button>
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"operationsList"
-).innerHTML = html;
-
-document.getElementById(
-"totalDebt"
-).innerText =
-totalDebt + " MAD";
-
-document.getElementById(
-"totalPaid"
-).innerText =
-totalPaid + " MAD";
-
-document.getElementById(
-"balance"
-).innerText =
-(totalDebt - totalPaid)
-+ " MAD";
-
-}
-
-renderOperations();
-
-document.getElementById(
-"addDepotBtn"
-).onclick = function(){
-
-let amount =
-prompt("Amount");
-
-if(!amount) return;
-
-let date =
-prompt(
-"Date YYYY-MM-DD",
-new Date()
-.toISOString()
-.split("T")[0]
-);
-
-let time =
-prompt(
-"Time HH:MM",
-new Date()
-.toTimeString()
-.slice(0,5)
-);
-
-person.operations.push({
-
-type:"Depot",
-
-amount:Number(amount),
-
-date:date,
-
-time:time
-
-});
-
-savePerson();
-
-renderOperations();
-
-};
-
-document.getElementById(
-"addPaidBtn"
-).onclick = function(){
-
-let amount =
-prompt("Amount");
-
-if(!amount) return;
-
-let date =
-prompt(
-"Date YYYY-MM-DD",
-new Date()
-.toISOString()
-.split("T")[0]
-);
-
-let time =
-prompt(
-"Time HH:MM",
-new Date()
-.toTimeString()
-.slice(0,5)
-);
-
-person.operations.push({
-
-type:"Paid",
-
-amount:Number(amount),
-
-date:date,
-
-time:time
-
-});
-
-savePerson();
-
-renderOperations();
-
-};
-
-function deleteOperation(index){
-
-if(
-!confirm(
-"Delete operation?"
-)
-){
-return;
-}
-
-person.operations.splice(
-index,
-1
-);
-
-savePerson();
-
-renderOperations();
-
-}
-
-function editOperation(index){
-
-let op =
-person.operations[index];
-
-let amount =
-prompt(
-"Amount",
-op.amount
-);
-
-if(!amount) return;
-
-let date =
-prompt(
-"Date",
-op.date
-);
-
-let time =
-prompt(
-"Time",
-op.time
-);
-
-op.amount =
-Number(amount);
-
-op.date =
-date;
-
-op.time =
-time;
-
-savePerson();
-
-renderOperations();
-
-}    
     
 </script>
 
 </body>
-</html>
+
+</html>    
