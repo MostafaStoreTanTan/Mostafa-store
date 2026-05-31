@@ -18,6 +18,7 @@ font-family:Arial,sans-serif;
 body{
 background:#f4f7fb;
 padding:15px;
+padding-bottom:100px;
 }
 
 .header{
@@ -39,29 +40,127 @@ margin-bottom:15px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
+.photo{
+width:120px;
+height:120px;
+border-radius:50%;
+background:#ddd;
+margin:0 auto 15px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:45px;
+overflow:hidden;
+}
+
+.photo img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
 .name{
 font-size:28px;
 font-weight:bold;
+text-align:center;
 margin-bottom:10px;
 }
 
-.balance{
+.rating{
+text-align:center;
 font-size:24px;
+margin-bottom:5px;
+}
+
+.rating-text{
+text-align:center;
 font-weight:bold;
-color:#0F766E;
-margin-bottom:10px;
+margin-bottom:15px;
 }
 
 .info{
-margin-bottom:8px;
-color:#555;
+margin-bottom:10px;
+font-size:16px;
 }
 
-.note{
-background:#fff8dc;
-padding:10px;
-border-radius:10px;
+.action-row{
+display:flex;
+gap:10px;
 margin-top:10px;
+}
+
+.action-row button,
+.action-row a{
+flex:1;
+text-align:center;
+padding:12px;
+border:none;
+border-radius:12px;
+text-decoration:none;
+color:white;
+font-weight:bold;
+}
+
+.call-btn{
+background:#16a34a;
+}
+
+.whatsapp-btn{
+background:#22c55e;
+}
+
+.summary{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-bottom:15px;
+}
+
+.summary-card{
+padding:15px;
+border-radius:15px;
+color:white;
+text-align:center;
+}
+
+.debt{
+background:#16a34a;
+}
+
+.payment{
+background:#dc2626;
+}
+
+.balance{
+background:#2563eb;
+}
+
+.summary-value{
+font-size:22px;
+font-weight:bold;
+}
+
+.section-title{
+font-size:22px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.message-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+margin-bottom:10px;
+font-weight:bold;
+}
+
+.customer-btn{
+background:#e5e7eb;
+}
+
+.me-btn{
+background:#dbeafe;
 }
 
 .history-item{
@@ -72,28 +171,22 @@ margin-bottom:10px;
 box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
-.call-btn{
-width:100%;
+.reminder-card{
+background:white;
 padding:15px;
-border:none;
 border-radius:15px;
-background:#16a34a;
-color:white;
-font-size:18px;
-font-weight:bold;
-margin-top:10px;
+margin-bottom:15px;
+box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
 
-.back-btn{
-width:100%;
-padding:15px;
+.edit-btn{
+margin-top:10px;
+padding:10px;
 border:none;
-border-radius:15px;
+border-radius:10px;
 background:#2563eb;
 color:white;
-font-size:18px;
-font-weight:bold;
-margin-top:10px;
+width:100%;
 }
 
 </style>
@@ -107,27 +200,138 @@ margin-top:10px;
 
 <div class="card">
 
-<div id="customerInfo"></div>
+<div class="photo" id="photoContainer">
+📷
+</div>
 
-<a id="callLink">
-<button class="call-btn">
-📞 Call Customer
-</button>
+<input
+type="file"
+id="photoInput"
+style="display:none">
+
+<div class="name" id="customerName">
+Customer
+</div>
+
+<div class="rating" id="customerStars">
+⭐⭐⭐⭐⭐
+</div>
+
+<div class="rating-text" id="ratingText">
+Excellent
+</div>
+
+<div class="info" id="customerPhone">
+📞 -
+</div>
+
+<div class="action-row">
+
+<a
+href="#"
+id="callLink"
+class="call-btn">
+📞 Call
 </a>
 
+<a
+href="#"
+id="whatsappLink"
+class="whatsapp-btn">
+💬 WhatsApp
+</a>
+
+</div>
+
+</div>
+
+<div class="summary">
+
+<div class="summary-card debt">
+<div>Total Debt</div>
+<div class="summary-value"
+id="totalDebt">
+0
+</div>
+</div>
+
+<div class="summary-card payment">
+<div>Total Paid</div>
+<div class="summary-value"
+id="totalPaid">
+0
+</div>
+</div>
+
+<div class="summary-card balance">
+<div>Balance</div>
+<div class="summary-value"
+id="currentBalance">
+0
+</div>
+</div>
+
+</div>
+
+<div class="reminder-card">
+
+<div class="section-title">
+📅 Reminder
+</div>
+
+<div id="dueDateText">
+Due Date: -
+</div>
+
+<div id="reminderDateText">
+Reminder Date: -
+</div>
+
+<div id="reminderTimeText">
+Reminder Time: -
+</div>
+
 <button
-class="back-btn"
-onclick="window.location.href='index.html'">
-⬅ Back
+class="edit-btn"
+id="editReminderBtn">
+✏️ Edit Reminder
 </button>
 
 </div>
 
-<h2 style="margin-bottom:10px;">
-📜 History
-</h2>
+<div class="card">
 
-<div id="historyList"></div>
+<div class="section-title">
+💬 Conversation
+</div>
+
+<button
+class="message-btn customer-btn"
+id="customerMessageBtn">
+🧑 Customer Said
+</button>
+
+<button
+class="message-btn me-btn"
+id="meMessageBtn">
+👤 I Said
+</button>
+
+<div id="conversationList">
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="section-title">
+📜 Operations
+</div>
+
+<div id="operationsList">
+</div>
+
+</div>
 
 <script>
 
@@ -151,119 +355,239 @@ document.body.innerHTML =
 
 }else{
 
+document.getElementById(
+"customerName"
+).innerText =
+person.name || "Customer";
+
+document.getElementById(
+"customerPhone"
+).innerText =
+"📞 " + (person.phone || "-");
+
 let stars = "";
+let ratingText = "No Rating";
 
-for(
-let i = 0;
-i < (person.rating || 0);
-i++
-){
-stars += "⭐";
+switch(person.rating){
+
+case 1:
+stars = "⭐";
+ratingText = "Very Bad";
+break;
+
+case 2:
+stars = "⭐⭐";
+ratingText = "Bad";
+break;
+
+case 3:
+stars = "⭐⭐⭐";
+ratingText = "Average";
+break;
+
+case 4:
+stars = "⭐⭐⭐⭐";
+ratingText = "Good";
+break;
+
+case 5:
+stars = "⭐⭐⭐⭐⭐";
+ratingText = "Excellent";
+break;
+
 }
 
-document
-.getElementById("customerInfo")
-.innerHTML = `
+document.getElementById(
+"customerStars"
+).innerText =
+stars;
 
-<div class="name">
-${person.name}
-</div>
+document.getElementById(
+"ratingText"
+).innerText =
+ratingText;
 
-<div class="balance">
-${person.balance} MAD
-</div>
+document.getElementById(
+"currentBalance"
+).innerText =
+person.balance || 0;
 
-<div class="info">
-📞 ${person.phone || "-"}
-</div>
+document.getElementById(
+"dueDateText"
+).innerText =
+"Due Date: " +
+(person.dueDate || "-");
 
-<div class="info">
-📅 Due Date:
-${person.dueDate || "-"}
-</div>
+document.getElementById(
+"reminderDateText"
+).innerText =
+"Reminder Date: " +
+(person.reminderDate || "-");
 
-<div class="info">
-⭐ Rating:
-${stars || "No Rating"}
-</div>
+document.getElementById(
+"reminderTimeText"
+).innerText =
+"Reminder Time: " +
+(person.reminderTime || "-");
 
-${
-person.notes &&
-person.notes.length
-?
-`
-<div class="note">
-📝 ${person.notes[0]}
-</div>
-`
-:
-""
+document.getElementById(
+"callLink"
+).href =
+"tel:" +
+(person.phone || "");
+
+let whatsappNumber =
+(person.phone || "")
+.replace(/^0/,"212");
+
+document.getElementById(
+"whatsappLink"
+).href =
+"https://wa.me/" +
+whatsappNumber;
+
+if(person.photo){
+
+document.getElementById(
+"photoContainer"
+).innerHTML =
+`<img src="${person.photo}">`;
+
 }
 
-`;
+let totalDebt = 0;
+let totalPaid = 0;
 
-document
-.getElementById("callLink")
-.href =
-"tel:" + (person.phone || "");
+if(person.history){
 
-let historyHtml = "";
+person.history.forEach(item=>{
 
-if(
-person.history &&
-person.history.length
-){
+if(item.type === "Debt"){
+totalDebt += item.amount;
+}
 
-person.history
-.slice()
-.reverse()
-.forEach(item=>{
-
-historyHtml += `
-
-<div class="history-item">
-
-<div>
-💰 ${item.amount} MAD
-</div>
-
-<div>
-📌 ${item.type}
-</div>
-
-<div>
-📅 ${item.date}
-</div>
-
-<div>
-🕒 ${item.time}
-</div>
-
-</div>
-
-`;
+if(item.type === "Payment"){
+totalPaid += item.amount;
+}
 
 });
 
-}else{
-
-historyHtml = `
-
-<div class="history-item">
-No Operations Yet
-</div>
-
-`;
-
 }
+
+document.getElementById(
+"totalDebt"
+).innerText =
+totalDebt + " MAD";
+
+document.getElementById(
+"totalPaid"
+).innerText =
+totalPaid + " MAD";
+
+document.getElementById(
+"currentBalance"
+).innerText =
+(person.balance || 0) +
+" MAD";
+
+document.getElementById(
+"photoContainer"
+).onclick = function(){
 
 document
-.getElementById("historyList")
-.innerHTML = historyHtml;
+.getElementById(
+"photoInput"
+)
+.click();
+
+};
+
+document
+.getElementById(
+"photoInput"
+)
+.onchange = function(e){
+
+let file =
+e.target.files[0];
+
+if(!file) return;
+
+let reader =
+new FileReader();
+
+reader.onload =
+function(event){
+
+person.photo =
+event.target.result;
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+reader.readAsDataURL(file);
+
+};
 
 }
 
-</script>
+document.getElementById(
+"editReminderBtn"
+).onclick = function(){
 
+let dueDate =
+prompt(
+"Due Date",
+person.dueDate || ""
+);
+
+if(dueDate !== null){
+person.dueDate = dueDate;
+}
+
+let reminderDate =
+prompt(
+"Reminder Date",
+person.reminderDate || ""
+);
+
+if(reminderDate !== null){
+person.reminderDate =
+reminderDate;
+}
+
+let reminderTime =
+prompt(
+"Reminder Time",
+person.reminderTime || ""
+);
+
+if(reminderTime !== null){
+person.reminderTime =
+reminderTime;
+}
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+</script>
 </body>
 </html>  
