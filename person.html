@@ -588,6 +588,139 @@ location.reload();
 
 };
 
+if(!person.messages){
+person.messages = [];
+}
+
+document.getElementById(
+"customerMessageBtn"
+).onclick = function(){
+
+let text =
+prompt("Customer Said");
+
+if(!text) return;
+
+let date =
+prompt(
+"Date",
+new Date().toISOString().split("T")[0]
+);
+
+let time =
+prompt(
+"Time",
+new Date().toTimeString().slice(0,5)
+);
+
+person.messages.push({
+sender:"Customer",
+text:text,
+date:date,
+time:time
+});
+
+people[selectedIndex] = person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+document.getElementById(
+"meMessageBtn"
+).onclick = function(){
+
+let text =
+prompt("I Said");
+
+if(!text) return;
+
+let date =
+prompt(
+"Date",
+new Date().toISOString().split("T")[0]
+);
+
+let time =
+prompt(
+"Time",
+new Date().toTimeString().slice(0,5)
+);
+
+person.messages.push({
+sender:"Me",
+text:text,
+date:date,
+time:time
+});
+
+people[selectedIndex] = person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+};
+
+let conversationHTML = "";
+
+if(person.messages){
+
+person.messages.forEach((msg,index)=>{
+
+conversationHTML += `
+<div class="history-item">
+
+<b>${msg.sender}</b>
+
+<p>${msg.text}</p>
+
+📅 ${msg.date}
+
+🕒 ${msg.time}
+
+<br><br>
+
+<button onclick="deleteMessage(${index})">
+🗑 Delete
+</button>
+
+</div>
+`;
+
+});
+
+}
+
+document.getElementById(
+"conversationList"
+).innerHTML =
+conversationHTML;
+
+function deleteMessage(index){
+
+person.messages.splice(index,1);
+
+people[selectedIndex] =
+person;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+location.reload();
+
+}
+    
 </script>
 </body>
 </html>  
