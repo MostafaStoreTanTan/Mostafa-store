@@ -251,6 +251,41 @@ renderPeople();
 
 }
 
+function deleteHistory(personIndex, historyIndex){
+
+if(confirm("Delete this operation?")){
+
+people[personIndex].history.splice(historyIndex,1);
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
+function editPerson(index){
+
+let newName = prompt(
+"Edit name",
+people[index].name
+);
+
+if(newName === null || newName.trim() === ""){
+return;
+}
+
+people[index].name = newName;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+  
 }
 
 function editNote(index){
