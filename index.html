@@ -601,6 +601,33 @@ a.click();
 
 }
 
+function importData(event){
+
+const file = event.target.files[0];
+
+if(!file) return;
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+people = JSON.parse(e.target.result);
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+alert("Backup restored successfully!");
+
+};
+
+reader.readAsText(file);
+
+}
+  
 renderPeople();
   
 </script>
