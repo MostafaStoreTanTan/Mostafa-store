@@ -450,6 +450,8 @@ document.getElementById("personNote")
 
 history:[],
 
+operations:[],
+  
 createdAt:
 new Date().toISOString()
 
@@ -527,9 +529,29 @@ return 0;
 
 people.forEach(person=>{
 
-totalAmount += person.balance;
+let balance = 0;
 
-if(person.balance > 0){
+if(person.operations){
+
+person.operations.forEach(op=>{
+
+if(op.type === "Depot"){
+balance += Number(op.amount);
+}
+
+if(op.type === "Paid"){
+balance -= Number(op.amount);
+}
+
+});
+
+}
+
+person.realBalance = balance;
+
+totalAmount += balance;
+
+if(person.realBalance > 0){
 
 if(
 person.dueDate &&
@@ -592,7 +614,7 @@ return;
 }
 
 if(
-currentTab === "overdue" &&
+person.realBalance > 0 &&
 !(
 person.balance > 0 &&
 person.dueDate &&
@@ -603,7 +625,7 @@ return;
 }
 
 if(
-currentTab === "today" &&
+person.realBalance > 0 &&
 !(
 person.balance > 0 &&
 person.dueDate === today
@@ -613,7 +635,7 @@ return;
 }
 
 if(
-currentTab === "upcoming" &&
+person.realBalance > 0 &&
 !(
 person.balance > 0 &&
 person.dueDate > today
@@ -642,7 +664,7 @@ ${person.name}
 </div>
 
 <div class="person-balance">
-${person.balance} MAD
+${person.realBalance} MAD
 </div>
 
 <div class="person-info">
