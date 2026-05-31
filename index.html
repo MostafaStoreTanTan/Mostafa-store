@@ -250,6 +250,30 @@ renderPeople();
 
 }
 
+function deletePerson(index){
+...
+}
+
+function editNote(index){
+
+let note = prompt(
+"Write a note",
+people[index].note || ""
+);
+
+if(note === null) return;
+
+people[index].note = note;
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
+renderPeople();
+
+}
+
 renderPeople();
 
 </script>
