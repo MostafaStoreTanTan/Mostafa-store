@@ -280,16 +280,13 @@ id="currentBalance">
 </div>
 
 <div id="dueDateText">
-Due Date: -
+📅 Payment Date: -
 </div>
 
-<div id="reminderDateText">
-Reminder Date: -
-</div>
-
-<div id="reminderTimeText">
-Reminder Time: -
-</div>
+<input
+type="date"
+id="dueDatePicker"
+style="display:none">
 
 <button
 class="edit-btn"
@@ -544,37 +541,24 @@ document.getElementById(
 "editReminderBtn"
 ).onclick = function(){
 
-let dueDate =
-prompt(
-"Due Date",
-person.dueDate || ""
+let picker =
+document.getElementById(
+"dueDatePicker"
 );
 
-if(dueDate !== null){
-person.dueDate = dueDate;
-}
+picker.value =
+person.dueDate || "";
 
-let reminderDate =
-prompt(
-"Reminder Date",
-person.reminderDate || ""
-);
+picker.showPicker();
 
-if(reminderDate !== null){
-person.reminderDate =
-reminderDate;
-}
+};
 
-let reminderTime =
-prompt(
-"Reminder Time",
-person.reminderTime || ""
-);
+document.getElementById(
+"dueDatePicker"
+).onchange = function(){
 
-if(reminderTime !== null){
-person.reminderTime =
-reminderTime;
-}
+person.dueDate =
+this.value;
 
 people[selectedIndex] =
 person;
