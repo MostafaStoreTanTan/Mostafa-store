@@ -1,726 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ar" dir="rtl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karni Pro - مسار اليوم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #f8fafc; color: #0f172a; padding: 15px; padding-bottom: 40px; }
+        .header { background: #0f766e; color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 15px; font-weight: 900; font-size: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: white; padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .stat-num { font-size: 18px; font-weight: 900; color: #0f766e; }
+        .stat-label { font-size: 11px; color: #64748b; font-weight: 700; margin-top: 3px; }
+        
+        .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; transition: all 0.3s ease; position: relative; }
+        .customer-card.status-pending { border-right-color: #cbd5e1; } /* رمادي */
+        .customer-card.status-current { border-right-color: #2563eb; background: #f0f5ff; } /* أزرق */
+        .customer-card.status-collected { border-right-color: #22c55e; opacity: 0.85; } /* أخضر */
+        .customer-card.status-no-pay { border-right-color: #ef4444; } /* أحمر */
+        .customer-card.status-callback { border-right-color: #f97316; } /* برتقالي */
+        .customer-card.status-closed { border-right-color: #eab308; } /* أصفر */
 
-<meta charset="UTF-8">
+        .card-body { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
+        .step-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; background: #cbd5e1; }
+        .status-pending .step-badge { background: #cbd5e1; }
+        .status-current .step-badge { background: #2563eb; animation: pulse 2s infinite; }
+        .status-collected .step-badge { background: #22c55e; }
+        .status-no-pay .step-badge { background: #ef4444; }
+        .status-callback .step-badge { background: #f97316; }
+        .status-closed .step-badge { background: #eab308; }
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+        .info-area { text-align: right; flex: 1; }
+        .cust-name { font-size: 16px; font-weight: 800; color: #0f172a; }
+        .cust-debt { font-size: 13px; font-weight: 700; color: #14b8a6; margin-top: 2px; }
+        .cust-note { font-size: 11px; color: #ef4444; font-weight: bold; margin-top: 3px; display: none; }
+        .status-no-pay .cust-note { display: block; }
 
-<title>Route</title>
+        .btn-panel { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; }
+        .action-btn { border: none; padding: 8px 12px; border-radius: 8px; color: white; font-weight: bold; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .btn-green { background: #22c55e; }
+        .btn-red { background: #ef4444; }
+        .btn-orange { background: #f97316; }
+        .btn-yellow { background: #eab308; }
 
-<style>
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+        .modal-box { background: white; width: 100%; max-width: 350px; padding: 20px; border-radius: 12px; text-align: right; }
+        .modal-title { font-weight: 800; font-size: 15px; margin-bottom: 10px; color: #0f172a; }
+        .modal-input { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; outline: none; margin-bottom: 15px; text-align: right; }
+        .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .m-btn { border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#f4f7fb;
-padding:15px;
-padding-bottom:100px;
-}
-
-.header{
-background:#0F766E;
-color:white;
-padding:25px;
-border-radius:20px;
-text-align:center;
-font-size:35px;
-font-weight:bold;
-margin-bottom:15px;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:10px;
-margin-bottom:15px;
-}
-
-.stat-card{
-background:white;
-padding:15px;
-border-radius:18px;
-text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.stat-number{
-font-size:24px;
-font-weight:bold;
-color:#0F766E;
-}
-
-.stat-label{
-font-size:13px;
-color:#666;
-margin-top:5px;
-}
-
-.legend{
-display:flex;
-overflow:auto;
-gap:10px;
-padding:10px 0;
-margin-bottom:15px;
-}
-
-.legend-item{
-background:white;
-padding:10px 15px;
-border-radius:15px;
-display:flex;
-align-items:center;
-gap:8px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-white-space:nowrap;
-}
-
-.dot{
-width:14px;
-height:14px;
-border-radius:50%;
-}
-
-.green{
-background:#16a34a;
-}
-
-.blue{
-background:#2563eb;
-}
-
-.gray{
-background:#9ca3af;
-}
-
-.yellow{
-background:#facc15;
-}
-
-.orange{
-background:#f97316;
-}
-
-.route-list{
-margin-top:15px;
-}
-
-.route-card{
-background:white;
-padding:18px;
-border-radius:20px;
-margin-bottom:12px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.route-top{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.route-number{
-width:45px;
-height:45px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-font-weight:bold;
-font-size:18px;
-}
-
-.route-name{
-font-size:22px;
-font-weight:bold;
-}
-
-.route-balance{
-margin-top:5px;
-font-weight:bold;
-color:#0F766E;
-}
-
-.route-status{
-margin-top:8px;
-font-weight:bold;
-}
-
-.actions{
-display:flex;
-gap:8px;
-margin-top:15px;
-flex-wrap:wrap;
-}
-
-.actions button{
-border:none;
-padding:10px 12px;
-border-radius:12px;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-
-.btn-green{
-background:#16a34a;
-}
-
-.btn-yellow{
-background:#facc15;
-color:black;
-}
-
-.btn-orange{
-background:#f97316;
-}
-
-.finish-btn{
-width:100%;
-padding:18px;
-border:none;
-border-radius:18px;
-background:#16a34a;
-color:white;
-font-size:18px;
-font-weight:bold;
-margin-top:15px;
-}
-
-</style>
-
+        .finish-btn { width: 100%; border: none; background: #16a34a; color: white; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+    </style>
 </head>
-
 <body>
 
-<div class="header">
-🗺️ Route Today
-</div>
-
-<div class="stats">
-
-<div class="stat-card">
-<div
-class="stat-number"
-id="totalCustomers">
-0
-</div>
-<div class="stat-label">
-Customers
-</div>
-</div>
-
-<div class="stat-card">
-<div
-class="stat-number"
-id="collectedCount">
-0
-</div>
-<div class="stat-label">
-Collected
-</div>
-</div>
-
-<div class="stat-card">
-<div
-class="stat-number"
-id="pendingCount">
-0
-</div>
-<div class="stat-label">
-Pending
-</div>
-</div>
-
-</div>
-
-<div class="legend">
-
-<div class="legend-item">
-<div class="dot green"></div>
-Collected
-</div>
-
-<div class="legend-item">
-<div class="dot blue"></div>
-Current
-</div>
-
-<div class="legend-item">
-<div class="dot gray"></div>
-Pending
-</div>
-
-<div class="legend-item">
-<div class="dot yellow"></div>
-Closed
-</div>
-
-<div class="legend-item">
-<div class="dot orange"></div>
-Come Back
-</div>
-
-</div>
-
-<div
-id="routeList"
-class="route-list">
-</div>
-
-<button
-id="finishRouteBtn"
-class="finish-btn">
-
-✅ Finish Route
-
-</button>
-
-<script>
-
-let people =
-JSON.parse(
-localStorage.getItem("people")
-) || [];
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-let route =
-JSON.parse(
-localStorage.getItem("routeToday")
-);
-
-if(!route){
-
-route = [];
-
-people.forEach(person=>{
-
-if(
-person.dueDate === today
-){
-
-route.push({
-
-name:person.name,
-
-status:"pending"
-
-});
-
-}
-
-});
-
-if(route.length > 0){
-
-route[0].status =
-"current";
-
-}
-
-localStorage.setItem(
-"routeToday",
-JSON.stringify(route)
-);
-
-}
-
-renderRoute();
-
-function renderRoute(){
-
-let html = "";
-
-let collected = 0;
-let pending = 0;
-
-document.getElementById(
-"totalCustomers"
-).innerText =
-route.length;
-
-route.forEach((item,index)=>{
-
-if(item.status==="collected"){
-collected++;
-}
-
-if(
-item.status==="pending" ||
-item.status==="current"
-){
-pending++;
-}
-
-let color = "#9ca3af";
-let text = "⚪ Pending";
-
-if(
-item.status==="current"
-){
-color="#2563eb";
-text="🔵 Current";
-}
-
-if(
-item.status==="collected"
-){
-color="#16a34a";
-text="🟢 Collected";
-}
-
-if(
-item.status==="closed"
-){
-color="#facc15";
-text="🟡 Closed";
-}
-
-if(
-item.status==="comeback"
-){
-color="#f97316";
-text="🟠 Come Back";
-}
-
-let person =
-people.find(
-p=>p.name===item.name
-);
-
-let balance = 0;
-
-if(
-person &&
-person.operations
-){
-
-let depot = 0;
-let paid = 0;
-
-person.operations.forEach(op=>{
-
-if(op.type==="Depot"){
-depot += Number(op.amount);
-}
-
-if(op.type==="Paid"){
-paid += Number(op.amount);
-}
-
-});
-
-balance = depot - paid;
-
-}
-
-html += `
-
-<div class="route-card">
-
-<div
-class="route-top"
-onclick="openCustomer('${item.name}')">
-
-<div
-class="route-number"
-style="background:${color};">
-
-${index+1}
-
-</div>
-
-<div>
-
-<div class="route-name">
-
-${item.name}
-
-</div>
-
-<div class="route-balance">
-
-💰 ${balance} MAD
-
-</div>
-
-<div class="route-status">
-
-${text}
-
-</div>
-
-</div>
-
-</div>
-
-<div class="actions">
-
-<button
-class="move-btn"
-onclick="moveUp(${index})">
-
-⬆️ Up
-
-</button>
-
-<button
-class="move-btn"
-onclick="moveDown(${index})">
-
-⬇️ Down
-
-</button>
-
-<button
-class="btn-green"
-onclick="markCollected(${index})">
-
-🟢 Collected
-
-</button>
-
-<button
-class="btn-yellow"
-onclick="markClosed(${index})">
-
-🟡 Closed
-
-</button>
-
-<button
-class="btn-orange"
-onclick="markComeBack(${index})">
-
-🟠 Come Back
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"routeList"
-).innerHTML =
-html;
-
-document.getElementById(
-"collectedCount"
-).innerText =
-collected;
-
-document.getElementById(
-"pendingCount"
-).innerText =
-pending;
-
-} 
-
-function openCustomer(name){
-
-let realIndex =
-people.findIndex(
-p => p.name === name
-);
-
-localStorage.setItem(
-"selectedCustomer",
-realIndex
-);
-
-window.location.href =
-"person.html";
-
-}
-
-function setNextCurrent(){
-
-let currentFound = false;
-
-route.forEach(item=>{
-
-if(
-item.status === "current"
-){
-
-currentFound = true;
-
-item.status =
-"pending";
-
-}
-
-});
-
-for(
-let i = 0;
-i < route.length;
-i++
-){
-
-if(
-route[i].status === "pending"
-){
-
-route[i].status =
-"current";
-
-break;
-
-}
-
-}
-
-}
-
-function markCollected(index){
-
-route[index].status =
-"collected";
-
-setNextCurrent();
-
-localStorage.setItem(
-"routeToday",
-JSON.stringify(route)
-);
-
-renderRoute();
-
-}
-
-function markClosed(index){
-
-route[index].status =
-"closed";
-
-setNextCurrent();
-
-localStorage.setItem(
-"routeToday",
-JSON.stringify(route)
-);
-
-renderRoute();
-
-}
-
-function markComeBack(index){
-
-let customer =
-route[index];
-
-customer.status =
-"comeback";
-
-route.splice(
-index,
-1
-);
-
-route.push(customer);
-
-setNextCurrent();
-
-localStorage.setItem(
-"routeToday",
-JSON.stringify(route)
-);
-
-renderRoute();
-
-}
-
-document.getElementById(
-"finishRouteBtn"
-).onclick = function(){
-
-if(
-confirm(
-"Finish Route ?"
-)
-){
-
-localStorage.removeItem(
-"routeToday"
-);
-
-alert(
-"Route Finished"
-);
-
-location.reload();
-
-}
-
-};
-
-function moveUp(index){
-
-if(index === 0) return;
-
-let temp =
-route[index];
-
-route[index] =
-route[index - 1];
-
-route[index - 1] =
-temp;
-
-localStorage.setItem(
-"routeToday",
-JSON.stringify(route)
-);
-
-renderRoute();
-
-}
-
-function moveDown(index){
-
-if(
-index === route.length - 1
-) return;
-
-let temp =
-route[index];
-
-route[index] =
-route[index + 1];
-
-route[index + 1] =
-temp;
-
-localStorage.setItem(
-"routeToday",
-JSON.stringify(route)
-);
-
-renderRoute();
-
-}
-   
+    <div class="header"><i class="fas fa-map-marked-alt"></i> مسار التوزيع اليومي</div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="countTotal">0</div><div class="stat-label">إجمالي الزبائن</div></div>
+        <div class="stat-card"><div class="stat-num" id="countDone" style="color:#22c55e;">0</div><div class="stat-label">تم التحصيل</div></div>
+        <div class="stat-card"><div class="stat-num" id="countRem" style="color:#f97316;">0</div><div class="stat-label">المتبقي</div></div>
+    </div>
+
+    <div id="routeCustomersList"></div>
+
+    <button class="finish-btn" onclick="finishRoute()"><i class="fas fa-check-double"></i> إنهاء مسار اليوم واغلاقه</button>
+
+    <div class="modal" id="noteModal">
+        <div class="modal-box">
+            <div class="modal-title">اكتب مذكرة سبب عدم الدفع اليوم:</div>
+            <input type="text" id="modalNoteInput" class="modal-field modal-input" placeholder="مثال: المحل فارغ، ارجع غداً...">
+            <div class="modal-btns">
+                <button class="m-btn" onclick="submitNoPayNote()" style="background:#ef4444; color:white;">حفظ المذكرة</button>
+                <button class="m-btn" onclick="closeModal()" style="background:#e2e8f0;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+    const firebaseConfig = { databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com" };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let customersData = [];
+    let activeNoPayIndex = null;
+
+    // جلب الزبائن الفعليين من قاعدة البيانات مباشرة
+    onValue(ref(db, 'customers'), (snapshot) => {
+        if (snapshot.exists()) {
+            const rawData = snapshot.val();
+            customersData = Object.keys(rawData).map((key, index) => ({
+                id: key,
+                name: rawData[key].name || "زبون مجهول",
+                amount: parseFloat(rawData[key].amount) || 0,
+                status: rawData[key].routeStatus || 'pending', // افتراضي رمادي من السيرفر
+                reason: rawData[key].routeReason || '',
+                index: index + 1
+            }));
+            
+            // تفعيل أول زبون رمادي تلقائياً ليصبح باللون الأزرق (أول واحد تذهب عنده)
+            ensureCurrentActiveCustomer();
+            renderRouteList();
+        }
+    });
+
+    function ensureCurrentActiveCustomer() {
+        // إذا كان هناك أي زبون مسجل حالياً بأنه أزرق (current)، لا نغير شيء
+        if (customersData.some(c => c.status === 'current')) return;
+
+        // ابحث عن أول زبون لا يزال حالته رمادية (pending) واجعله أزرق
+        const firstPending = customersData.find(c => c.status === 'pending');
+        if (firstPending) {
+            firstPending.status = 'current';
+            updateStatusInFirebase(firstPending.id, 'current', '');
+        }
+    }
+
+    function renderRouteList() {
+        const container = document.getElementById('routeCustomersList');
+        container.innerHTML = "";
+
+        let done = 0, rem = 0;
+
+        customersData.forEach((cust, idx) => {
+            if (cust.status === 'collected') done++;
+            else rem++;
+
+            const card = document.createElement('div');
+            card.className = `customer-card status-${cust.status}`;
+            card.innerHTML = `
+                <div class="card-body">
+                    <div class="step-badge">${cust.index}</div>
+                    <div class="info-area">
+                        <div class="cust-name">${cust.name}</div>
+                        <div class="cust-debt">${cust.amount.toFixed(2)} درهم</div>
+                        <div class="cust-note" id="note-text-${idx}"><i class="fas fa-exclamation-circle"></i> المذكرة: ${cust.reason}</div>
+                    </div>
+                </div>
+                <div class="btn-panel">
+                    <button class="action-btn btn-green" onclick="changeStatus(${idx}, 'collected')"><i class="fas fa-check"></i> اعطاني</button>
+                    <button class="action-btn btn-red" onclick="triggerNoPayModal(${idx})"><i class="fas fa-times"></i> لم يعطِ</button>
+                    <button class="action-btn btn-orange" onclick="changeStatus(${idx}, 'callback')"><i class="fas fa-clock"></i> سأعود</button>
+                    <button class="action-btn btn-yellow" onclick="changeStatus(${idx}, 'closed')"><i class="fas fa-door-closed"></i> مغلق</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        document.getElementById('countTotal').textContent = customersData.length;
+        document.getElementById('countDone').textContent = done;
+        document.getElementById('countRem').textContent = rem;
+    }
+
+    window.changeStatus = function(index, newStatus, reason = "") {
+        const currentCust = customersData[index];
+        currentCust.status = newStatus;
+        currentCust.reason = reason;
+
+        // حفظ الحالة الجديدة في الفايربيس للعميل الذي ضغطنا عليه
+        updateStatusInFirebase(currentCust.id, newStatus, reason);
+
+        // إذا ضغطنا على الأخضر (اعطاني)، نفعّل الشخص الموالي ليكون أزرق (current) تلقائياً
+        if (newStatus === 'collected') {
+            const nextCust = customersData.find((c, i) => i > index && c.status === 'pending');
+            if (nextCust) {
+                nextCust.status = 'current';
+                updateStatusInFirebase(nextCust.id, 'current', '');
+            }
+        }
+        renderRouteList();
+    };
+
+    window.triggerNoPayModal = function(index) {
+        activeNoPayIndex = index;
+        document.getElementById('modalNoteInput').value = "";
+        document.getElementById('noteModal').style.display = 'flex';
+    };
+
+    window.submitNoPayNote = function() {
+        const txt = document.getElementById('modalNoteInput').value.trim() || "بدون سبب مذكور";
+        if (activeNoPayIndex !== null) {
+            changeStatus(activeNoPayIndex, 'no-pay', txt);
+        }
+        closeModal();
+    };
+
+    window.closeModal = function() {
+        document.getElementById('noteModal').style.display = 'none';
+        activeNoPayIndex = null;
+    };
+
+    function updateStatusInFirebase(id, status, reason) {
+        update(ref(db, `customers/${id}`), {
+            routeStatus: status,
+            routeReason: reason
+        });
+    }
+
+    window.finishRoute = function() {
+        if(confirm("هل أنت متأكد من تصفير المسار وبدء يوم جديد؟ (سيعود الجميع للون الرمادي)")) {
+            customersData.forEach(c => {
+                updateStatusInFirebase(c.id, 'pending', '');
+            });
+            alert("تم تصفير المسار بنجاح وبداية يوم جديد!");
+        }
+    };
 </script>
-
 </body>
-
-</html> 
+</html>
