@@ -1,18 +1,15 @@
 {
-  "name": "Karni",
+  "name": "Karni Pro",
   "short_name": "Karni",
-  "start_url": "./",
+  "description": "نظام إدارة الكرني الذكي",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0F766E",
   "theme_color": "#0F766E",
   "icons": [
     {
-      "src": "IMG-20260531-WA0000.jpg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
-    },
-    {
-      "src": "IMG-20260531-WA0000.jpg",
+      "src": "icon-512.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
