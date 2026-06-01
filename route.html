@@ -7,24 +7,19 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
 body{background:#f5f7fa;padding:15px;padding-bottom:100px}
-
-.header{background:#0F766E;color:white;padding:25px;border-radius:25px;text-align:center;font-size:26px;font-weight:bold;margin-bottom:15px;box-shadow:0 4px 15px rgba(15,118,110,0.25)}
+.header{background:#0F766E;color:white;padding:25px;border-radius:25px;text-align:center;font-size:26px;font-weight:bold;margin-bottom:15px;position:relative}
 .back-btn{position:absolute;right:15px;top:20px;background:none;border:none;color:white;font-size:24px;cursor:pointer}
-
-.date-picker{background:white;padding:15px;border-radius:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px}
-.date-picker label{font-weight:bold;color:#334155;font-size:15px}
-.date-picker input{flex:1;padding:10px;border:2px solid #e2e8f0;border-radius:12px;font-size:16px;text-align:center}
-
+.date-picker{background:white;padding:15px;border-radius:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;justify-content:space-between}
+.date-picker label{font-weight:bold;color:#334155;font-size:16px}
+.date-picker input{padding:10px;border:2px solid #e2e8f0;border-radius:12px;font-size:16px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
 .stat-card{background:white;padding:20px 10px;border-radius:20px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.08)}
 .stat-number{font-size:32px;font-weight:bold;color:#0F766E;margin-bottom:5px}
 .stat-label{font-size:14px;color:#64748b;font-weight:500}
-
 .legend{display:flex;overflow:auto;gap:10px;padding:10px 0;margin-bottom:20px}
 .legend-item{background:white;padding:12px 18px;border-radius:15px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);white-space:nowrap;font-size:14px;font-weight:500;color:#334155}
 .dot{width:12px;height:12px;border-radius:50%}
 .gray{background:#94a3b8}.blue{background:#2563eb}.green{background:#16a34a}.yellow{background:#facc15}.orange{background:#f97316}
-
 .route-list{margin-top:15px}
 .route-card{background:white;padding:18px;border-radius:20px;margin-bottom:12px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
 .route-top{display:flex;align-items:center;gap:15px;margin-bottom:12px}
@@ -36,32 +31,29 @@ body{background:#f5f7fa;padding:15px;padding-bottom:100px}
 .route-number.comeback{background:#f97316}
 .route-info{flex:1}
 .route-name{font-size:20px;font-weight:bold;color:#1e293b;margin-bottom:4px}
-.route-balance{font-size:18px;font-weight:bold;color:#0F766E;display:flex;align-items:center;gap:5px}
-.route-status{margin-top:6px;font-weight:bold;font-size:14px;display:flex;align-items:center;gap:6px}
+.route-balance{font-size:18px;font-weight:bold;color:#0F766E}
+.route-status{margin-top:6px;font-weight:bold;font-size:14px}
 .status-pending{color:#94a3b8}.status-current{color:#2563eb}.status-visited{color:#16a34a}.status-closed{color:#facc15}.status-comeback{color:#f97316}
-
 .actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
 .actions button{border:none;padding:10px 12px;border-radius:12px;color:white;font-weight:bold;cursor:pointer;font-size:13px;flex:1;min-width:80px}
-.actions button:active{transform:scale(0.96)}
-.actions button:disabled{opacity:0.4;cursor:not-allowed}
+.actions button:disabled{opacity:0.4}
 .btn-gray{background:#cbd5e1;color:#475569}
 .btn-green{background:#16a34a}
 .btn-yellow{background:#facc15;color:#000}
 .btn-orange{background:#f97316}
-
 .finish-btn{width:100%;padding:20px;border:none;border-radius:20px;background:#16a34a;color:white;font-size:19px;font-weight:bold;margin-top:15px;box-shadow:0 4px 15px rgba(22,163,74,0.3);cursor:pointer}
-.finish-btn:active{transform:scale(0.98)}
-
-.no-route{text-align:center;padding:60px 20px;color:#999}
-.no-route-icon{font-size:60px;margin-bottom:15px}
+.no-route{text-align:center;padding:60px 20px;color:#999;font-size:18px}
+.debug{background:#fef3c7;border:2px dashed #f59e0b;padding:15px;border-radius:15px;margin-bottom:15px;font-size:13px;color:#92400e}
 </style>
 </head>
 <body>
 
-<div class="header" style="position:relative">
+<div class="header">
 <button class="back-btn" onclick="window.location.href='index.html'">⬅️</button>
-🗺️ Route Today
+Route Today 🗺️
 </div>
+
+<div class="debug" id="debugBox">جار التحميل...</div>
 
 <div class="date-picker">
 <label>📅 التاريخ:</label>
@@ -87,8 +79,6 @@ body{background:#f5f7fa;padding:15px;padding-bottom:100px}
 <div class="legend-item"><div class="dot gray"></div>Pending</div>
 <div class="legend-item"><div class="dot blue"></div>Current</div>
 <div class="legend-item"><div class="dot green"></div>Collected</div>
-<div class="legend-item"><div class="dot yellow"></div>Closed</div>
-<div class="legend-item"><div class="dot orange"></div>Come Back</div>
 </div>
 
 <div id="routeList" class="route-list"></div>
@@ -125,7 +115,9 @@ function getTodayDate(){
 }
 
 function normalizeDate(dateStr){
-    dateStr = (dateStr || '').toString().trim();
+    if(!dateStr) return '';
+    dateStr = dateStr.toString().trim();
+    // 03/06/2026 -> 2026-06-03
     if(dateStr.includes('/')){
         let parts = dateStr.split('/');
         return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
@@ -133,45 +125,63 @@ function normalizeDate(dateStr){
     return dateStr;
 }
 
-// حط تاريخ اليوم فـ input
 const today = getTodayDate();
 document.getElementById('dateInput').value = today;
 selectedDate = today;
 
+function debugLog(msg){
+    document.getElementById('debugBox').innerHTML += msg + '<br>';
+    console.log(msg);
+}
+
 loadCustomers();
 
-// منين تبدل التاريخ
 document.getElementById('dateInput').addEventListener('change', (e)=>{
     selectedDate = e.target.value;
+    document.getElementById('debugBox').innerHTML = '';
     loadCustomers();
 });
 
 function loadCustomers(){
+    debugLog('📅 التاريخ المحدد: ' + selectedDate);
+    debugLog('📅 تاريخ اليوم: ' + today);
+
     get(ref(db, 'customers')).then((snapshot)=>{
         allCustomers = [];
         routeCustomers = [];
+        let debugCount = 0;
 
         if(snapshot.exists()){
             snapshot.forEach(child => {
                 const data = child.val();
                 const amount = parseFloat(data.amount) || 0;
-                const payDate = normalizeDate(data.paymentDate);
+                const rawDate = data.paymentDate;
+                const payDate = normalizeDate(rawDate);
 
-                // القاعدة 1: المامحددش ليه تاريخ لا يظهر نهائياً
-                if(!payDate || amount <= 0) return;
+                debugCount++;
 
-                // القاعدة 2: جيب جميع الأشخاص اللي عندهم التاريخ المحدد
+                // شرط 1: المامحددش ليه تاريخ لا يظهر
+                if(!payDate){
+                    debugLog(`❌ ${data.name}: ماكاينش تاريخ`);
+                    return;
+                }
+                if(amount <= 0){
+                    debugLog(`❌ ${data.name}: المبلغ 0`);
+                    return;
+                }
+
+                // شرط 2: جيب جميع الأشخاص ديال التاريخ المحدد
                 if(payDate === selectedDate){
+                    debugLog(`✅ ${data.name}: مطابق - المبلغ ${amount} MAD`);
                     let status = data.routeStatus || 'pending';
                     allCustomers.push({
                         id: child.key,
                         name: data.name,
                         amount: amount,
-                        status: status,
-                        payDate: payDate
+                        status: status
                     });
 
-                    // القاعدة 3: غير اللي تاريخو = اليوم يدوز للمسار
+                    // شرط 3: غير اللي تاريخو = اليوم يدوز للمسار
                     if(payDate === today){
                         routeCustomers.push({
                             id: child.key,
@@ -180,23 +190,34 @@ function loadCustomers(){
                             status: status
                         });
                     }
+                }else{
+                    debugLog(`⏭️ ${data.name}: تاريخ مختلف ${payDate}`);
                 }
             });
 
-            // رتب المسار
+            debugLog(`<br>📊 النتيجة: ${allCustomers.length} زبون فالتاريخ، ${routeCustomers.length} فالمسار`);
+
+            if(allCustomers.length === 0){
+                debugLog(`⚠️ ما لقيت حتى شي زبون بتاريخ ${selectedDate}`);
+                debugLog(`💡 تأكد أن paymentDate فـ Firebase = ${selectedDate}`);
+            }
+
             routeCustomers.sort((a,b)=>{
                 const order = {visited: 1, current: 2, pending: 3, closed: 4, comeback: 5};
                 return order[a.status] - order[b.status];
             });
 
-            // دير أول واحد current إلا ما كاينش
             if(routeCustomers.length > 0 &&!routeCustomers.find(c => c.status === 'current')){
                 routeCustomers[0].status = 'current';
                 update(ref(db, 'customers/' + routeCustomers[0].id), {routeStatus: 'current'});
             }
 
             renderRoute();
+        }else{
+            debugLog('❌ ما كاينش حتى شي زبون فـ Firebase');
         }
+    }).catch(err=>{
+        debugLog('❌ خطأ فـ Firebase: ' + err.message);
     });
 }
 
@@ -207,18 +228,14 @@ let pending = 0;
 
 document.getElementById("totalCustomers").innerText = allCustomers.length;
 
-// إلا التاريخ المحدد ماشي اليوم → عرض فقط + ما يبانوش الأزرار
 let isToday = selectedDate === today;
 
 if(routeCustomers.length === 0){
-    html = `
-    <div class="no-route">
-        <div class="no-route-icon">📭</div>
-        <div style="font-size:18px;font-weight:bold;margin-bottom:8px">لا توجد زبناء</div>
-        <div style="font-size:14px">${isToday? 'لا يوجد زبناء لهذا اليوم' : 'اختر تاريخ اليوم لعرض المسار'}</div>
-    </div>
-    `;
+    html = `<div class="no-route">📭 لا توجد زبناء ${isToday? 'لهذا اليوم' : 'لهذا التاريخ'}</div>`;
+    document.getElementById("finishRouteBtn").style.display = 'none';
 }else{
+    document.getElementById("finishRouteBtn").style.display = isToday? 'block' : 'none';
+
     routeCustomers.forEach((item,index)=>{
         if(item.status==="visited") collected++;
         if(item.status==="pending" || item.status==="current") pending++;
@@ -258,9 +275,6 @@ if(routeCustomers.length === 0){
 document.getElementById("routeList").innerHTML = html;
 document.getElementById("collectedCount").innerText = collected;
 document.getElementById("pendingCount").innerText = pending;
-
-// خبي زر Finish إلا ماشي اليوم
-document.getElementById("finishRouteBtn").style.display = isToday? 'block' : 'none';
 }
 
 function setNextCurrent(){
@@ -300,7 +314,6 @@ window.markComeBack = function(index){
 let customer = routeCustomers[index];
 customer.status = "comeback";
 update(ref(db, 'customers/' + customer.id), {routeStatus: 'comeback'});
-
 routeCustomers.splice(index, 1);
 routeCustomers.push(customer);
 setNextCurrent();
