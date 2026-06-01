@@ -1,158 +1,1029 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بيانات الزبون</title>
-<style>
-body{
-  font-family: 'Tajawal', sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.card{
-  background: white;
-  padding: 40px;
-  border-radius: 25px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  max-width: 450px;
-  width: 100%;
-}
-h2{
-  color: #667eea;
-  margin-bottom: 25px;
-  text-align: center;
-}
-.info{
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 12px;
-  margin: 15px 0;
-  font-size: 16px;
-}
-label{
-  display: block;
-  margin-top: 20px;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #333;
-}
-input{
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 18px;
-  box-sizing: border-box;
-}
-input:focus{
-  border-color: #667eea;
-  outline: none;
-}
-.btn{
-  width: 100%;
-  padding: 18px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 15px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 25px;
-}
-.btn:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تفاصيل الزبون - Karni Pro</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --gray: #6b7280;
+            --light-gray: #f3f4f6;
+            --white: #ffffff;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 60px rgba(102,126,234,0.3);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            color: var(--dark);
+        }
+
+       .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--light-gray);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            padding-bottom: 120px;
+        }
+
+        /* Header */
+       .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 20px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+       .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+       .btn-back {
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+       .btn-back:active {
+            transform: scale(0.9);
+            background: rgba(255,255,255,0.3);
+        }
+
+       .header-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+       .firebase-status {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+       .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Profile Section */
+       .profile-section {
+            background: white;
+            padding: 35px 20px;
+            text-align: center;
+            margin-bottom: 15px;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+       .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+       .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            border: 5px solid white;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.25);
+            overflow: hidden;
+        }
+
+       .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+       .btn-camera {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 4px solid white;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+       .btn-camera:active {
+            transform: scale(0.85);
+        }
+
+       .customer-name {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+       .rating {
+            color: #fbbf24;
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            letter-spacing: 6px;
+        }
+
+       .customer-phone {
+            color: var(--gray);
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        /* Quick Actions */
+       .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+       .btn-quick {
+            padding: 16px;
+            border-radius: 18px;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+       .btn-call {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+       .btn-whatsapp {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            color: white;
+        }
+
+       .btn-quick:active {
+            transform: scale(0.94);
+        }
+
+        /* Edit Buttons */
+       .edit-buttons {
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+       .btn-edit {
+            padding: 18px 20px;
+            border-radius: 18px;
+            border: none;
+            background: white;
+            color: var(--primary);
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Cairo', sans-serif;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+
+       .btn-edit:active {
+            transform: scale(0.97);
+            background: var(--light-gray);
+        }
+
+        /* Stats Cards */
+       .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 0 20px;
+            margin-bottom: 25px;
+        }
+
+       .stat-card {
+            background: white;
+            padding: 22px 10px;
+            border-radius: 22px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+       .stat-card:active {
+            transform: scale(0.96);
+            border-color: var(--primary);
+        }
+
+       .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+       .stat-value {
+            font-size: 1.6rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+       .stat-depot { color: var(--success); }
+       .stat-paid { color: var(--danger); }
+       .stat-balance { color: var(--primary); }
+
+        /* Section Card */
+       .section {
+            background: white;
+            margin: 0 20px 20px;
+            padding: 25px 20px;
+            border-radius: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+       .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+       .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--dark);
+        }
+
+       .btn-add {
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+       .btn-add:active {
+            transform: scale(0.92);
+        }
+
+        /* Date Input */
+       .date-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            font-size: 1.05rem;
+            font-family: 'Cairo', sans-serif;
+            background: var(--light-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+       .date-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+        }
+
+        /* Transaction Item */
+       .transaction-item {
+            background: var(--light-gray);
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-right: 5px solid var(--primary);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+       .transaction-item:active {
+            transform: scale(0.98);
+        }
+
+       .transaction-item.taken {
+            border-right-color: var(--success);
+        }
+
+       .transaction-item.given {
+            border-right-color: var(--danger);
+        }
+
+       .trans-info {
+            flex: 1;
+        }
+
+       .trans-type {
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+       .trans-date {
+            font-size: 0.88rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+       .trans-amount {
+            font-size: 1.4rem;
+            font-weight: 900;
+        }
+
+       .trans-taken { color: var(--success); }
+       .trans-given { color: var(--danger); }
+
+       .btn-edit-trans {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        /* Notes */
+       .notes-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 18px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            font-size: 1.05rem;
+            font-family: 'Cairo', sans-serif;
+            resize: vertical;
+            background: var(--light-gray);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+       .notes-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+        }
+
+        /* Location Button */
+       .btn-location {
+            width: 100%;
+            padding: 18px;
+            border-radius: 18px;
+            border: none;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(239,68,68,0.3);
+        }
+
+       .btn-location:active {
+            transform: scale(0.96);
+        }
+
+        /* Modal */
+       .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+       .modal.show {
+            display: flex;
+        }
+
+       .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 35px 28px;
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.35s ease;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+       .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--dark);
+        }
+
+       .modal-input,.modal-select {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid var(--light-gray);
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            margin-bottom: 18px;
+            font-weight: 600;
+            background: var(--light-gray);
+            transition: all 0.3s;
+        }
+
+       .modal-input:focus,.modal-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+        }
+
+       .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+       .btn-modal {
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+        }
+
+       .btn-save {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+       .btn-cancel {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+
+       .btn-modal:active {
+            transform: scale(0.94);
+        }
+
+        /* Loading */
+       .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray);
+        }
+
+       .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--light-gray);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+       .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+       .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+           .stats-grid {
+                grid-template-columns: 1fr;
+            }
+           .quick-actions {
+                grid-template-columns: 1fr;
+            }
+           .customer-name {
+                font-size: 1.7rem;
+            }
+           .avatar {
+                width: 110px;
+                height: 110px;
+                font-size: 3.5rem;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            /* Optional dark mode styles */
+        }
+    </style>
 </head>
 <body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <button class="btn-back" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <div class="header-title">تفاصيل الزبون</div>
+                <div class="firebase-status">
+                    <span class="status-dot"></span>
+                    متصل
+                </div>
+            </div>
+        </div>
 
-<div class="card">
-  <h2>📝 تعديل بيانات الزبون</h2>
-  
-  <div class="info">
-    <strong>ID:</strong> <span id="id">تحميل...</span>
-  </div>
-  
-  <div class="info">
-    <strong>الاسم:</strong> <span id="name">تحميل...</span>
-  </div>
-  
-  <label>💰 الثمن/الدفع:</label>
-  <input type="number" id="price" placeholder="0">
-  
-  <button class="btn" onclick="save()">💾 حفظ التعديلات</button>
-</div>
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p style="font-size: 1.1rem; font-weight: 600;">كنجيب بيانات الزبون...</p>
+        </div>
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, get, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        <!-- Content -->
+        <div id="content" style="display: none;">
+            <!-- Profile -->
+            <div class="profile-section">
+                <div class="avatar-container">
+                    <div class="avatar" id="customerAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <button class="btn-camera" onclick="changeAvatar()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <h1 class="customer-name" id="customerName">...</h1>
+                <div class="rating" id="customerRating">★★★</div>
+                <div class="customer-phone">
+                    <i class="fas fa-phone"></i>
+                    <span id="customerPhone">-</span>
+                </div>
+            </div>
 
-// قاعدة البيانات ديال karni-b9b34 اللي فيها الزبناء
-const firebaseConfig = {
-  apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
-  authDomain: "karni-b9b34.firebaseapp.com",
-  databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "karni-b9b34",
-  storageBucket: "karni-b9b34.firebasestorage.app",
-  messagingSenderId: "489835094040",
-  appId: "1:489835094040:web:109e20fe7b65516903236d"
-};
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn-quick btn-call" onclick="callCustomer()">
+                    <i class="fas fa-phone"></i>
+                    اتصال
+                </button>
+                <button class="btn-quick btn-whatsapp" onclick="openWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                    واتساب
+                </button>
+            </div>
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+            <!-- Edit Buttons -->
+            <div class="edit-buttons">
+                <button class="btn-edit" onclick="showEditNameModal()">
+                    <i class="fas fa-pen"></i>
+                    تعديل الاسم
+                </button>
+                <button class="btn-edit" onclick="showEditPhoneModal()">
+                    <i class="fas fa-phone"></i>
+                    تعديل الهاتف
+                </button>
+                <button class="btn-edit" onclick="showEditLocationModal()">
+                    <i class="fas fa-map-marker-alt"></i>
+                    تعديل الموقع
+                </button>
+            </div>
 
-// كنستناو حتى يتحمل HTML كامل عاد كنخدمو
-document.addEventListener('DOMContentLoaded', async () => {
-  
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  
-  // تجربة باش نشوفو واش جاب الـ ID
-  alert('الـ ID اللي جاي من الرابط: ' + id);
-  
-  document.getElementById('id').innerText = id || 'ماكاينش ID';
-  
-  if(!id || id === 'null') {
-    alert('خطأ: الرابط ما فيهش ID ديال الزبون');
-    return;
-  }
-  
-  try {
-    const snap = await get(ref(db, 'customers/'+id));
-    if(snap.exists()){
-      const c = snap.val();
-      document.getElementById('name').innerText = c.name || 'بلا اسم';
-      document.getElementById('price').value = c.depot || 0;
-    } else {
-      alert('الزبون ما لقيناه فـ قاعدة البيانات karni-b9b34');
-      console.log('كنقلب على:', 'customers/'+id);
-    }
-  } catch(err) {
-    alert('خطأ فالاتصال: ' + err.message);
-  }
-});
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card
+                         // ========== SAVE FUNCTIONS ==========
 
-// دالة الحفظ
-window.save = async () => {
-  const id = new URLSearchParams(window.location.search).get('id');
-  const newPrice = parseFloat(document.getElementById('price').value) || 0;
-  
-  try {
-    await update(ref(db, 'customers/'+id), {depot: newPrice});
-    alert('تم تعديل الثمن بنجاح ✅');
-    window.location.href = 'index.html';
-  } catch(err) {
-    alert('خطأ فالحفظ: ' + err.message);
-  }
-}
-</script>
+        // Save Name
+        function saveName() {
+            const newName = document.getElementById('newName').value.trim();
+            if (!newName) {
+                alert('المرجو إدخال الاسم');
+                return;
+            }
 
+            database.ref('customers/' + customerId).update({
+                name: newName,
+                updatedAt: new Date().toISOString()
+            }).then(() => {
+                showToast('✅ تم تعديل الاسم بنجاح');
+                closeModal('editNameModal');
+            }).catch(error => {
+                alert('خطأ في الحفظ: ' + error.message);
+            });
+        }
+
+        // Save Phone
+        function savePhone() {
+            const newPhone = document.getElementById('newPhone').value.trim();
+
+            database.ref('customers/' + customerId).update({
+                phone: newPhone,
+                updatedAt: new Date().toISOString()
+            }).then(() => {
+                showToast('✅ تم تعديل الهاتف بنجاح');
+                closeModal('editPhoneModal');
+            }).catch(error => {
+                alert('خطأ في الحفظ: ' + error.message);
+            });
+        }
+
+        // Save Location
+        function saveLocation() {
+            const newLocation = document.getElementById('newLocation').value.trim();
+
+            database.ref('customers/' + customerId).update({
+                location: newLocation,
+                updatedAt: new Date().toISOString()
+            }).then(() => {
+                showToast('✅ تم حفظ الموقع بنجاح');
+                closeModal('editLocationModal');
+            }).catch(error => {
+                alert('خطأ في الحفظ: ' + error.message);
+            });
+        }
+
+        // Save Notes
+        function saveNotes() {
+            const notes = document.getElementById('customerNotes').value;
+
+            database.ref('customers/' + customerId).update({
+                notes: notes,
+                updatedAt: new Date().toISOString()
+            }).then(() => {
+                showToast('✅ تم حفظ الملاحظات');
+            }).catch(error => {
+                alert('خطأ في الحفظ: ' + error.message);
+            });
+        }
+
+        // Update Payment Date
+        function updatePaymentDate() {
+            const newDate = document.getElementById('paymentDate').value;
+
+            database.ref('customers/' + customerId).update({
+                paymentDate: newDate,
+                updatedAt: new Date().toISOString()
+            }).then(() => {
+                showToast('📅 تم تحديث تاريخ الاستحقاق');
+            }).catch(error => {
+                alert('خطأ في التحديث: ' + error.message);
+            });
+        }
+
+        // ========== TRANSACTION FUNCTIONS ==========
+
+        // Save New Transaction
+        function saveTransaction() {
+            const type = document.getElementById('transType').value;
+            const amount = parseFloat(document.getElementById('transAmount').value);
+            const date = document.getElementById('transDate').value;
+
+            if (!amount || amount <= 0) {
+                alert('المرجو إدخال مبلغ صحيح');
+                return;
+            }
+
+            if (!date) {
+                alert('المرجو اختيار التاريخ');
+                return;
+            }
+
+            const newTransaction = {
+                type: type,
+                amount: amount,
+                date: date,
+                createdAt: new Date().toISOString()
+            };
+
+            transactions.push(newTransaction);
+
+            database.ref('customers/' + customerId + '/transactions').set(transactions)
+           .then(() => {
+                showToast('✅ تمت إضافة العملية بنجاح');
+                closeModal('addTransactionModal');
+                calculateTotals();
+                displayTransactions();
+            }).catch(error => {
+                alert('خطأ في الحفظ: ' + error.message);
+            });
+        }
+
+        // Update Transaction
+        function updateTransaction() {
+            if (editingTransactionIndex === null) return;
+
+            const type = document.getElementById('editTransType').value;
+            const amount = parseFloat(document.getElementById('editTransAmount').value);
+            const date = document.getElementById('editTransDate').value;
+
+            if (!amount || amount <= 0) {
+                alert('المرجو إدخال مبلغ صحيح');
+                return;
+            }
+
+            transactions[editingTransactionIndex] = {
+               ...transactions[editingTransactionIndex],
+                type: type,
+                amount: amount,
+                date: date,
+                updatedAt: new Date().toISOString()
+            };
+
+            database.ref('customers/' + customerId + '/transactions').set(transactions)
+           .then(() => {
+                showToast('✅ تم تعديل العملية');
+                closeModal('editTransactionModal');
+                editingTransactionIndex = null;
+                calculateTotals();
+                displayTransactions();
+            }).catch(error => {
+                alert('خطأ في التعديل: ' + error.message);
+            });
+        }
+
+        // Delete Transaction
+        function deleteTransaction(index) {
+            if (confirm('متأكدة بغيتي تحذفي هاد العملية؟')) {
+                transactions.splice(index, 1);
+
+                database.ref('customers/' + customerId + '/transactions').set(transactions)
+               .then(() => {
+                    showToast('🗑️ تم حذف العملية');
+                    calculateTotals();
+                    displayTransactions();
+                }).catch(error => {
+                    alert('خطأ في الحذف: ' + error.message);
+                });
+            }
+        }
+
+        // ========== QUICK ACTIONS ==========
+
+        // Call Customer
+        function callCustomer() {
+            const phone = customerData.phone;
+            if (phone && phone!== '-') {
+                window.location.href = 'tel:' + phone;
+            } else {
+                alert('لا يوجد رقم هاتف مسجل لهاد الزبون');
+            }
+        }
+
+        // Open WhatsApp
+        function openWhatsApp() {
+            const phone = customerData.phone;
+            if (phone && phone!== '-') {
+                // تنظيف الرقم
+                let cleanPhone = phone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) {
+                    cleanPhone = '212' + cleanPhone.substring(1);
+                } else if (!cleanPhone.startsWith('212')) {
+                    cleanPhone = '212' + cleanPhone;
+                }
+                window.open('https://wa.me/' + cleanPhone, '_blank');
+            } else {
+                alert('لا يوجد رقم هاتف مسجل لهاد الزبون');
+            }
+        }
+
+        // Open Location on Map
+        function openLocation() {
+            const location = customerData.location;
+            if (location && location.trim()!== '') {
+                // إذا كان رابط كامل
+                if (location.startsWith('http')) {
+                    window.open(location, '_blank');
+                } else {
+                    // إذا كان إحداثيات
+                    window.open('https://www.google.com/maps?q=' + location, '_blank');
+                }
+            } else {
+                alert('لا يوجد موقع مسجل لهاد الزبون\nاضغطي "تعديل الموقع" لإضافته');
+            }
+        }
+
+        // Change Avatar - رفع صورة
+        function changeAvatar() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64 = event.target.result;
+
+                        database.ref('customers/' + customerId).update({
+                            avatar: base64,
+                            updatedAt: new Date().toISOString()
+                        }).then(() => {
+                            document.getElementById('customerAvatar').innerHTML = `<img src="${base64}" alt="avatar">`;
+                            showToast('📷 تم تغيير الصورة');
+                        }).catch(error => {
+                            alert('خطأ في رفع الصورة: ' + error.message);
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // ========== TOAST NOTIFICATION ==========
+        function showToast(message) {
+            // إنشاء toast إذا ما كانش موجود
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.style.cssText = `
+                    position: fixed;
+                    top: 80px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(-150px);
+                    background: white;
+                    padding: 16px 24px;
+                    border-radius: 15px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                    font-weight: 700;
+                    z-index: 2000;
+                    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                    font-size: 1.05rem;
+                `;
+                document.body.appendChild(toast);
+            }
+
+            toast.textContent = message;
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-50%) translateY(-150px)';
+            }, 3000);
+        }
+
+        // ========== KEYBOARD SHORTCUTS ==========
+        document.addEventListener('keydown', function(e) {
+            // ESC لإغلاق المودالات
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.show').forEach(modal => {
+                    modal.classList.remove('show');
+                });
+            }
+        });
+
+        // ========== PREVENT ZOOM ON INPUT FOCUS MOBILE ==========
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Load on start
+        window.addEventListener('load', loadCustomerData);
+    </script>
 </body>
-</html>
+</html> 
