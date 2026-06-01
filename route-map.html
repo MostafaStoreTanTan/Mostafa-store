@@ -3,54 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Route Map</title>
+<title>Route List</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
-body{background:#f0f4f8}
+body{background:#f5f5f5;padding:15px;padding-bottom:120px}
 
-.header{background:#0F766E;color:white;padding:18px 20px;text-align:center;font-size:20px;font-weight:bold;display:flex;align-items:center;justify-content:space-between}
-.header button{background:white;border:none;width:36px;height:36px;border-radius:10px;font-size:20px;cursor:pointer;color:#0F766E}
+.header{background:#0F766E;color:white;padding:18px 20px;border-radius:25px;text-align:center;font-size:22px;font-weight:bold;margin-bottom:18px;position:relative;display:flex;align-items:center;justify-content:space-between}
+.back-btn{background:white;width:40px;height:40px;border-radius:12px;border:none;font-size:22px;cursor:pointer;color:#0F766E;display:flex;align-items:center;justify-content:center}
+.map-btn{background:white;color:#0F766E;border:none;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:bold;cursor:pointer}
+.reset-btn{background:#ef4444;color:white;border:none;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:bold;cursor:pointer}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px;background:white}
-.stat-card{text-align:center;padding:10px}
-.stat-number{font-size:24px;font-weight:bold;color:#0F766E}
-.stat-label{font-size:12px;color:#64748b}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px}
+.stat-card{background:white;padding:18px 8px;border-radius:18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.stat-number{font-size:28px;font-weight:bold;color:#0F766E;margin-bottom:4px}
+.stat-label{font-size:13px;color:#6b7280}
 
-.map-container{position:relative;width:100%;height:70vh;background:#e8f0f7;overflow:hidden}
-.map-bg{position:absolute;width:100%;height:100%;background-image:radial-gradient(#d1d5db 1px, transparent 1px);background-size:30px 30px;opacity:0.3}
+.legend{display:flex;justify-content:space-around;margin:15px 0 20px;font-size:12px;color:#6b7280;flex-wrap:wrap;gap:8px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend-dot{width:12px;height:12px;border-radius:50%}
 
-.route-path{position:absolute;top:0;left:0;width:100%;height:100%}
-.route-path svg{width:100%;height:100%}
+.add-box{background:white;padding:20px;border-radius:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.add-box input{width:100%;padding:16px;border:2px solid #e5e7eb;border-radius:14px;font-size:16px;text-align:right;background:#f9fafb}
+.add-box input:focus{border-color:#0F766E;outline:none;background:white}
+.add-btn{width:100%;padding:16px;margin-top:12px;border:none;border-radius:14px;background:#0F766E;color:white;font-size:17px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 
-.point{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;z-index:10}
-.point-label{background:white;padding:8px 12px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.15);font-size:14px;white-space:nowrap}
-.point-label.name{font-weight:bold;color:#1e293b}
-.point-label.status{font-size:12px;margin-top:2px}
-.point-label.visited.status{color:#16a34a}
-.point-label.current.status{color:#2563eb}
-.point-label.pending.status{color:#6b7280}
-.point-label.closed.status{color:#1f2937}
-.point-label.postponed.status{color:#f97316}
+.route-card{background:white;padding:16px;border-radius:20px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px;position:relative;border-right:5px solid transparent;transition:0.2s;cursor:grab}
+.route-card.dragging{opacity:0.5;transform:scale(0.98)}
+.route-card.current{border-right-color:#2563eb}
+.route-card.visited{border-right-color:#9ca3af;opacity:0.7}
+.route-card.closed{border-right-color:#1f2937;opacity:0.6}
+.route-card.closed-note{border-right-color:#dc2626}
+.route-card.postponed{border-right-color:#f97316}
 
-.point-dot{width:36px;height:36px;border-radius:50%;color:white;font-weight:bold;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid white;box-shadow:0 3px 8px rgba(0,0,0,.2)}
-.point-dot.visited{background:#16a34a}
-.point-dot.current{background:#2563eb}
-.point-dot.pending{background:#9ca3af}
-.point-dot.closed{background:#1f2937}
-.point-dot.closed-note{background:#dc2626}
-.point-dot.postponed{background:#f97316}
+.drag-handle{font-size:24px;color:#d1d5db;cursor:grab;padding:5px;user-select:none}
+.drag-handle:active{cursor:grabbing}
 
-.add-box{position:fixed;bottom:0;left:0;right:0;background:white;padding:15px;border-radius:20px 20px 0 0;box-shadow:0 -4px 15px rgba(0,0,0,.1)}
-.add-box input{width:100%;padding:14px;border:2px solid #e5e7eb;border-radius:12px;font-size:16px;text-align:right}
-.add-btn{width:100%;padding:14px;margin-top:10px;border:none;border-radius:12px;background:#0F766E;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+.route-number{width:50px;height:50px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;flex-shrink:0}
+.route-number.visited{background:#9ca3af}
+.route-number.closed{background:#1f2937}
+.route-number.closed-note{background:#dc2626}
+.route-number.postponed{background:#f97316}
+
+.route-info{flex:1;text-align:right}
+.route-name{font-size:18px;font-weight:bold;color:#1f2937;margin-bottom:3px}
+.route-status{font-size:13px;color:#2563eb;margin-bottom:8px}
+.route-status.visited{color:#9ca3af}
+.route-status.closed{color:#1f2937}
+.route-status.closed-note{color:#dc2626}
+.route-status.postponed{color:#f97316}
+.route-note{font-size:12px;color:#dc2626;margin-top:4px;display:flex;align-items:center;gap:5px}
+
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.actions button{padding:7px 10px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:bold;white-space:nowrap}
+.btn-done{background:#16a34a;color:white}
+.btn-closed{background:#1f2937;color:white}
+.btn-note{background:#dc2626;color:white}
+.btn-postpone{background:#f97316;color:white}
+.btn-delete{background:#fee2e2;color:#ef4444;padding:7px 10px}
+
+.clear-btn{width:100%;padding:18px;border:none;border-radius:18px;background:#ef4444;color:white;font-size:18px;font-weight:bold;margin-top:25px}
+
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#16a34a;color:white;padding:12px 24px;border-radius:12px;z-index:999;font-weight:bold;box-shadow:0 4px 12px rgba(22,163,74,0.3)}
 </style>
 </head>
 <body>
 
 <div class="header">
-<button onclick="window.location.href='index.html'">⬅️</button>
-🗺️ Route
-<button onclick="toggleView()">📋</button>
+<button class="back-btn" onclick="window.location.href='route.html'">🗺️</button>
+📋 Route
+<button class="reset-btn" onclick="resetRoute()">إعادة تعيين</button>
 </div>
 
 <div class="stats">
@@ -72,14 +93,12 @@ body{background:#f0f4f8}
 </div>
 </div>
 
-<div class="map-container" id="mapContainer">
-<div class="map-bg"></div>
-<div class="route-path">
-<svg>
-<path id="routePath" fill="none" stroke="#374151" stroke-width="8" stroke-dasharray="10 8" stroke-linecap="round"/>
-</svg>
-</div>
-<div id="pointsContainer"></div>
+<div class="legend">
+<span><div class="legend-dot" style="background:#f97316"></div> Postponed</span>
+<span><div class="legend-dot" style="background:#dc2626"></div> Note</span>
+<span><div class="legend-dot" style="background:#1f2937"></div> Closed</span>
+<span><div class="legend-dot" style="background:#9ca3af"></div> Visited</span>
+<span><div class="legend-dot" style="background:#2563eb"></div> Current</span>
 </div>
 
 <div class="add-box">
@@ -87,9 +106,13 @@ body{background:#f0f4f8}
 <button class="add-btn" onclick="addCustomer()">➕ إضافة زبون</button>
 </div>
 
+<div id="routeList"></div>
+
+<button class="clear-btn" onclick="clearAll()">🗑️ مسح كل شيء</button>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
@@ -105,16 +128,31 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let routeList = [];
+let draggedItem = null;
 
 onValue(ref(db, 'routeManual'), (snapshot)=>{
     routeList = snapshot.exists()? snapshot.val() : [];
-    renderMap();
+    renderRoute();
 });
+
+function showToast(msg){
+    let toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(), 1800);
+}
+
+function saveToFirebase(){
+    set(ref(db, 'routeManual'), routeList).then(()=>{
+        showToast('✅ تم الحفظ');
+    });
+}
 
 window.addCustomer = function(){
     const nameInput = document.getElementById('nameInput');
     const name = nameInput.value.trim();
-    if(!name) return;
+    if(!name){ alert('كتب الاسم عاد'); return; }
 
     routeList.push({
         id: Date.now(),
@@ -122,7 +160,7 @@ window.addCustomer = function(){
         status: 'pending',
         note: ''
     });
-    set(ref(db, 'routeManual'), routeList);
+    saveToFirebase();
     nameInput.value = '';
 }
 
@@ -130,84 +168,147 @@ document.getElementById('nameInput').addEventListener('keypress', (e)=>{
     if(e.key === 'Enter') addCustomer();
 });
 
-window.toggleView = function(){
-    window.location.href = 'route.html';
+window.markDone = function(id){
+    let idx = routeList.findIndex(c => c.id === id);
+    if(idx!== -1){
+        routeList[idx].status = 'visited';
+        saveToFirebase();
+    }
 }
 
-// رسم الطريق المنحني + الدوائر
-function renderMap(){
-    const container = document.getElementById('pointsContainer');
-    const path = document.getElementById('routePath');
-    container.innerHTML = '';
+window.markClosed = function(id){
+    let idx = routeList.findIndex(c => c.id === id);
+    if(idx!== -1){
+        routeList[idx].status = 'closed';
+        routeList[idx].note = '';
+        saveToFirebase();
+    }
+}
 
-    let pending = 0, current = 0, visited = 0;
+window.addNote = function(id){
+    let note = prompt('اكتب الرسالة/الملاحظة:');
+    if(note){
+        let idx = routeList.findIndex(c => c.id === id);
+        if(idx!== -1){
+            routeList[idx].status = 'closed-note';
+            routeList[idx].note = note;
+            saveToFirebase();
+        }
+    }
+}
+
+window.postpone = function(id){
+    let idx = routeList.findIndex(c => c.id === id);
+    if(idx!== -1){
+        let customer = routeList.splice(idx, 1)[0];
+        customer.status = 'postponed';
+        routeList.push(customer);
+        saveToFirebase();
+    }
+}
+
+window.deleteCustomer = function(id){
+    if(confirm('مسح هاد الزبون؟')){
+        routeList = routeList.filter(c => c.id!== id);
+        saveToFirebase();
+    }
+}
+
+window.resetRoute = function(){
+    if(confirm('إعادة تعيين كلشي لـ pending؟')){
+        routeList.forEach(c => {
+            c.status = 'pending';
+            c.note = '';
+        });
+        saveToFirebase();
+    }
+}
+
+window.clearAll = function(){
+    if(confirm('⚠️ مسح كلشي؟')){
+        remove(ref(db, 'routeManual'));
+    }
+}
+
+function renderRoute(){
+    let html = '';
+    let pending = 0;
+    let current = 0;
+    let visited = 0;
 
     if(routeList.length === 0){
-        path.setAttribute('d', '');
-        document.getElementById('totalCount').innerText = 0;
-        return;
-    }
+        html = '<div style="text-align:center;padding:60px;color:#999">الليست خاوية</div>';
+    }else{
+        routeList.forEach((item, index)=>{
+            if(item.status === 'pending') pending++;
+            if(item.status === 'current') current++;
+            if(item.status === 'visited') visited++;
 
-    // حساب نقاط الطريق المنحني
-    let points = [];
-    let height = document.getElementById('mapContainer').offsetHeight;
-    let width = document.getElementById('mapContainer').offsetWidth;
+            if(pending > 0 && item.status === 'pending' && current === 0){
+                item.status = 'current';
+                current = 1;
+                pending--;
+            }
 
-    routeList.forEach((item, index)=>{
-        let y = 80 + (index * (height - 160) / Math.max(routeList.length - 1, 1));
-        let x = width/2 + Math.sin(index * 0.8) * (width * 0.25);
-        points.push({x, y});
-    });
+            let cardClass = item.status;
+            let numberClass = item.status;
+            let statusText = item.status === 'current'? 'Current' :
+                            item.status === 'visited'? 'Visited' :
+                            item.status === 'closed'? 'Closed' :
+                            item.status === 'closed-note'? 'Closed' :
+                            item.status === 'postponed'? 'Postponed' : 'Pending';
 
-    // رسم مسار SVG
-    if(points.length > 1){
-        let d = `M ${points[0].x} ${points[0].y}`;
-        for(let i = 1; i < points.length; i++){
-            let cpX = (points[i-1].x + points[i].x) / 2;
-            d += ` Q ${cpX} ${points[i-1].y}, ${points[i].x} ${points[i].y}`;
-        }
-        path.setAttribute('d', d);
-    }
-
-    // رسم النقط
-    routeList.forEach((item, index)=>{
-        if(item.status === 'pending') pending++;
-        if(item.status === 'current') current++;
-        if(item.status === 'visited') visited++;
-
-        if(pending > 0 && item.status === 'pending' && current === 0){
-            item.status = 'current';
-            current = 1;
-            pending--;
-        }
-
-        let point = points[index];
-        let statusText = item.status === 'current'? 'Current' :
-                        item.status === 'visited'? 'Visited' :
-                        item.status === 'closed'? 'Closed' :
-                        item.status === 'closed-note'? 'Closed' :
-                        item.status === 'postponed'? 'Postponed' : 'Pending';
-
-        let isLeft = index % 2 === 0; // مرة يمين مرة يسار
-
-        container.innerHTML += `
-        <div class="point" style="top:${point.y}px;left:${point.x}px;flex-direction:${isLeft?'row-reverse':'row'}">
-            <div class="point-dot ${item.status}">${index+1}</div>
-            <div class="point-label ${item.status}">
-                <div class="name">${item.name}</div>
-                <div class="status">${statusText}</div>
+            html += `
+            <div class="route-card ${cardClass}" draggable="true" data-index="${index}">
+                <div class="drag-handle">⋮</div>
+                <div class="route-number ${numberClass}">${index+1}</div>
+                <div class="route-info">
+                    <div class="route-name">${item.name}</div>
+                    <div class="route-status ${item.status}">${statusText}</div>
+                    ${item.note? `<div class="route-note">✏️ ${item.note}</div>` : ''}
+                    <div class="actions">
+                        ${item.status!== 'visited'? `<button class="btn-done" onclick="markDone(${item.id})">✅ تم</button>` : ''}
+                        <button class="btn-closed" onclick="markClosed(${item.id})">مسدود</button>
+                        <button class="btn-note" onclick="addNote(${item.id})">✏️ رسالة</button>
+                        <button class="btn-postpone" onclick="postpone(${item.id})">أجل</button>
+                        <button class="btn-delete" onclick="deleteCustomer(${item.id})">🗑️</button>
+                    </div>
+                </div>
             </div>
-        </div>
-        `;
-    });
+            `;
+        });
+    }
 
-    document.getElementById('totalCount').innerText = routeList.length;
-    document.getElementById('visitedCount').innerText = visited;
-    document.getElementById('currentCount').innerText = current;
+    document.getElementById('routeList').innerHTML = html;
     document.getElementById('pendingCount').innerText = pending;
-}
+    document.getElementById('currentCount').innerText = current;
+    document.getElementById('visitedCount').innerText = visited;
+    document.getElementById('totalCount').innerText = routeList.length;
 
-window.addEventListener('resize', renderMap);
+    // تفعيل السحب والإفلات
+    document.querySelectorAll('.route-card').forEach(card=>{
+        card.addEventListener('dragstart', e=>{
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+        });
+        card.addEventListener('dragend', e=>{
+            e.target.classList.remove('dragging');
+        });
+        card.addEventListener('dragover', e=>e.preventDefault());
+        card.addEventListener('drop', e=>{
+            e.preventDefault();
+            if(draggedItem && draggedItem!== e.currentTarget){
+                let fromIndex = parseInt(draggedItem.dataset.index);
+                let toIndex = parseInt(e.currentTarget.dataset.index);
+
+                let item = routeList.splice(fromIndex, 1)[0];
+                routeList.splice(toIndex, 0, item);
+
+                saveToFirebase();
+            }
+        });
+    });
+}
 </script>
 </body>
 </html>
