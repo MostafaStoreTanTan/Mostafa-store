@@ -1,122 +1,61 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karni Pro - الرئيسية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: #f8fafc; color: #0f172a; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; }
-        .header { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        
-        .add-box { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
-        .input-group { margin-bottom: 10px; text-align: right; }
-        .input-group label { font-size: 12px; font-weight: bold; color: #64748b; }
-        .input-field { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; outline: none; text-align: right; font-size: 14px; }
-        .input-field:focus { border-color: #14b8a6; }
-        .btn-add { width: 100%; background: #14b8a6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; margin-top: 5px; }
-        
-        .customer-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #14b8a6; }
-        .cust-info { text-align: right; }
-        .cust-name { font-weight: bold; font-size: 16px; color: #0f172a; }
-        .cust-amount { font-weight: 900; font-size: 15px; color: #0f766e; margin-top: 3px; }
-        
-        .btn-details { background: #2563eb; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
-        .no-data { text-align: center; color: #94a3b8; padding: 20px; font-size: 14px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تعديل الثمن</title>
+<style>
+body{font-family:Tajawal,sans-serif;background:#00a8ff;padding:30px}
+.card{background:white;border-radius:20px;padding:30px;max-width:400px;margin:0 auto}
+h2{text-align:center;color:#1d3557}
+input{width:100%;padding:15px;font-size:20px;border:2px solid #ddd;border-radius:12px;margin:15px 0;text-align:center}
+button{width:100%;padding:15px;background:#06d6a0;color:white;border:none;border-radius:12px;font-size:18px;font-weight:900;cursor:pointer}
+</style>
+<script type="importmap">{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js","firebase/database":"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"}}</script>
+<script type="module">
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, get, update } from 'firebase/database';
+
+// بيانات karni-b9b34 اللي فالصورة ديالك
+const app = initializeApp({
+apiKey: "AIzaSyC...حط_apiKey_ديالك_هنا",
+databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
+projectId: "karni-b9b34"
+});
+const db = getDatabase(app);
+
+const id = new URLSearchParams(window.location.search).get('id');
+document.getElementById && (document.getElementById('id').innerText = id);
+
+async function load(){
+const snap = await get(ref(db, 'customers/'+id));
+if(snap.exists()){
+const c = snap.val();
+document.getElementById('name').innerText = c.name;
+document.getElementById('price').value = c.depot || 0;
+} else {
+alert('الزبون ما لقيناه');
+}
+}
+
+window.save = async ()=>{
+const newPrice = parseFloat(document.getElementById('price').value);
+await update(ref(db, 'customers/'+id), {depot: newPrice});
+alert('تم تعديل الثمن ✅');
+window.location.href = 'index.html';
+}
+
+load();
+</script>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <h2>Karni Pro</h2>
-        <p style="font-size: 12px; margin-top: 5px;"><i class="fas fa-circle" style="color: #22c55e;"></i> متصل بـ Firebase</p>
-    </div>
-
-    <div class="add-box">
-        <h4 style="text-align: right; margin-bottom: 10px; color: #0f766e;">إضافة زبون جديد للتجربة</h4>
-        <div class="input-group">
-            <label>اسم الزبون</label>
-            <input type="text" id="newName" class="input-field" placeholder="مثال: محمد السوسي">
-        </div>
-        <div class="input-group">
-            <label>المبلغ الأولي (درهم)</label>
-            <input type="number" step="0.01" id="newAmount" class="input-field" placeholder="0.00">
-        </div>
-        <button class="btn-add" onclick="window.addNewCustomer()"><i class="fas fa-plus"></i> إضافة وحفظ بالسيرفر</button>
-    </div>
-
-    <h4 style="text-align: right; margin-bottom: 10px; color: #64748b;">قائمة الزبناء الحالية</h4>
-    <div id="customersList">
-        <div class="no-data">جاري جلب قائمة الزبناء...</div>
-    </div>
+<div class="card">
+<h2>تعديل الثمن فقط</h2>
+<p>ID: <b id="id">-</b></p>
+<p>الزبون: <b id="name">تحميل...</b></p>
+<input type="number" id="price" placeholder="الثمن">
+<button onclick="save()">حفظ الثمن</button>
+<button style="background:#666;margin-top:10px" onclick="history.back()">رجوع</button>
 </div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
-
-    // إعدادات قاعدة البيانات الخاصة بك
-    const firebaseConfig = { databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com" };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // جلب وعرض البيانات تلقائياً وفورياً عند أي تعديل
-    onValue(ref(db, 'customers'), (snapshot) => {
-        const listContainer = document.getElementById('customersList');
-        listContainer.innerHTML = "";
-
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            Object.keys(data).forEach(key => {
-                const customer = data[key];
-                const amount = parseFloat(customer.amount) || 0;
-
-                const card = document.createElement('div');
-                card.className = 'customer-card';
-                card.innerHTML = `
-                    <div class="cust-info">
-                        <div class="cust-name">${customer.name || 'زبون مجهول'}</div>
-                        <div class="cust-amount">${amount.toFixed(2)} درهم</div>
-                    </div>
-                    <button class="btn-details" onclick="window.location.href='person.html?id=${key}'">
-                        <i class="fas fa-user-edit"></i> التفاصيل
-                    </button>
-                `;
-                listContainer.appendChild(card);
-            });
-        } else {
-            listContainer.innerHTML = '<div class="no-data">لا يوجد أي زبناء مسجلين حالياً.</div>';
-        }
-    });
-
-    // دالة الإضافة السريعة للتجربة والتحقق من المزامنة
-    window.addNewCustomer = function() {
-        const nameInput = document.getElementById('newName');
-        const amountInput = document.getElementById('newAmount');
-
-        const name = nameInput.value.trim();
-        const amount = parseFloat(amountInput.value) || 0;
-
-        if (!name) {
-            alert("الرجاء إدخال اسم الزبون!");
-            return;
-        }
-
-        push(ref(db, 'customers'), {
-            name: name,
-            amount: amount,
-            routeStatus: 'pending',
-            routeReason: ''
-        }).then(() => {
-            nameInput.value = "";
-            amountInput.value = "";
-            alert("تمت إضافة الزبون بنجاح وسيظهر في القائمة فوراً!");
-        });
-    };
-</script>
 </body>
 </html>
