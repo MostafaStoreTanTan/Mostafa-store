@@ -2,127 +2,531 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karni Pro - تجربة الاتصال</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0f766e">
+    <title>Karni Pro - الإدارة المالية المتقدمة</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
-        body { font-family: 'Cairo', sans-serif; background: #f0fdfa; padding: 20px; text-align: center; color: #0f172a; }
-        .test-card { background: white; max-width: 400px; margin: 30px auto; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(15,118,110,0.15); border: 2px solid #ccfbf1; }
-        .status-badge { display: inline-block; padding: 6px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; font-size: 14px; }
-        .success { background: #dcfce7; color: #16a34a; }
-        .warning { background: #fef9c3; color: #ca8a04; }
-        .info-box { background: #f8fafc; padding: 12px; border-radius: 10px; margin: 10px 0; font-size: 14px; font-weight: bold; word-break: break-all; text-align: right; }
-        .btn-test { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-family: 'Cairo'; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
-        .btn-test:active { transform: scale(0.98); }
+        :root {
+            --primary: #0f766e;
+            --primary-light: #14b8a6;
+            --primary-dark: #115e59;
+            --gradient: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #2dd4bf 100%);
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow: 0 10px 30px rgba(15, 118, 110, 0.08);
+            --radius: 24px;
+            --radius-sm: 14px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Cairo', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 60px; line-height: 1.6; }
+
+        /* الهيدر العلوي المتطور */
+        .top-navbar { background: var(--gradient); padding: 35px 20px 35px; border-radius: 0 0 35px 35px; color: white; display: flex; align-items: center; gap: 15px; box-shadow: var(--shadow); position: relative; z-index: 10; }
+        .back-btn { background: rgba(255,255,255,0.25); border: none; width: 44px; height: 44px; border-radius: 16px; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); backdrop-filter: blur(5px); }
+        .back-btn:active { transform: scale(0.9); }
+        .nav-title { font-size: 22px; font-weight: 900; flex: 1; letter-spacing: -0.5px; }
+
+        /* منطقة الملف الشخصي */
+        .profile-container { max-width: 540px; margin: -25px auto 0; padding: 0 20px; position: relative; z-index: 20; }
+        .profile-card { background: var(--card); border-radius: var(--radius); padding: 30px 24px; text-align: center; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.8); }
+        
+        .avatar-wrapper { position: relative; width: 95px; height: 95px; margin: 0 auto 15px; }
+        .avatar-circle { width: 100%; height: 100%; background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 4px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; color: #0284c7; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        
+        .person-name { font-size: 26px; font-weight: 800; color: var(--text); margin-bottom: 4px; letter-spacing: -0.5px; }
+        
+        /* نظام النجوم التفاعلي المعقد */
+        .stars-rating { display: flex; justify-content: center; gap: 8px; margin: 10px 0 20px; }
+        .star { font-size: 24px; color: #cbd5e1; cursor: pointer; transition: var(--transition); }
+        .star.active { color: var(--warning); text-shadow: 0 2px 10px rgba(245, 158, 11, 0.4); animation: starPunch 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes starPunch { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
+
+        /* أزرار الاتصال الفوري */
+        .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+        .contact-link { text-decoration: none; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; color: white; transition: var(--transition); box-shadow: var(--shadow-sm); }
+        .contact-link.call { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+        .contact-link.whatsapp { background: linear-gradient(135deg, #16a34a, #15803d); }
+        .contact-link:active { transform: scale(0.96); opacity: 0.95; }
+        
+        .btn-edit-field { background: var(--bg); border: 1px solid #e2e8f0; color: var(--text-muted); width: 100%; padding: 12px; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); }
+        .btn-edit-field:hover { background: #f1f5f9; color: var(--text); }
+
+        /* شبكة الحسابات الثلاثية الاحترافية */
+        .financial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 25px 0; }
+        .fin-card { background: var(--card); border-radius: var(--radius); padding: 18px 12px; text-align: center; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.7); position: relative; overflow: hidden; }
+        .fin-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .fin-card.debt-card::before { background: var(--success); }
+        .fin-card.paid-card::before { background: var(--danger); }
+        .fin-card.balance-card::before { background: #2563eb; }
+        .fin-label { font-size: 13px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+        .fin-val { font-size: 16px; font-weight: 900; font-family: 'monospace', sans-serif; letter-spacing: -0.5px; }
+        .fin-val.debt { color: var(--success-dark); }
+        .fin-val.paid { color: var(--danger-dark); }
+        .fin-val.balance { color: #1d4ed8; }
+
+        /* لوحات الإدخال والتسجيل للمعامِلات */
+        .section-title { font-size: 18px; font-weight: 800; color: var(--text); margin: 30px 0 15px; text-align: right; display: flex; align-items: center; gap: 10px; }
+        .action-box { background: var(--card); border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
+        
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; text-align: right; }
+        .input-group label { font-size: 13px; font-weight: 800; color: var(--text-muted); }
+        .field-input { width: 100%; padding: 14px; border: 1.5px solid #e2e8f0; border-radius: 14px; font-size: 15px; font-weight: 600; outline: none; background: #f8fafc; color: var(--text); transition: var(--transition); }
+        .field-input:focus { border-color: var(--primary-light); background: white; box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1); }
+        
+        .btn-action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+        .btn-calc { border: none; padding: 16px; border-radius: 16px; font-weight: 800; font-size: 16px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: var(--transition); box-shadow: var(--shadow-sm); }
+        .btn-calc.give { background: linear-gradient(135deg, var(--success-dark), var(--success)); }
+        .btn-calc.take { background: linear-gradient(135deg, var(--danger-dark), var(--danger)); }
+        .btn-calc:active { transform: scale(0.96); filter: brightness(0.95); }
+
+        /* سجل كشف الحساب المتطور */
+        .logs-container { display: flex; flex-direction: column; gap: 12px; }
+        .log-item { background: var(--card); border-radius: 18px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.01); border-right: 6px solid #cbd5e1; transition: var(--transition); position: relative; }
+        .log-item.type-debt { border-right-color: var(--success); }
+        .log-item.type-pay { border-right-color: var(--danger); }
+        .log-info { text-align: right; flex: 1; padding-left: 15px; }
+        .log-type { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+        .log-item.type-debt .log-type { color: var(--success-dark); }
+        .log-item.type-pay .log-type { color: var(--danger-dark); }
+        .log-note { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
+        .log-date { font-size: 12px; color: #94a3b8; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        
+        .log-side { text-align: left; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .log-amount { font-size: 18px; font-weight: 900; font-family: 'monospace', sans-serif; }
+        .log-actions { display: flex; gap: 12px; }
+        .btn-log-action { background: #f1f5f9; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .btn-log-action.edit:hover { background: #e0f2fe; color: #0284c7; }
+        .btn-log-action.delete:hover { background: #fee2e2; color: var(--danger); }
+
+        /* نافذة المودال المنبثقة الشاملة */
+        .modal { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; transition: var(--transition); }
+        .modal.active { display: flex; }
+        .modal-content { background: white; width: 100%; max-width: 440px; border-radius: var(--radius); padding: 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); animation: modalZoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes modalZoom { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        .modal-title { font-size: 18px; font-weight: 900; margin-bottom: 20px; text-align: right; color: var(--text); display: flex; align-items: center; gap: 8px; }
+
+        /* شاشة التحميل الاستباقية الفاخرة */
+        .loader-screen { position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; font-weight: 800; color: var(--primary); font-size: 16px; transition: opacity 0.4s ease; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #ccfbf1; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(3000deg); } }
     </style>
 </head>
 <body>
 
-    <h2>📓 لوحة فحص المزامنة والـ ID</h2>
-    
-    <div class="test-card">
-        <div id="idBadge" class="status-badge">جاري فحص الرابط...</div>
-        
-        <div class="info-box">
-            <i class="fas fa-link" style="color: #0f766e;"></i> الـ ID المستخدم حالياً:
-            <p id="displayId" style="color: #2563eb; margin-top: 5px;">-</p>
-        </div>
-
-        <div class="info-box">
-            <i class="fas fa-user" style="color: #0f766e;"></i> اسم الزبون في قاعدة البيانات:
-            <p id="displayName" style="color: #0f766e; margin-top: 5px;">جاري جلب البيانات حياً...</p>
-        </div>
-
-        <div class="info-box">
-            <i class="fas fa-money-bill-wave" style="color: #16a34a;"></i> الدين الحالي المسجل له:
-            <p id="displayAmount" style="color: #16a34a; margin-top: 5px;">0.00 درهم</p>
-        </div>
-
-        <button class="btn-test" onclick="addTestDebt()">
-            <i class="fas fa-plus"></i> إضافة دين تجريبي (+50 درهم)
-        </button>
+    <div class="loader-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <span>مزامنة مشفّرة متقدمة مع Firebase...</span>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, onValue, update, push } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    <header class="top-navbar">
+        <button class="back-btn" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+        <h1 class="nav-title">إدارة حساب العميل المالي</h1>
+    </header>
 
-        // إعدادات الـ Firebase الخاصة بمشروعك الحالي
+    <div class="profile-container">
+        
+        <div class="profile-card">
+            <div class="avatar-wrapper">
+                <div class="avatar-circle" id="avatarLetter">?</div>
+            </div>
+            <h2 class="person-name" id="personName">جاري الاتصال بالسيرفر...</h2>
+            
+            <div class="stars-rating" id="ratingContainer">
+                <i class="fas fa-star star" data-value="1"></i>
+                <i class="fas fa-star star" data-value="2"></i>
+                <i class="fas fa-star star" data-value="3"></i>
+                <i class="fas fa-star star" data-value="4"></i>
+                <i class="fas fa-star star" data-value="5"></i>
+            </div>
+
+            <div class="contact-row">
+                <a href="#" id="callBtn" class="contact-link call"><i class="fas fa-phone-alt"></i> إتصال مباشر</a>
+                <a href="#" id="whatsappBtn" class="contact-link whatsapp"><i class="fab fa-whatsapp"></i> مراسلة واتساب</a>
+            </div>
+
+            <button class="btn-edit-field" onclick="openEditModal()">
+                <i class="fas fa-user-edit"></i> تعديل الهوية ورقم الهاتف
+            </button>
+        </div>
+
+        <div class="financial-grid">
+            <div class="fin-card debt-card">
+                <div class="fin-label">Depot (له)</div>
+                <div class="fin-val debt" id="totalDebt">0.00 MAD</div>
+            </div>
+            <div class="fin-card paid-card">
+                <div class="fin-label">Paid (منه)</div>
+                <div class="fin-val paid" id="totalPaid">0.00 MAD</div>
+            </div>
+            <div class="fin-card balance-card">
+                <div class="fin-label">Balance (الباقي)</div>
+                <div class="fin-val balance" id="totalBalance">0.00 MAD</div>
+            </div>
+        </div>
+
+        <h3 class="section-title"><i class="fas fa-plus-circle" style="color: var(--primary);"></i> تقييد معاملة مالية فورية</h3>
+        <div class="action-box">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>المبلغ المالي (درهم المغربي) *</label>
+                    <input type="number" step="0.01" class="field-input" id="transAmount" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>تاريخ المعاملة المعتمد *</label>
+                    <input type="date" class="field-input" id="transDate">
+                </div>
+            </div>
+            <div class="input-group" style="margin-bottom: 5px;">
+                <label>بيان الملاحظة والسلع المشتراة</label>
+                <input type="text" class="field-input" id="transNote" placeholder="أكتب تفاصيل السلع أو الدفعة هنا...">
+            </div>
+            <div class="btn-action-group">
+                <button class="btn-calc give" onclick="processTransaction('debt')">
+                    <i class="fas fa-cart-plus"></i> أخذ سلع (سلف/دين)
+                </button>
+                <button class="btn-calc take" onclick="processTransaction('pay')">
+                    <i class="fas fa-hand-holding-usd"></i> إعطاء مال (تسديد)
+                </button>
+            </div>
+        </div>
+
+        <h3 class="section-title"><i class="fas fa-file-invoice-dollar" style="color: var(--primary);"></i> كشف الحساب التاريخي المفصّل</h3>
+        <div class="logs-container" id="historyLogList"></div>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-title"><i class="fas fa-user-tag" style="color:var(--primary)"></i> تعديل بيانات العميل الأساسية</div>
+            <div class="input-group" style="margin-bottom: 14px;">
+                <label>الاسم الكامل المعتمد *</label>
+                <input type="text" class="field-input" id="editName">
+            </div>
+            <div class="input-group" style="margin-bottom: 14px;">
+                <label>رقم هاتف المحمول (مع رمز الدولة)</label>
+                <input type="tel" class="field-input" id="editPhone" placeholder="212600000000+">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px;">
+                <button class="btn-calc give" onclick="saveCustomerInfo()" style="padding: 12px; font-size:14px;">حفظ الهوية</button>
+                <button class="btn-calc take" onclick="closeModal('editModal')" style="padding: 12px; font-size:14px; background: #64748b;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="editTransactionModal">
+        <div class="modal-content">
+            <div class="modal-title"><i class="fas fa-edit" style="color:var(--warning)"></i> مراجعة وتعديل بيانات المعاملة السابقة</div>
+            <input type="hidden" id="modalTransId">
+            <input type="hidden" id="modalTransType">
+            <div class="input-row">
+                <div class="input-group">
+                    <label>المبلغ المعدل *</label>
+                    <input type="number" step="0.01" class="field-input" id="modalTransAmount">
+                </div>
+                <div class="input-group">
+                    <label>التاريخ المعدل المختار *</label>
+                    <input type="date" class="field-input" id="modalTransDate">
+                </div>
+            </div>
+            <div class="input-group" style="margin-bottom: 14px;">
+                <label>ملاحظة / بيان السلع المعدل</label>
+                <input type="text" class="field-input" id="modalTransNote">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px;">
+                <button class="btn-calc give" onclick="saveTransactionUpdate()" style="padding: 12px; font-size:14px; background: linear-gradient(135deg, var(--warning), #d97706)">حفظ التعديلات الماليّة</button>
+                <button class="btn-calc take" onclick="closeModal('editTransactionModal')" style="padding: 12px; font-size:14px; background: #64748b;">إلغاء الأمر</button>
+            </div>
+        </div>
+    </div>
+
+        <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+        import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+
+        // إعدادات مشروعك الحقيقي بالاعتماد على لوحة تحكمك لضبان قراءة زبائنك الحاليين
         const firebaseConfig = {
-            apiKey: "AIzaSyD5KnoOye-Ns7RNQq9KqGNSmakYydIoLAw",
-            authDomain: "my-store-4f430.firebaseapp.com",
-            databaseURL: "https://my-store-4f430-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "my-store-4f430",
-            storageBucket: "my-store-4f430.firebasestorage.app",
-            messagingSenderId: "674007434765",
-            appId: "1:674007434765:web:c4005d096ab86167cc3744"
+            apiKey: "AIzaSyBCVOOouLET3...", 
+            authDomain: "karni-b9b34.firebaseapp.com",
+            databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com",
+            projectId: "karni-b9b34",
+            storageBucket: "karni-b9b34.appspot.com",
+            messagingSenderId: "489835094040",
+            appId: "1:489835094040:web:dcb..."
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         let customerId = "";
 
-        // 1. قراءة وفحص الـ ID
-        const urlParams = new URLSearchParams(window.location.search);
-        customerId = urlParams.get('id');
+        // بدء إعدادات المستند البرمجي فور اكتمال البناء البصري للـ DOM
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('transDate').value = new Date().toISOString().split('T')[0];
 
-        const idBadge = document.getElementById('idBadge');
-        const displayId = document.getElementById('displayId');
+            // استخراج معرف الزبون الفريد من رابط URL المعطى من الصفحة الرئيسية index.html
+            const urlParams = new URLSearchParams(window.location.search);
+            customerId = urlParams.get('id');
 
-        if (customerId) {
-            // في حال تم فتح الصفحة من الـ index.html بشكل صحيح
-            idBadge.className = "status-badge success";
-            idBadge.innerHTML = `<i class="fas fa-check-circle"></i> تم استقبال الـ ID بنجاح من الصفحة الرئيسية`;
-            displayId.textContent = customerId;
-        } else {
-            // في حال فتحت الصفحة مباشرة للتجربة (تجاوز الخطأ أوتوماتيكياً)
-            customerId = "test_customer_123"; 
-            idBadge.className = "status-badge warning";
-            idBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> الرابط لا يحتوي على ID! تم تفعيل ID تجريبي للفحص`;
-            displayId.textContent = customerId + " (تجريبي)";
-        }
-
-        // 2. جلب ومراقبة بيانات هذا العميل حياً من Firebase
-        const customerRef = ref(db, `customers/${customerId}`);
-        onValue(customerRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                document.getElementById('displayName').textContent = data.name || "زبون بدون اسم";
-                document.getElementById('displayAmount').textContent = (data.amount || 0).toFixed(2) + " درهم";
-            } else {
-                // إذا كان الـ ID التجريبي أو المرسل غير موجود في السيرفر بعد
-                document.getElementById('displayName').textContent = "الزبون غير مسجل في السيرفر";
-                document.getElementById('displayAmount').textContent = "0.00 درهم";
+            // حماية وقائية ذكية: لتلافي تعطل الشاشة عند اختبار الملف مباشرة
+            if (!customerId) {
+                console.warn("لم يتم تمرير ID زبون حقيقي! تم تحويل النظام لـ كود فحص مؤقت لغرض الفحص.");
+                customerId = "test_customer_123";
             }
+
+            initCustomerLiveStream();
+            initStarsRatingSystem();
         });
 
-        // 3. دالة إضافة حركة تجريبية للتأكد من أن الإرسال للسيرفر يعمل
-        window.addTestDebt = function() {
-            const currentText = document.getElementById('displayAmount').textContent;
-            const currentAmount = parseFloat(currentText) || 0;
-            const newAmount = currentAmount + 50;
+        // تشغيل خط البث المباشر المستمر لبيانات الحساب من خوادم Firebase
+        function initCustomerLiveStream() {
+            const customerRef = ref(db, `customers/${customerId}`);
+            
+            onValue(customerRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    
+                    // تعبئة واجهات العرض النصية والأيقونات
+                    document.getElementById('personName').textContent = data.name || "زبون غير معرف الاسم";
+                    document.getElementById('avatarLetter').textContent = data.name ? data.name.trim().charAt(0).toUpperCase() : "?";
+                    
+                    // تنظيف أرقام الهواتف وتجهيزها لمفاتيح الاتصال الهاتفي والواتساب السريع
+                    const cleanPhone = data.phone ? data.phone.replace(/\s+/g, '') : "";
+                    document.getElementById('callBtn').href = `tel:${cleanPhone}`;
+                    document.getElementById('whatsappBtn').href = `https://wa.me/${cleanPhone}`;
+
+                    // تعبئة قيم التعديل المسبقة للمودال لسهولة الإدارة
+                    document.getElementById('editName').value = data.name || "";
+                    document.getElementById('editPhone').value = data.phone || "";
+
+                    // جلب وعرض النجوم التقييمية المسجلة للزبون في السيرفر
+                    applyStarsRating(data.rating || 0);
+
+                    // ترحيل ومعالجة البيانات المالية الرياضية وسجل المعاملات
+                    renderFinancialsAndLogs(data.transactions);
+                } else {
+                    // هيكل مالي نظيف وتأسيسي للزبائن الجدد
+                    document.getElementById('personName').textContent = "زبون تجريبي جديد للكرني";
+                    renderFinancialsAndLogs(null);
+                }
+                
+                // التخلص من شاشة التحميل بانسيابية مريحة للعين وبسرعة مناسبة للـ UI
+                const loader = document.getElementById('loadingScreen');
+                if (loader) {
+                    loader.style.opacity = "0";
+                    setTimeout(() => loader.style.display = "none", 400);
+                }
+            });
+        }
+
+                 // بناء سجل كشف الحساب التاريخي وإعادة إحتساب القيم الثلاثة بدقة كاملة
+        function renderFinancialsAndLogs(transactions) {
+            const listContainer = document.getElementById('historyLogList');
+            listContainer.innerHTML = "";
+
+            let totalDebtSum = 0; // مجموع السلع (له)
+            let totalPaidSum = 0; // مجموع المدفوع (منه)
+
+            if (!transactions) {
+                listContainer.innerHTML = `
+                    <div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-weight:700; background:white; border-radius:18px; border:1px dashed #cbd5e1;">
+                        <i class="fas fa-folder-open fa-2x" style="color:#cbd5e1; margin-bottom:10px; display:block;"></i>
+                        سجل الحساب المالي لهذا الزبون فارغ تماماً حالياً.
+                    </div>`;
+                updateDashboardDisplay(0, 0, 0);
+                return;
+            }
+
+            // تحويل الكائنات غير المنظمة الآتية من Firebase إلى مصفوفة مرتبة ومصنفة
+            const transList = Object.keys(transactions).map(key => ({ id: key, ...transactions[key] }));
+            
+            // ترتيب الحركات المالية تصاعدياً من الأحدث إلى الأقدم بناء على التاريخ المدخل
+            transList.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            transList.forEach(trans => {
+                const amt = parseFloat(trans.amount) || 0;
+                if (trans.type === 'debt') totalDebtSum += amt;
+                if (trans.type === 'pay') totalPaidSum += amt;
+
+                const item = document.createElement('div');
+                item.className = `log-item type-${trans.type}`;
+                item.innerHTML = `
+                    <div class="log-info">
+                        <div class="log-type">${trans.type === 'debt' ? 'أخذ سلع (دين / له)' : 'تسديد دفعة مالية (منه)'}</div>
+                        <div class="log-note">${trans.note || 'لم يتم كتابة بيان سلع'}</div>
+                        <div class="log-date"><i class="far fa-calendar-alt"></i> التاريخ المسجل: ${trans.date}</div>
+                    </div>
+                    <div class="log-side">
+                        <div class="log-amount" style="color: ${trans.type === 'debt' ? 'var(--success-dark)' : 'var(--danger-dark)'};">
+                            ${trans.type === 'debt' ? '+' : '-'}${amt.toFixed(2)} MAD
+                        </div>
+                        <div class="log-actions">
+                            <button class="btn-log-action edit" onclick="openEditTransactionModal('${trans.id}', ${amt}, '${trans.date}', '${trans.note || ''}', '${trans.type}')" title="تعديل العملية الماليّة">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-log-action delete" onclick="deleteTransaction('${trans.id}')" title="حذف العملية نهائياً">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+
+            // الحساب الصافي لبطاقة الباقي
+            const currentBalance = totalDebtSum - totalPaidSum;
+            updateDashboardDisplay(totalDebtSum, totalPaidSum, currentBalance);
+        }
+
+        // تحديث أرقام الشاشات العلوية وتنسيقها الرياضي
+        function updateDashboardDisplay(debt, paid, balance) {
+            document.getElementById('totalDebt').textContent = debt.toFixed(2) + " MAD";
+            document.getElementById('totalPaid').textContent = paid.toFixed(2) + " MAD";
+            document.getElementById('totalBalance').textContent = balance.toFixed(2) + " MAD";
+        }
+
+        // دالة إنشاء وإدخال حركة مالية جديدة بالكامل في السيرفر
+        window.processTransaction = function(type) {
+            const amtField = document.getElementById('transAmount');
+            const dateField = document.getElementById('transDate');
+            const noteField = document.getElementById('transNote');
+
+            const amount = parseFloat(amtField.value);
+            const date = dateField.value;
+            const note = noteField.value.trim();
+
+            if (isNaN(amount) || amount <= 0) { alert("خطأ: يرجى إدخال قيمة مبلغ مالي صحيحة وأكبر من الصفر!"); return; }
+            if (!date) { alert("خطأ: يرجى تحديد تاريخ صالح للمعاملة الماليّة!"); return; }
+
+            const newTransRef = push(ref(db, `customers/${customerId}/transactions`));
+            const updates = {};
+            
+            updates[`customers/${customerId}/transactions/${newTransRef.key}`] = {
+                amount: amount,
+                date: date,
+                note: note,
+                type: type,
+                timestamp: Date.now()
+            };
+
+            // احتساب التزامن السريع لإجمالي المبلغ المالي المستحق لتحديث الكارت في الواجهة الرئيسية index.html
+            const currentTotalBalance = parseFloat(document.getElementById('totalBalance').textContent) || 0;
+            const calculatedNewBalance = type === 'debt' ? (currentTotalBalance + amount) : (currentTotalBalance - amount);
+            
+            updates[`customers/${customerId}/amount`] = calculatedNewBalance >= 0 ? calculatedNewBalance : 0;
+            updates[`customers/${customerId}/date`] = date; 
+
+            update(ref(db), updates)
+                .then(() => {
+                    amtField.value = "";
+                    noteField.value = "";
+                    alert("تم تقييد المعاملة ومزامنتها السحابية الحية بنجاح واحتساب الأرصدة.");
+                })
+                .catch(err => alert("حدث خطأ في الاتصال بالخادم السحابي: " + err.message));
+        };
+
+        // 🟢 ميزة التعديل المتقدم الشامل (تحديث التاريخ والمبلغ المالي والبيانات السابقة)
+        window.openEditTransactionModal = function(id, amount, date, note, type) {
+            document.getElementById('modalTransId').value = id;
+            document.getElementById('modalTransType').value = type;
+            document.getElementById('modalTransAmount').value = amount;
+            document.getElementById('modalTransDate').value = date;
+            document.getElementById('modalTransNote').value = note;
+            
+            document.getElementById('editTransactionModal').classList.add('active');
+        };
+
+        window.saveTransactionUpdate = function() {
+            const transId = document.getElementById('modalTransId').value;
+            const transType = document.getElementById('modalTransType').value;
+            const updatedAmount = parseFloat(document.getElementById('modalTransAmount').value);
+            const updatedDate = document.getElementById('modalTransDate').value;
+            const updatedNote = document.getElementById('modalTransNote').value.trim();
+
+            if (isNaN(updatedAmount) || updatedAmount <= 0) { alert("يرجى كتابة مبلغ صحيح!"); return; }
+            if (!updatedDate) { alert("التاريخ مطلوب لتسجيل الدورة الماليّة!"); return; }
 
             const updates = {};
-            // تحديث المبلغ الإجمالي للزبون
-            updates[`customers/${customerId}/amount`] = newAmount;
-            updates[`customers/${customerId}/name`] = document.getElementById('displayName').textContent === "الزبون غير مسجل في السيرفر" ? "زبون تجريبي جديد" : document.getElementById('displayName').textContent;
-            
-            // إضافة الحركة في سجل المعاملات التاريخي ليتوافق مع كود الـ 1500 سطر
-            const transRef = push(ref(db, `customers/${customerId}/transactions`));
-            updates[`customers/${customerId}/transactions/${transRef.key}`] = {
-                amount: 50,
-                date: new Date().toISOString().split('T')[0],
-                note: "دين تجريبي فحص الاتصال",
-                type: "debt",
+            // تحديث بيانات الحركة الداخلية الفردية بما فيها التاريخ المختار الجديد
+            updates[`customers/${customerId}/transactions/${transId}`] = {
+                amount: updatedAmount,
+                date: updatedDate,
+                note: updatedNote,
+                type: transType,
                 timestamp: Date.now()
             };
 
             update(ref(db), updates)
-                .then(() => alert("ممتاز! تم تحديث البيانات وإرسالها إلى Firebase بنجاح!"))
-                .catch(err => alert("فشل الإرسال: " + err.message));
+                .then(() => {
+                    closeModal('editTransactionModal');
+                    // بعد التحديث السحابي المباشر، سيعيد الـ Realtime SDK استدعاء الموازين الرياضية وإعادة تصفية كرت العميل الإجمالي أوتوماتيكياً
+                    alert("تم تعديل بيانات الحركة المالية وتاريخها بنجاح، وجاري تحديث الرصيد الكلي.");
+                })
+                .catch(err => alert("فشل الحفظ المعدل: " + err.message));
+        };
+
+        // دالة حذف معاملة مالية سابقة وإسقاط حساباتها الفورية
+        window.deleteTransaction = function(transId) {
+            if (confirm("تحذير حاسم: هل أنت متأكد تماماً من حذف هذه المعاملة من السجل بشكل نهائي؟ سيقوم النظام بإعادة احتساب كامل المبالغ المستحقة.")) {
+                remove(ref(db, `customers/${customerId}/transactions/${transId}`))
+                    .then(() => alert("تمت إزالة المعاملة المالية من كشف الحساب وإعادة تنظيم القيود المتبقية."));
+            }
+        };
+
+        // نظام التحكم المستقر بنقاط التقييم الجماهيري للزبون
+        function initStarsRatingSystem() {
+            document.querySelectorAll('#ratingContainer .star').forEach(star => {
+                star.addEventListener('click', function() {
+                    const ratingVal = parseInt(this.getAttribute('data-value'));
+                    update(ref(db), { [`customers/${customerId}/rating`]: ratingVal })
+                        .then(() => applyStarsRating(ratingVal));
+                });
+            });
+        }
+
+        function applyStarsRating(rating) {
+            document.querySelectorAll('#ratingContainer .star').forEach(star => {
+                const val = parseInt(star.getAttribute('data-value'));
+                star.className = val <= rating ? "fas fa-star star active" : "fas fa-star star";
+            });
+        }
+
+        // لوحة إغلاق النوافذ المنبثقة
+        window.closeModal = function(modalId) { 
+            document.getElementById(modalId).classList.remove('active'); 
+        };
+
+        window.openEditModal = function() { 
+            document.getElementById('editModal').classList.add('active'); 
+        };
+
+        // حفظ بيانات الهوية الشخصية المحدثة للزبون
+        window.saveCustomerInfo = function() {
+            const name = document.getElementById('editName').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            if (!name) { alert("الاسم الكامل حقل إجباري لتفادي ضياع الحسابات!"); return; }
+
+            update(ref(db), {
+                [`customers/${customerId}/name`]: name,
+                [`customers/${customerId}/phone`]: phone
+            }).then(() => { closeModal('editModal'); alert("تم حفظ تعديل بيانات هوية العميل حياً في السيرفر."); });
         };
     </script>
 </body>
 </html>
+   
