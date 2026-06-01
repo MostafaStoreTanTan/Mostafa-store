@@ -8,162 +8,40 @@
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
     body{background:#f5f7fa;min-height:100vh}
 
-  .header{
-        background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-        padding:30px 20px 60px;
-        border-radius:0 0 30px 30px;
-        box-shadow:0 4px 20px rgba(0,184,148,0.3);
-        position:relative;
-    }
-  .header h1{
-        color:white;
-        font-size:28px;
-        text-align:center;
-        margin-bottom:10px;
-    }
-  .back-btn{
-        position:absolute;
-        top:20px;
-        right:20px;
-        width:45px;
-        height:45px;
-        border-radius:15px;
-        background:rgba(255,255,255,0.2);
-        border:none;
-        color:white;
-        font-size:22px;
-        cursor:pointer;
-        backdrop-filter:blur(10px);
-    }
-  .back-btn:active{transform:scale(0.95)}
+ .header{background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);padding:30px 20px 60px;border-radius:0 0 30px 30px;box-shadow:0 4px 20px rgba(0,184,148,0.3);position:relative}
+ .header h1{color:white;font-size:28px;text-align:center;margin-bottom:10px}
+ .back-btn{position:absolute;top:20px;right:20px;width:45px;height:45px;border-radius:15px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:22px;cursor:pointer;backdrop-filter:blur(10px)}
+ .back-btn:active{transform:scale(0.95)}
+ .container{padding:20px;margin-top:-40px;position:relative;z-index:2}
+ .card{background:white;border-radius:25px;padding:25px;margin-bottom:15px;box-shadow:0 4px 15px rgba(0,0,0,0.08);animation:slideUp 0.4s ease}
+   @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+ .avatar{width:80px;height:80px;border-radius:25px;background:linear-gradient(135deg, #00b894, #00cec9);color:white;font-size:36px;font-weight:bold;display:flex;align-items:center;justify-content:center;margin:0 auto 15px}
+ .name{text-align:center;font-size:24px;font-weight:bold;color:#2d3436;margin-bottom:5px}
+ .phone{text-align:center;color:#636e72;font-size:16px;margin-bottom:20px}
+ .total-box{background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);color:white;padding:20px;border-radius:20px;text-align:center;margin-bottom:20px}
+ .total-label{font-size:14px;opacity:0.9;margin-bottom:5px}
+ .total-value{font-size:32px;font-weight:bold}
+ .label{display:block;font-weight:bold;color:#2d3436;margin:15px 0 8px;font-size:15px}
+ .input{width:100%;padding:16px;border:2px solid #dfe6e9;border-radius:15px;font-size:18px;background:#f8f9fa;transition:0.3s}
+ .input:focus{border-color:#00b894;background:white;outline:none;box-shadow:0 0 0 3px rgba(0,184,148,0.1)}
+ .input[readonly]{background:#e9ecef;color:#6c757d;cursor:not-allowed}
+ .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+ .save-btn{width:100%;padding:18px;border:none;border-radius:15px;background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);color:white;font-size:18px;font-weight:bold;cursor:pointer;margin-top:25px;box-shadow:0 4px 15px rgba(0,184,148,0.3);transition:0.2s}
+ .save-btn:active{transform:scale(0.97);box-shadow:0 2px 8px rgba(0,184,148,0.2)}
+ .loading{text-align:center;padding:50px;color:#636e72;font-size:18px}
+ .date-label{font-size:12px;color:#74b9ff;margin-top:5px;font-weight:normal}
 
-  .container{
-        padding:20px;
-        margin-top:-40px;
-        position:relative;
-        z-index:2;
-    }
+   /* جديد: ألوان العمليات */
+ .paid-input{border:2px solid #ff7675!important;background:#fff5f5!important}
+ .received-input{border:2px solid #00b894!important;background:#f0fff4!important}
 
-  .card{
-        background:white;
-        border-radius:25px;
-        padding:25px;
-        margin-bottom:15px;
-        box-shadow:0 4px 15px rgba(0,0,0,0.08);
-        animation:slideUp 0.4s ease;
-    }
-    @keyframes slideUp{
-        from{opacity:0;transform:translateY(20px)}
-        to{opacity:1;transform:translateY(0)}
-    }
-
-  .avatar{
-        width:80px;
-        height:80px;
-        border-radius:25px;
-        background:linear-gradient(135deg, #00b894, #00cec9);
-        color:white;
-        font-size:36px;
-        font-weight:bold;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        margin:0 auto 15px;
-    }
-
-  .name{
-        text-align:center;
-        font-size:24px;
-        font-weight:bold;
-        color:#2d3436;
-        margin-bottom:5px;
-    }
-
-  .phone{
-        text-align:center;
-        color:#636e72;
-        font-size:16px;
-        margin-bottom:20px;
-    }
-
-  .total-box{
-        background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-        color:white;
-        padding:20px;
-        border-radius:20px;
-        text-align:center;
-        margin-bottom:20px;
-    }
-  .total-label{font-size:14px;opacity:0.9;margin-bottom:5px}
-  .total-value{font-size:32px;font-weight:bold}
-
-  .label{
-        display:block;
-        font-weight:bold;
-        color:#2d3436;
-        margin:15px 0 8px;
-        font-size:15px;
-    }
-
-  .input{
-        width:100%;
-        padding:16px;
-        border:2px solid #dfe6e9;
-        border-radius:15px;
-        font-size:18px;
-        background:#f8f9fa;
-        transition:0.3s;
-    }
-  .input:focus{
-        border-color:#00b894;
-        background:white;
-        outline:none;
-        box-shadow:0 0 0 3px rgba(0,184,148,0.1);
-    }
-  .input[readonly]{
-        background:#e9ecef;
-        color:#6c757d;
-        cursor:not-allowed;
-    }
-
-  .row{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:12px;
-    }
-
-  .save-btn{
-        width:100%;
-        padding:18px;
-        border:none;
-        border-radius:15px;
-        background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-        color:white;
-        font-size:18px;
-        font-weight:bold;
-        cursor:pointer;
-        margin-top:25px;
-        box-shadow:0 4px 15px rgba(0,184,148,0.3);
-        transition:0.2s;
-    }
-  .save-btn:active{
-        transform:scale(0.97);
-        box-shadow:0 2px 8px rgba(0,184,148,0.2);
-    }
-
-  .loading{
-        text-align:center;
-        padding:50px;
-        color:#636e72;
-        font-size:18px;
-    }
-
-  .date-label{
-        font-size:12px;
-        color:#74b9ff;
-        margin-top:5px;
-        font-weight:normal;
-    }
+ .history-title{font-size:18px;font-weight:bold;color:#2d3436;margin:25px 0 15px}
+ .history-item{background:#f8f9fa;border-right:4px solid #00b894;padding:12px 15px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+ .history-paid{border-right-color:#ff7675!important}
+ .history-amount{font-weight:bold;font-size:16px}
+ .history-paid.history-amount{color:#ff7675}
+ .history-received.history-amount{color:#00b894}
+ .history-date{font-size:13px;color:#636e72}
 </style>
 </head>
 <body>
@@ -195,18 +73,21 @@
 
             <div class="row">
                 <div>
-                    <label class="label">📥 استلام - انت خديتي</label>
-                    <input type="number" id="received" class="input" placeholder="0">
-                    <div class="date-label" id="receivedDate">تاريخ الاستلام: --</div>
+                    <label class="label">📤 دفع - انت عطيتي</label>
+                    <input type="number" id="paid" class="input paid-input" placeholder="0">
+                    <div class="date-label" id="paidDate">تاريخ الدفع: --</div>
                 </div>
                 <div>
-                    <label class="label">📤 دفع - انت عطيتي</label>
-                    <input type="number" id="paid" class="input" placeholder="0">
-                    <div class="date-label" id="paidDate">تاريخ الدفع: --</div>
+                    <label class="label">📥 استلام - انت خديتي</label>
+                    <input type="number" id="received" class="input received-input" placeholder="0">
+                    <div class="date-label" id="receivedDate">تاريخ الاستلام: --</div>
                 </div>
             </div>
 
             <button class="save-btn" id="saveBtn">💾 حفظ التغييرات</button>
+
+            <div class="history-title">📋 سجل العمليات</div>
+            <div id="historyList"></div>
         </div>
     </div>
 </div>
@@ -230,27 +111,47 @@ const db = getDatabase(app);
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
-
 const loading = document.getElementById('loading');
 const content = document.getElementById('content');
 
-if(!id){
-    alert('خطأ: ما كاينش id\nرجع لـ index.html');
-    window.location.href = 'index.html';
-}
-
+if(!id){alert('خطأ: ما كاينش id');window.location.href = 'index.html';}
 const customerRef = ref(db, 'customers/' + id);
 
-// دالة حساب المبلغ الإجمالي - مربوط بالمبلغ الأساسي
+// القاعدة الجديدة: الإجمالي = الأساسي + دفع - استلام
 function calculateTotal(){
     const amount = parseFloat(document.getElementById('amount').value) || 0;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
-    const total = amount - paid + received;
+    const total = amount + paid - received;
     document.getElementById('totalAmount').textContent = total.toFixed(2) + ' درهم';
 }
 
-// قرا البيانات
+function showHistory(data){
+    const historyList = document.getElementById('historyList');
+    historyList.innerHTML = '';
+
+    const history = [];
+    if(data.paid && data.paid > 0) history.push({type:'دفع', amount:data.paid, date:data.paidDate});
+    if(data.received && data.received > 0) history.push({type:'استلام', amount:data.received, date:data.receivedDate});
+
+    if(history.length === 0){
+        historyList.innerHTML = '<div style="text-align:center;color:#999;padding:20px">لا توجد عمليات بعد</div>';
+        return;
+    }
+
+    history.forEach(op => {
+        const div = document.createElement('div');
+        div.className = 'history-item ' + (op.type === 'دفع'? 'history-paid' : 'history-received');
+        div.innerHTML = `
+            <div>
+                <div class="history-amount">${op.amount} درهم - ${op.type}</div>
+                <div class="history-date">📅 ${op.date || '--'}</div>
+            </div>
+        `;
+        historyList.appendChild(div);
+    });
+}
+
 get(customerRef).then((snapshot)=>{
     loading.style.display = 'none';
     content.style.display = 'block';
@@ -271,6 +172,7 @@ get(customerRef).then((snapshot)=>{
         if(data.receivedDate) document.getElementById('receivedDate').textContent = 'تاريخ الاستلام: ' + data.receivedDate;
 
         calculateTotal();
+        showHistory(data);
     }else{
         alert('الزبون غير موجود');
         window.location.href = 'index.html';
@@ -280,11 +182,9 @@ get(customerRef).then((snapshot)=>{
     window.location.href = 'index.html';
 });
 
-// حساب تلقائي منين كتبدل الدفع أو الاستلام فقط
 document.getElementById('paid').addEventListener('input', calculateTotal);
 document.getElementById('received').addEventListener('input', calculateTotal);
 
-// حفظ
 document.getElementById('saveBtn').addEventListener('click', ()=>{
     const btn = document.getElementById('saveBtn');
     btn.textContent = '⏳ جاري الحفظ...';
@@ -294,29 +194,24 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     const date = document.getElementById('date').value;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
-    const newTotal = amount - paid + received; // المبلغ الجديد
+    const newTotal = amount + paid - received; // القاعدة الجديدة
 
     const today = new Date().toISOString().split('T')[0];
 
     const updateData = {
-        amount: newTotal, // هنا كنحفظو المبلغ الجديد باش يبان فـ index
+        amount: newTotal,
         paymentDate: date,
         paid: paid,
         received: received,
         updatedAt: new Date().toISOString()
     };
 
-    // إلا عطيتي مبلغ، سجل تاريخ الدفع
     if(paid > 0) updateData.paidDate = today;
-
-    // إلا خديتي مبلغ، سجل تاريخ الاستلام
     if(received > 0) updateData.receivedDate = today;
 
     update(customerRef, updateData).then(()=>{
         btn.textContent = '✅ تم الحفظ';
-        setTimeout(()=>{
-            window.location.href = 'index.html';
-        }, 800);
+        setTimeout(()=>{window.location.href = 'index.html'}, 800);
     }).catch((error)=>{
         alert('خطأ: ' + error.message);
         btn.textContent = '💾 حفظ التغييرات';
@@ -324,7 +219,6 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     });
 });
 
-// رجوع
 document.getElementById('backBtn').addEventListener('click', ()=>{
     window.location.href = 'index.html';
 });
