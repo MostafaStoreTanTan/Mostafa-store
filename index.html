@@ -7,42 +7,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-*{font-family:'Tajawal',sans-serif;box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(135deg,#00d2d3 0%,#00a8ff 100%);min-height:100vh;padding:0}
-.header{background:linear-gradient(135deg,#00d2d3 0%,#00a8ff 100%);padding:25px 20px;border-radius:0 0 35px 35px;box-shadow:0 8px 25px rgba(0,0,0,0.15);position:sticky;top:0;z-index:100}
+*{font-family:'Tajawal',sans-serif;margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(135deg,#00d4ff 0%,#00a8ff 100%);min-height:100vh;padding-bottom:80px}
+.header{padding:20px;text-align:center;color:white}
 .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.header h1{color:white;font-size:32px;font-weight:900;display:flex;align-items:center;gap:10px}
-.header-btn{width:45px;height:45px;border-radius:15px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:20px;cursor:pointer;backdrop-filter:blur(10px)}
-.firebase-badge{background:rgba(255,255,255,0.25);padding:8px 20px;border-radius:25px;color:white;font-weight:800;font-size:14px;display:inline-flex;align-items:center;gap:8px;margin:0 auto;display:flex;width:fit-content}
-.dot{width:10px;height:10px;background:#06d6a0;border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.header h1{font-size:28px;font-weight:900;display:flex;align-items:center;gap:8px}
+.header-btn{width:45px;height:45px;border-radius:15px;background:rgba(255,255,255,0.25);border:none;color:white;font-size:20px;cursor:pointer}
+.firebase-badge{background:rgba(255,255,255,0.25);padding:8px 20px;border-radius:25px;display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.dot{width:10px;height:10px;background:#06d6a0;border-radius:50%}
 .container{padding:20px}
-.search-box{background:white;border-radius:18px;padding:15px 20px;display:flex;align-items:center;gap:12px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
-.search-box input{border:none;outline:none;font-size:16px;width:100%;background:transparent}
-.filter-btns{display:flex;gap:10px;margin-bottom:20px;overflow-x:auto}
-.filter-btn{padding:12px 25px;border-radius:25px;border:2px solid white;background:transparent;color:white;font-weight:800;font-size:15px;cursor:pointer;white-space:nowrap}
+.search-box{background:white;border-radius:20px;padding:15px 20px;display:flex;align-items:center;gap:12px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.search-box input{border:none;outline:none;width:100%;font-size:16px;text-align:right}
+.filter-btns{display:flex;gap:10px;margin-bottom:25px}
+.filter-btn{flex:1;padding:12px;border-radius:25px;border:2px solid white;background:transparent;color:white;font-weight:800;font-size:16px;cursor:pointer}
 .filter-btn.active{background:white;color:#00a8ff}
-.customer-card{background:white;border-radius:22px;padding:20px;margin-bottom:15px;box-shadow:0 5px 20px rgba(0,0,0,0.1);position:relative}
-.customer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.customer-card{background:white;border-radius:22px;padding:20px;margin-bottom:15px;box-shadow:0 5px 20px rgba(0,0,0,0.1)}
+.customer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .customer-name{font-size:22px;font-weight:900;color:#1d3557}
 .avatar{width:55px;height:55px;border-radius:18px;background:#e9ecef;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#00a8ff}
-.amount{font-size:32px;font-weight:900;color:#00a8ff;text-align:center;margin:12px 0}
+.amount{font-size:36px;font-weight:900;color:#00a8ff;text-align:center;margin:15px 0}
 .customer-info{display:flex;justify-content:center;align-items:center;gap:15px;color:#666;font-size:15px;margin-bottom:15px}
-.customer-info i{color:#00a8ff}
 .btns{display:flex;gap:10px}
-.btn{flex:1;padding:14px;border:none;border-radius:14px;font-weight:900;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-delete{background:#ef476f;color:white}
-.btn-paid{background:#06d6a0;color:white}
-.btn-details{background:#4361ee;color:white}
-.add-btn{position:fixed;bottom:30px;left:30px;width:65px;height:65px;border-radius:50%;background:linear-gradient(135deg,#00d2d3 0%,#00a8ff 100%);border:none;color:white;font-size:35px;cursor:pointer;box-shadow:0 8px 25px rgba(0,168,255,0.4);z-index:99}
-.loading{text-align:center;color:white;padding:50px;font-size:20px;font-weight:800}
+.btn{flex:1;padding:14px;border:none;border-radius:14px;font-weight:900;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:white}
+.btn-delete{background:#ef476f}
+.btn-paid{background:#06d6a0}
+.btn-details{background:#4361ee}
+.add-btn{position:fixed;bottom:30px;left:30px;width:65px;height:65px;border-radius:50%;background:linear-gradient(135deg,#00d4ff 0%,#00a8ff 100%);border:none;color:white;font-size:35px;cursor:pointer;box-shadow:0 8px 25px rgba(0,168,255,0.4)}
+.loading{text-align:center;color:white;padding:80px 20px;font-size:24px;font-weight:800}
 </style>
 <script type="importmap">{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js","firebase/database":"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"}}</script>
 <script type="module">
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, remove, update } from 'firebase/database';
 
-// بيانات Gmail القديم - نفس ديال Karni Pro
+// بيانات Gmail القديم - بدلهم بمعلوماتك
 const app = initializeApp({
 apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
 databaseURL: "https://users-1eecc-default-rtdb.firebaseio.com",
@@ -50,20 +48,13 @@ projectId: "users-1eecc"
 });
 const db = getDatabase(app);
 
-let allCustomers = {};
-
-function loadCustomers(){
+// تحميل الزبناء
 onValue(ref(db, 'customers'), (snapshot)=>{
 const data = snapshot.val() || {};
-allCustomers = data;
-renderCustomers(data);
-});
-}
-
-function renderCustomers(data){
 const container = document.getElementById('customersList');
+
 if(Object.keys(data).length === 0){
-container.innerHTML = '<div class="loading">لا يوجد زبناء بعد<br>اضغط + لإضافة زبون</div>';
+container.innerHTML = '<div class="loading">لا يوجد زبناء<br>اضغط + لإضافة زبون</div>';
 return;
 }
 
@@ -72,7 +63,6 @@ for(let id in data){
 const c = data[id];
 const balance = (c.depot || 0) - (c.paid || 0);
 const firstLetter = c.name? c.name.charAt(0).toUpperCase() : 'A';
-const phoneIcon = c.phone? '<i class="fas fa-phone"></i>' : '';
 
 html += `
 <div class="customer-card">
@@ -82,7 +72,7 @@ html += `
 </div>
 <div class="amount">${balance} درهم</div>
 <div class="customer-info">
-<i class="fas fa-calendar"></i> ${c.paymentDate || 'بدون تاريخ'} - ${phoneIcon}
+<i class="fas fa-calendar"></i> ${c.paymentDate || 'بدون تاريخ'}
 </div>
 <div class="btns">
 <button class="btn btn-delete" onclick="deleteCustomer('${id}')"><i class="fas fa-trash"></i></button>
@@ -93,15 +83,15 @@ html += `
 `;
 }
 container.innerHTML = html;
-}
-}
+});
 
+// الدوال
 window.openPerson = function(id){
 window.location.href = 'person.html?id=' + id;
 }
 
 window.deleteCustomer = async function(id){
-if(confirm('متأكد بغيتي تحذف الزبون؟')){
+if(confirm('حذف الزبون؟')){
 await remove(ref(db, 'customers/'+id));
 }
 }
@@ -113,28 +103,26 @@ balance: 0,
 status: 'paid',
 updatedAt: Date.now()
 });
-alert('✅ تم وضع علامة مخلص');
+alert('تم وضع علامة مخلص ✅');
 }
-
-loadCustomers();
 </script>
 </head>
 <body>
 <div class="header">
 <div class="header-top">
-<button class="header-btn"><i class="fas fa-chart-bar"></i></button>
-<h1>Karni Pro <i class="fas fa-book"></i></h1>
 <button class="header-btn"><i class="fas fa-moon"></i></button>
+<h1><i class="fas fa-book"></i> Karni Pro</h1>
+<button class="header-btn"><i class="fas fa-chart-bar"></i></button>
 </div>
 <div class="firebase-badge">
-متصل بـ Firebase <span class="dot"></span>
+<span class="dot"></span> متصل بـ Firebase
 </div>
 </div>
 
 <div class="container">
 <div class="search-box">
-<input type="text" placeholder="ابحث عن زبون...">
 <i class="fas fa-search"></i>
+<input type="text" placeholder="ابحث عن زبون...">
 </div>
 
 <div class="filter-btns">
