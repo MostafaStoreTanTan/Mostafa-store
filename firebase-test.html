@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase Test</title>
+</head>
+
+<body>
+
+<h2>Firebase Test</h2>
+
+<input
+type="text"
+id="customerName"
+placeholder="Customer Name">
+
+<button id="addBtn">
+Add Customer
+</button>
+
+<hr>
+
+<div id="customers">
+Loading...
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyD5KnoOye-Ns7RNQq9KqGNSmakYydIoLAw",
+
+authDomain: "my-store-4f430.firebaseapp.com",
+
+projectId: "my-store-4f430",
+
+storageBucket: "my-store-4f430.firebasestorage.app",
+
+messagingSenderId: "674007434765",
+
+appId: "1:674007434765:web:c4005d096ab86167cc3744"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+async function loadCustomers(){
+
+const snapshot =
+await getDocs(
+collection(
+db,
+"customers"
+)
+);
+
+let html = "";
+
+snapshot.forEach(doc=>{
+
+html += `
+<div>
+${doc.data().name}
+</div>
+`;
+
+});
+
+document.getElementById(
+"customers"
+).innerHTML =
+html || "No Customers";
+
+}
+
+document.getElementById(
+"addBtn"
+).onclick =
+async function(){
+
+let name =
+document.getElementById(
+"customerName"
+).value;
+
+if(!name) return;
+
+await addDoc(
+collection(
+db,
+"customers"
+),
+{
+name:name
+}
+);
+
+loadCustomers();
+
+};
+
+loadCustomers();
+
+</script>
+
+</body>
+</html>
