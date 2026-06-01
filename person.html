@@ -45,12 +45,14 @@
         <h2 id="customerName">جاري التحميل...</h2>
     </div>
 
+    <!-- بطاقات الحسابات الثلاثة -->
     <div class="fin-grid">
         <div class="fin-card debt"><div class="fin-label">له (Depot)</div><div class="fin-val" id="viewDebt">0.00</div></div>
         <div class="fin-card paid"><div class="fin-label">منه (Paid)</div><div class="fin-val" id="viewPaid">0.00</div></div>
         <div class="fin-card balance"><div class="fin-label">الباقي (Balance)</div><div class="fin-val" id="viewBalance">0.00</div></div>
     </div>
 
+    <!-- استمارة إدخال ميزانية اليوم والمذكرة -->
     <div class="form-box">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div class="input-group"><label>المبلغ (درهم) *</label><input type="number" step="0.01" id="amount" class="input-field" placeholder="0.00"></div>
@@ -58,18 +60,19 @@
         </div>
         <div class="input-group"><label>المذكرة / بيان السلع</label><input type="text" id="note" class="input-field" placeholder="تحديد نوع السلعة أو سبب الدفع..."></div>
         <div class="btn-group">
-            <button class="btn give" onclick="addTransaction('debt')"><i class="fas fa-plus"></i> أخذ سلع (دين)</button>
-            <button class="btn take" onclick="addTransaction('pay')"><i class="fas fa-hand-holding-usd"></i> تسديد مبلغ</button>
+            <button class="btn give" onclick="window.addTransaction('debt')"><i class="fas fa-plus"></i> أخذ سلع (دين)</button>
+            <button class="btn take" onclick="window.addTransaction('pay')"><i class="fas fa-hand-holding-usd"></i> تسديد مبلغ</button>
         </div>
     </div>
 
+    <!-- كشف الحساب التاريخي المعروض للزبون -->
     <h4 style="text-align: right; margin-bottom: 10px; color: #64748b;">سجل المعاملات اليومية</h4>
     <div id="logsList"></div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
     // إعدادات الفايربيس الأساسية لمشروعك
     const firebaseConfig = {
@@ -129,7 +132,7 @@
                     <span class="log-amount" style="color:${t.type === 'debt' ? '#16a34a' : '#dc2626'}">
                         ${t.type === 'debt' ? '+' : '-'}${amt.toFixed(2)}
                     </span>
-                    <button class="btn-del" onclick="deleteItem('${key}')"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn-del" onclick="window.deleteItem('${key}')"><i class="fas fa-trash-alt"></i></button>
                 </div>`;
             list.appendChild(item);
         });
@@ -139,7 +142,7 @@
         document.getElementById('viewBalance').textContent = (totalDebt - totalPaid).toFixed(2) + " MAD";
     }
 
-    // إضافة حركة مالية جديدة وتحديد اليوم بدقة
+    // تصدير الدالة للنطاق العام لكي يراها الـ HTML عند الضغط
     window.addTransaction = function(type) {
         const amtInput = document.getElementById('amount');
         const dateInput = document.getElementById('date');
@@ -154,17 +157,20 @@
             return;
         }
 
-        const newRef = push(ref(db, `customers/${customerId}/transactions`));
+        const transRef = ref(db, `customers/${customerId}/transactions`);
+        const newTransRef = push(transRef);
         const dataUpdate = { amount, date, note, type };
 
-        update(ref(db, `customers/${customerId}/transactions/${newRef.key}`), dataUpdate).then(() => {
+        set(newTransRef, dataUpdate).then(() => {
             amtInput.value = "";
             noteInput.value = "";
-            alert("تم تسجيل المعاملة بنجاح!");
+            alert("تم تسجيل المعاملة وحفظها بنجاح!");
+        }).catch((error) => {
+            alert("خطأ في الاتصال بقاعدة البيانات: " + error.message);
         });
     };
 
-    // حذف معاملة مالية معينة من السجل
+    // تصدير دالة الحذف للنطاق العام
     window.deleteItem = function(key) {
         if (confirm("هل تريد حذف هذه العملية المالية نهائياً؟")) {
             remove(ref(db, `customers/${customerId}/transactions/${key}`));
