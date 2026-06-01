@@ -3,68 +3,174 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>إضافة زبون - Karni</title>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<title>إدارة الزبناء</title>
 <style>
-body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:30px}
-h2{color:#22c55e}
-input,button{padding:12px;margin:8px;width:85%;max-width:400px;border-radius:8px;border:none;font-size:16px}
-input{background:#1e293b;color:white}
-button{background:#22c55e;color:white;cursor:pointer;font-weight:bold}
-button:hover{background:#16a34a}
-#msg{margin-top:15px;font-size:18px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
+body{background:#f5f7fa;color:#333;padding:15px}
+.card{background:#fff;border-radius:20px;padding:20px;margin-bottom:15px;box-shadow:0 2px 10px rgba(0,0,0,0.08)}
+.avatar{width:100px;height:100px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:50px;margin:0 auto 15px}
+h1{text-align:center;font-size:24px;margin-bottom:10px}
+.stars{text-align:center;font-size:22px;color:#ccc;margin-bottom:10px}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:bold;margin:8px 0;cursor:pointer}
+.btn-green{background:#25D366;color:white}
+.btn-blue{background:#007bff;color:white}
+.btn-red{background:#dc3545;color:white}
+.stats{display:flex;gap:10px;margin:15px 0}
+.stat{flex:1;text-align:center;padding:12px;border-radius:12px;background:#f8f9fa}
+.stat.label{font-size:13px;color:#666}
+.stat.value{font-size:20px;font-weight:bold;margin-top:5px}
+.input{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;font-size:15px;margin:8px 0}
+.input:focus{border-color:#007bff;outline:none}
+textarea.input{min-height:80px;resize:vertical}
+.page{display:none}
+.page.active{display:block}
+.nav{display:flex;gap:10px;margin-bottom:20px}
+.nav-btn{flex:1;padding:12px;background:#fff;border:2px solid #007bff;color:#007bff;border-radius:10px;cursor:pointer;font-weight:bold}
+.nav-btn.active{background:#007bff;color:white}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{padding:12px;text-align:right;border-bottom:1px solid #eee}
+th{background:#007bff;color:white}
+.badge{padding:5px 10px;border-radius:20px;font-size:12px}
+.badge-pending{background:#fff3cd;color:#856404}
+.badge-paid{background:#d4edda;color:#155724}
 </style>
-</head>
-<body>
-<h2>➕ إضافة زبون جديد</h2>
-<input id="name" placeholder="الاسم الكامل" required><br>
-<input id="phone" placeholder="رقم الهاتف" required><br>
-<input id="amount" placeholder="المبلغ بالدرهم" type="number" required><br>
-<button onclick="addCustomer()">حفظ الزبون</button>
-<div id="msg"></div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, push, set, onValue, update, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-<script>
 const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
-  authDomain: "karni-b9b34.firebaseapp.com",
-  databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "karni-b9b34",
-  storageBucket: "karni-b9b34.firebasestorage.app",
-  messagingSenderId: "489835094040",
-  appId: "1:489835094040:web:109e20fe7b65516903236d"
+  authDomain: "users-1eecc.firebaseapp.com",
+  databaseURL: "https://users-1eecc-default-rtdb.firebaseio.com",
+  projectId: "users-1eecc",
+  storageBucket: "users-1eecc.appspot.com",
+  messagingSenderId: "927647092908",
+  appId: "1:927647092908:web:9e7e7ccfe90e68b0"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 
-function addCustomer(){
-  const name = document.getElementById('name').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const amount = document.getElementById('amount').value.trim();
-  const msg = document.getElementById('msg');
-  
-  if(!name || !phone || !amount){
-    msg.innerHTML = '⚠️ عمر جميع الخانات';
-    msg.style.color = 'orange';
-    return;
-  }
-  
-  db.ref('customers').push({
-    name: name,
-    phone: phone,
-    amount: amount,
-    date: new Date().toLocaleDateString('ar-MA'),
-    time: new Date().toLocaleTimeString('ar-MA')
-  });
-  
-  msg.innerHTML = '✅ تم حفظ الزبون بنجاح!';
-  msg.style.color = '#22c55e';
-  document.getElementById('name').value = '';
-  document.getElementById('phone').value = '';
-  document.getElementById('amount').value = '';
-  
-  setTimeout(()=>{msg.innerHTML=''}, 3000);
-}
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+window.db = db; window.ref = ref; window.push = push; window.set = set;
+window.onValue = onValue; window.update = update; window.remove = remove;
 </script>
-</body>
-</html>
+</head>
+<body>
+<div class="nav">
+<button class="nav-btn active" onclick="showPage('list')">الزبناء</button>
+<button class="nav-btn" onclick="showPage('add')">إضافة</button>
+</div>
+<div id="list" class="page active"></div>
+<div id="add" class="page"></div>
+<div id="person" class="page"></div>
+
+ <script>
+function showPage(page){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(page).classList.add('active');
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+event.target.classList.add('active');
+if(page=='list') loadCustomers();
+}
+
+function addCustomerPage(){
+return `
+<div class="card">
+<h1>إضافة زبون جديد</h1>
+<input class="input" id="name" placeholder="اسم الزبون">
+<input class="input" id="phone" placeholder="رقم الهاتف - اختياري" type="tel">
+<input class="input" id="depot" placeholder="المبلغ الأصلي - Depot" type="number">
+<input class="input" id="paid" placeholder="المبلغ المدفوع - Paid" type="number" value="0">
+<label>تاريخ الدفع:</label>
+<input class="input" id="paymentDate" type="date">
+<label>تاريخ الأخذ:</label>
+<input class="input" id="depotDate" type="date">
+<input class="input" id="location" placeholder="رابط Google Maps - اختياري">
+<textarea class="input" id="note" placeholder="ملاحظة"></textarea>
+<button class="btn btn-blue" onclick="saveCustomer()">حفظ الزبون</button>
+</div>`;
+}
+
+async function saveCustomer(){
+const name=document.getElementById('name').value;
+const depot=parseFloat(document.getElementById('depot').value)||0;
+const paid=parseFloat(document.getElementById('paid').value)||0;
+if(!name||depot<=0){alert('عمر الاسم والمبلغ');return;}
+const customer={
+name, phone:document.getElementById('phone').value||'',
+depot, paid, balance:depot-paid,
+paymentDate:document.getElementById('paymentDate').value||'',
+depotDate:document.getElementById('depotDate').value||new Date().toISOString().split('T')[0],
+location:document.getElementById('location').value||'',
+note:document.getElementById('note').value||'',
+status: paid>=depot? 'paid' : 'pending',
+createdAt:Date.now()
+};
+await set(push(ref(db,'customers')), customer);
+alert('تم الحفظ ✅');
+showPage('list');
+}
+document.getElementById('add').innerHTML = addCustomerPage(); 
+
+   function loadCustomers(){
+const listDiv=document.getElementById('list');
+onValue(ref(db,'customers'), (snapshot)=>{
+const data=snapshot.val()||{};
+let html='<div class="card"><h1>لائحة الزبناء</h1><input class="input" placeholder="بحث..." onkeyup="search(this.value)"><table><tr><th>الاسم</th><th>المبلغ</th><th>الحالة</th><th></th></tr>';
+let total=0;
+for(let id in data){
+const c=data[id];
+total+=c.balance||0;
+html+=`<tr onclick="showPerson('${id}')"><td>${c.name}</td><td>${c.balance} درهم</td><td><span class="badge badge-${c.status}">${c.status=='paid'?'مخلص':'باقي'}</span></td><td>👁️</td></tr>`;
+}
+html+=`</table><div class="stat" style="margin-top:15px"><div class="label">مجموع الديون</div><div class="value">${total} درهم</div></div></div>`;
+listDiv.innerHTML=html;
+});
+}
+loadCustomers();
+
+function search(val){
+document.querySelectorAll('table tr').forEach((row,i)=>{
+if(i==0)return;
+row.style.display=row.innerText.includes(val)?'':'none';
+});
+}
+
+async function showPerson(id){
+onValue(ref(db,'customers/'+id), (snap)=>{
+const c=snap.val();
+const balance=c.depot-c.paid;
+document.getElementById('person').innerHTML=`
+<div class="card">
+<div class="avatar">📷</div>
+<h1 id="pName">${c.name}</h1>
+<div class="stars">☆</div>
+<div class="stats">
+<div class="stat"><div class="label">Depot</div><div class="value" style="color:green">${c.depot} MAD</div></div>
+<div class="stat"><div class="label">Paid</div><div class="value" style="color:red">${c.paid} MAD</div></div>
+<div class="stat"><div class="label">Balance</div><div class="value" style="color:blue">${balance} MAD</div></div>
+</div>
+<label>📅 Payment Date</label>
+<input class="input" type="date" value="${c.paymentDate}" onchange="updateField('${id}','paymentDate',this.value)">
+<label>📍 الموقع</label>
+<input class="input" value="${c.location}" placeholder="رابط Maps" onchange="updateField('${id}','location',this.value)">
+${c.location?`<button class="btn btn-green" onclick="window.open('${c.location}')">فتح الخريطة</button>`:''}
+<label>📝 ملاحظة</label>
+<textarea class="input" onchange="updateField('${id}','note',this.value)">${c.note}</textarea>
+<button class="btn btn-green" onclick="call('${c.phone}')">📞 Call</button>
+<button class="btn btn-green" onclick="whatsapp('${c.phone}')">💬 WhatsApp</button>
+<button class="btn btn-blue" onclick="editName('${id}','${c.name}')">✏️ Edit Name</button>
+<button class="btn btn-blue" onclick="editPhone('${id}','${c.phone}')">📞 Edit Phone</button>
+<button class="btn btn-red" onclick="deleteCustomer('${id}')">حذف</button>
+</div>`;
+showPage('person');
+});
+}
+
+function call(phone){if(phone)window.location.href='tel:'+phone;else alert('لا يوجد رقم')}
+function whatsapp(phone){if(phone)window.open('https://wa.me/212'+phone.replace(/^0/,'')+'?text=مرحبا')}
+async function updateField(id,field,val){await update(ref(db,'customers/'+id),{[field]:val})}
+async function editName(id,old){const n=prompt('الاسم الجديد',old);if(n)updateField(id,'name',n)}
+async function editPhone(id,old){const p=prompt('الرقم الجديد',old);if(p)updateField(id,'phone',p)}
+async function deleteCustomer(id){if(confirm('متأكد؟')){await remove(ref(db,'customers/'+id));showPage('list')}}
+</script>
+</body></html>   
