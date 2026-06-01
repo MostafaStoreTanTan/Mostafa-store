@@ -769,7 +769,10 @@ const db = getDatabase(app);
                             <div class="customer-avatar">${customer.name.charAt(0)}</div>
                             <div class="customer-info">
                                 <div class="customer-name">${customer.name}</div>
-                                <div class="customer-amount">${customer.amount} درهم</div>
+                                // حساب المبلغ المتبقي = الأساسي + الاستلام - الدفع
+const remaining = customer.remaining || (customer.amount + (customer.received || 0) - (customer.paid || 0));
+
+<div class="customer-amount ${remaining < 0 ? 'overdue' : ''}">${remaining.toFixed(2)} درهم</div>
                                 <div class="customer-meta">
                                     <span><i class="fas fa-phone"></i> ${customer.phone || '-'}</span>
                                     <span><i class="fas fa-calendar"></i> ${customer.date}</span>
