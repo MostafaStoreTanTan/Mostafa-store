@@ -39,7 +39,7 @@ margin-bottom:15px;
 
 .stats{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(3,1fr);
 gap:10px;
 margin-bottom:15px;
 }
@@ -58,47 +58,137 @@ font-weight:bold;
 color:#0F766E;
 }
 
+.stat-label{
+font-size:13px;
+color:#666;
+margin-top:5px;
+}
+
+.legend{
+display:flex;
+overflow:auto;
+gap:10px;
+padding:10px 0;
+margin-bottom:15px;
+}
+
+.legend-item{
+background:white;
+padding:10px 15px;
+border-radius:15px;
+display:flex;
+align-items:center;
+gap:8px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+white-space:nowrap;
+}
+
+.dot{
+width:14px;
+height:14px;
+border-radius:50%;
+}
+
+.green{
+background:#16a34a;
+}
+
+.blue{
+background:#2563eb;
+}
+
+.gray{
+background:#9ca3af;
+}
+
+.yellow{
+background:#facc15;
+}
+
+.orange{
+background:#f97316;
+}
+
 .route-list{
 margin-top:15px;
 }
 
-.route-item{
+.route-card{
 background:white;
-padding:15px;
-border-radius:18px;
-margin-bottom:10px;
+padding:18px;
+border-radius:20px;
+margin-bottom:12px;
 box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.route-top{
 display:flex;
 align-items:center;
-gap:15px;
+gap:12px;
+}
+
+.route-number{
+width:45px;
+height:45px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-weight:bold;
+font-size:18px;
+}
+
+.route-name{
+font-size:22px;
+font-weight:bold;
+}
+
+.route-balance{
+margin-top:5px;
+font-weight:bold;
+color:#0F766E;
+}
+
+.route-status{
+margin-top:8px;
+font-weight:bold;
+}
+
+.actions{
+display:flex;
+gap:8px;
+margin-top:15px;
+flex-wrap:wrap;
+}
+
+.actions button{
+border:none;
+padding:10px 12px;
+border-radius:12px;
+color:white;
+font-weight:bold;
 cursor:pointer;
 }
 
-.drag{
-font-size:25px;
-color:#666;
+.btn-green{
+background:#16a34a;
 }
 
-.customer-info{
-flex:1;
+.btn-yellow{
+background:#facc15;
+color:black;
 }
 
-.customer-name{
-font-size:20px;
-font-weight:bold;
-}
-
-.customer-balance{
-margin-top:5px;
-color:#0F766E;
-font-weight:bold;
+.btn-orange{
+background:#f97316;
 }
 
 .finish-btn{
 width:100%;
-padding:16px;
+padding:18px;
 border:none;
-border-radius:15px;
+border-radius:18px;
 background:#16a34a;
 color:white;
 font-size:18px;
@@ -119,49 +209,83 @@ margin-top:15px;
 <div class="stats">
 
 <div class="stat-card">
-
 <div
 class="stat-number"
-id="customerCount">
+id="totalCustomers">
 0
 </div>
-
-<div>
+<div class="stat-label">
 Customers
 </div>
-
 </div>
 
 <div class="stat-card">
-
 <div
 class="stat-number"
-id="totalBalance">
+id="collectedCount">
 0
 </div>
-
-<div>
-Balance
+<div class="stat-label">
+Collected
+</div>
 </div>
 
+<div class="stat-card">
+<div
+class="stat-number"
+id="pendingCount">
+0
+</div>
+<div class="stat-label">
+Pending
+</div>
+</div>
+
+</div>
+
+<div class="legend">
+
+<div class="legend-item">
+<div class="dot green"></div>
+Collected
+</div>
+
+<div class="legend-item">
+<div class="dot blue"></div>
+Current
+</div>
+
+<div class="legend-item">
+<div class="dot gray"></div>
+Pending
+</div>
+
+<div class="legend-item">
+<div class="dot yellow"></div>
+Closed
+</div>
+
+<div class="legend-item">
+<div class="dot orange"></div>
+Come Back
 </div>
 
 </div>
 
 <div
-class="route-list"
-id="routeList">
+id="routeList"
+class="route-list">
 </div>
 
 <button
-class="finish-btn"
-id="finishRouteBtn">
+id="finishRouteBtn"
+class="finish-btn">
 
 ✅ Finish Route
 
 </button>
 
- <script>
+<script>
 
 let people =
 JSON.parse(
@@ -173,7 +297,14 @@ new Date()
 .toISOString()
 .split("T")[0];
 
-let routePeople = [];
+let route =
+JSON.parse(
+localStorage.getItem("routeToday")
+);
+
+if(!route){
+
+route = [];
 
 people.forEach(person=>{
 
@@ -181,51 +312,31 @@ if(
 person.dueDate === today
 ){
 
-routePeople.push(person);
+route.push({
 
-}
+name:person.name,
 
-});
-
-let totalBalance = 0;
-
-routePeople.forEach(person=>{
-
-let depot = 0;
-let paid = 0;
-
-if(person.operations){
-
-person.operations.forEach(op=>{
-
-if(op.type === "Depot"){
-depot += Number(op.amount);
-}
-
-if(op.type === "Paid"){
-paid += Number(op.amount);
-}
+status:"pending"
 
 });
 
 }
 
-person.balance =
-depot - paid;
-
-totalBalance += person.balance;
-
 });
 
-document.getElementById(
-"customerCount"
-).innerText =
-routePeople.length;
+if(route.length > 0){
 
-document.getElementById(
-"totalBalance"
-).innerText =
-totalBalance + " MAD";
+route[0].status =
+"current";
+
+}
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+}
 
 renderRoute();
 
@@ -233,54 +344,154 @@ function renderRoute(){
 
 let html = "";
 
+let collected = 0;
+let pending = 0;
+
+document.getElementById(
+"totalCustomers"
+).innerText =
+route.length;
+
+route.forEach((item,index)=>{
+
+if(item.status==="collected"){
+collected++;
+}
+
 if(
-routePeople.length === 0
+item.status==="pending" ||
+item.status==="current"
+){
+pending++;
+}
+
+let color = "#9ca3af";
+let text = "⚪ Pending";
+
+if(
+item.status==="current"
+){
+color="#2563eb";
+text="🔵 Current";
+}
+
+if(
+item.status==="collected"
+){
+color="#16a34a";
+text="🟢 Collected";
+}
+
+if(
+item.status==="closed"
+){
+color="#facc15";
+text="🟡 Closed";
+}
+
+if(
+item.status==="comeback"
+){
+color="#f97316";
+text="🟠 Come Back";
+}
+
+let person =
+people.find(
+p=>p.name===item.name
+);
+
+let balance = 0;
+
+if(
+person &&
+person.operations
 ){
 
-html = `
+let depot = 0;
+let paid = 0;
 
-<div class="route-item">
+person.operations.forEach(op=>{
 
-<div class="customer-info">
+if(op.type==="Depot"){
+depot += Number(op.amount);
+}
 
-<div class="customer-name">
-No Customers Today
-</div>
+if(op.type==="Paid"){
+paid += Number(op.amount);
+}
 
-</div>
+});
 
-</div>
-
-`;
+balance = depot - paid;
 
 }
 
-routePeople.forEach(
-(person,index)=>{
-
 html += `
 
+<div class="route-card">
+
 <div
-class="route-item"
-onclick="openCustomer(${index})">
+class="route-top"
+onclick="openCustomer('${item.name}')">
 
-<div class="drag">
-☰
-</div>
+<div
+class="route-number"
+style="background:${color};">
 
-<div class="customer-info">
-
-<div class="customer-name">
-
-${person.name}
+${index+1}
 
 </div>
 
-<div class="customer-balance">
+<div>
 
-💰 ${person.balance} MAD
+<div class="route-name">
+
+${item.name}
 
 </div>
+
+<div class="route-balance">
+
+💰 ${balance} MAD
+
+</div>
+
+<div class="route-status">
+
+${text}
+
+</div>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="btn-green"
+onclick="markCollected(${index})">
+
+🟢 Collected
+
+</button>
+
+<button
+class="btn-yellow"
+onclick="markClosed(${index})">
+
+🟡 Closed
+
+</button>
+
+<button
+class="btn-orange"
+onclick="markComeBack(${index})">
+
+🟠 Come Back
+
+</button>
 
 </div>
 
@@ -295,14 +506,23 @@ document.getElementById(
 ).innerHTML =
 html;
 
-}
+document.getElementById(
+"collectedCount"
+).innerText =
+collected;
 
-function openCustomer(index){
+document.getElementById(
+"pendingCount"
+).innerText =
+pending;
+
+} 
+
+function openCustomer(name){
 
 let realIndex =
 people.findIndex(
-p => p.name ===
-routePeople[index].name
+p => p.name === name
 );
 
 localStorage.setItem(
@@ -315,19 +535,123 @@ window.location.href =
 
 }
 
+function setNextCurrent(){
+
+let currentFound = false;
+
+route.forEach(item=>{
+
+if(
+item.status === "current"
+){
+
+currentFound = true;
+
+item.status =
+"pending";
+
+}
+
+});
+
+for(
+let i = 0;
+i < route.length;
+i++
+){
+
+if(
+route[i].status === "pending"
+){
+
+route[i].status =
+"current";
+
+break;
+
+}
+
+}
+
+}
+
+function markCollected(index){
+
+route[index].status =
+"collected";
+
+setNextCurrent();
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+function markClosed(index){
+
+route[index].status =
+"closed";
+
+setNextCurrent();
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+function markComeBack(index){
+
+let customer =
+route[index];
+
+customer.status =
+"comeback";
+
+route.splice(
+index,
+1
+);
+
+route.push(customer);
+
+setNextCurrent();
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
 document.getElementById(
 "finishRouteBtn"
 ).onclick = function(){
 
 if(
 confirm(
-"Finish Route?"
+"Finish Route ?"
 )
 ){
+
+localStorage.removeItem(
+"routeToday"
+);
 
 alert(
 "Route Finished"
 );
+
+location.reload();
 
 }
 
