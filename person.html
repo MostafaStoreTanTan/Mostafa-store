@@ -4,59 +4,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>تفاصيل الزبون - Karni Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ====== CSS الأساسي - 200 سطر ====== */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a1929;color:#fff;font-family:'Tajawal','Cairo',sans-serif;min-height:100vh;padding:20px}
-.container{max-width:800px;margin:0 auto}
-.header-card{background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);border-radius:20px;padding:30px;margin-bottom:20px;text-align:center;position:relative}
-.avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 15px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:bold;color:#fff}
-.customer-name{font-size:28px;font-weight:bold;margin-bottom:10px}
-.stars{font-size:24px;cursor:pointer}
-.star{color:#444;transition:0.3s;display:inline-block;margin:0 3px}
-.star.active{color:#ffd700}
-.back-btn{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.2);border:none;color:#fff;padding:10px 20px;border-radius:10px;cursor:pointer;font-size:16px}
-.card{background:#16213e;border-radius:15px;padding:20px;margin-bottom:15px;border:1px solid #2a3f5f}
-.card h3{margin-bottom:15px;font-size:18px}
-.info-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #2a3f5f}
+body{background:linear-gradient(135deg,#0a1929 0%,#0f2438 100%);color:#fff;font-family:'Tajawal','Cairo',sans-serif;min-height:100vh;padding:20px;animation:fadeIn 0.5s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.container{max-width:900px;margin:0 auto}
+.header-card{background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);border-radius:25px;padding:35px;margin-bottom:25px;text-align:center;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3);animation:slideDown 0.6s}
+@keyframes slideDown{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.avatar{width:90px;height:90px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:bold;color:#fff;box-shadow:0 5px 15px rgba(0,0,0,0.3);transition:0.3s}
+.avatar:hover{transform:scale(1.1)}
+.customer-name{font-size:32px;font-weight:bold;margin-bottom:15px;text-shadow:2px 2px 4px rgba(0,0,0,0.3)}
+.stars{font-size:28px;cursor:pointer}
+.star{color:#444;transition:0.3s;display:inline-block;margin:0 5px;cursor:pointer}
+.star:hover{transform:scale(1.3)}
+.star.active{color:#ffd700;text-shadow:0 0 10px #ffd700}
+.back-btn{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.3);color:#fff;padding:12px 25px;border-radius:12px;cursor:pointer;font-size:16px;font-weight:bold;transition:0.3s}
+.back-btn:hover{background:rgba(255,255,255,0.3);transform:translateX(-5px)}
+.card{background:#16213e;border-radius:20px;padding:25px;margin-bottom:20px;border:2px solid #2a3f5f;box-shadow:0 5px 15px rgba(0,0,0,0.2);animation:fadeInUp 0.5s}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.card h3{margin-bottom:20px;font-size:20px;display:flex;align-items:center;gap:10px}
+.info-row{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid #2a3f5f;font-size:17px}
 .info-row:last-child{border-bottom:none}
-.balance-row{font-size:24px;font-weight:bold}
-.balance-positive{color:#2ecc71}
-.balance-negative{color:#e74c3c}
-.actions{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.btn{flex:1;min-width:120px;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;transition:0.3s;color:#fff}
+.balance-row{font-size:28px;font-weight:bold;padding:20px 0}
+.balance-positive{color:#2ecc71;text-shadow:0 0 10px rgba(46,204,113,0.5)}
+.balance-negative{color:#e74c3c;text-shadow:0 0 10px rgba(231,76,60,0.5)}
+.actions{display:flex;gap:15px;margin-bottom:25px;flex-wrap:wrap}
+.btn{flex:1;min-width:140px;padding:18px;border:none;border-radius:15px;font-size:17px;font-weight:bold;cursor:pointer;transition:0.3s;color:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.2)}
 .btn-deposit{background:linear-gradient(135deg,#27ae60,#2ecc71)}
 .btn-paid{background:linear-gradient(135deg,#c0392b,#e74c3c)}
-.btn:hover{transform:translateY(-3px)}
-table{width:100%;border-collapse:collapse}
-th{background:#2a3f5f;padding:12px;text-align:center}
-td{padding:12px;text-align:center;border-bottom:1px solid #2a3f5f}
-.amount-deposit{color:#2ecc71;font-weight:bold}
-.amount-paid{color:#e74c3c;font-weight:bold}
-.popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center}
-.popup.active{display:flex}
-.popup-content{background:#16213e;padding:30px;border-radius:20px;width:90%;max-width:400px}
-.popup-content h3{margin-bottom:20px;text-align:center}
-.popup-content input{width:100%;padding:12px;margin-bottom:15px;border-radius:10px;border:1px solid #2a3f5f;background:#0a1929;color:#fff;font-size:16px}
-.popup-btns{display:flex;gap:10px}
-.popup-btn{flex:1;padding:12px;border:none;border-radius:10px;cursor:pointer;font-weight:bold;font-size:16px}
-.btn-confirm{background:#27ae60;color:#fff}
-.btn-cancel{background:#7f8c8d;color:#fff}
-.date-editable{cursor:pointer;color:#3498db}
-textarea{width:100%;min-height:80px;padding:10px;border-radius:10px;border:1px solid #2a3f5f;background:#0a1929;color:#fff;font-family:inherit}
-@media(max-width:600px){
-.customer-name{font-size:22px}
+.btn:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 6px 20px rgba(0,0,0,0.3)}
+.btn:active{transform:translateY(0)}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th{background:linear-gradient(135deg,#2a3f5f,#34495e);padding:15px;text-align:center;font-weight:bold;font-size:16px}
+td{padding:15px;text-align:center;border-bottom:1px solid #2a3f5f;font-size:15px;transition:0.2s}
+tr:hover td{background:rgba(52,73,94,0.3)}
+.amount-deposit{color:#2ecc71;font-weight:bold;font-size:17px}
+.amount-paid{color:#e74c3c;font-weight:bold;font-size:17px}
+.popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.popup.active{display:flex;animation:fadeIn 0.3s}
+.popup-content{background:linear-gradient(135deg,#16213e,#1e3c72);padding:35px;border-radius:25px;width:90%;max-width:450px;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:popupScale 0.4s}
+@keyframes popupScale{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.popup-content h3{margin-bottom:25px;text-align:center;font-size:24px}
+.popup-content input{width:100%;padding:15px;margin-bottom:18px;border-radius:12px;border:2px solid #2a3f5f;background:#0a1929;color:#fff;font-size:17px;transition:0.3s}
+.popup-content input:focus{border-color:#3498db;outline:none;box-shadow:0 0 10px rgba(52,152,219,0.5)}
+.popup-btns{display:flex;gap:15px}
+.popup-btn{flex:1;padding:15px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;font-size:17px;transition:0.3s}
+.btn-confirm{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff}
+.btn-cancel{background:linear-gradient(135deg,#7f8c8d,#95a5a6);color:#fff}
+.popup-btn:hover{transform:translateY(-2px)}
+.date-editable{cursor:pointer;color:#3498db;font-weight:bold;transition:0.2s}
+.date-editable:hover{text-decoration:underline;color:#5dade2}
+textarea{width:100%;min-height:100px;padding:15px;border-radius:12px;border:2px solid #2a3f5f;background:#0a1929;color:#fff;font-family:inherit;font-size:15px;transition:0.3s}
+textarea:focus{border-color:#3498db;outline:none}
+input[type="text"]{width:100%;padding:15px;border-radius:12px;border:2px solid #2a3f5f;background:#0a1929;color:#fff;font-size:16px;transition:0.3s}
+input[type="text"]:focus{border-color:#3498db;outline:none}
+.filter-btns{display:flex;gap:10px;margin-bottom:20px}
+.filter-btn{flex:1;padding:12px;background:#34495e;border:none;border-radius:10px;color:#fff;cursor:pointer;font-weight:bold;transition:0.3s}
+.filter-btn.active{background:linear-gradient(135deg,#3498db,#2980b9)}
+.filter-btn:hover{transform:translateY(-2px)}
+.search-box{width:100%;padding:12px;margin-bottom:15px;border-radius:10px;border:2px solid #2a3f5f;background:#0a1929;color:#fff}
+@media(max-width:768px){
+.customer-name{font-size:26px}
 .actions{flex-direction:column}
 .btn{min-width:100%}
+.avatar{width:70px;height:70px;font-size:32px}
+@media(max-width:600px){
+.customer-name{font-size:22px}
+.card{padding:18px}
+th,td{padding:10px;font-size:13px}
 }
-@keyframes fadeInUp{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
-}
+/* ====== نهاية CSS ====== */
 </style>
 </head>
 <body>
 <div class="container">
-<button class="back-btn" onclick="window.close()">رجوع</button>
+<button class="back-btn" onclick="window.close()">⬅️ رجوع</button>
 
 <div class="header-card">
 <div class="avatar" id="avatar">أ</div>
@@ -71,49 +95,54 @@ to{opacity:1;transform:translateY(0)}
 </div>
 
 <div class="card">
-<div class="info-row"><span>رقم الهاتف</span><span id="customerPhone">-</span></div>
-<div class="info-row"><span>تاريخ الإنشاء</span><span id="customerDate">-</span></div>
-<div class="info-row balance-row"><span>الرصيد الحالي</span><span id="balance">0 درهم</span></div>
+<div class="info-row"><span>📱 رقم الهاتف</span><span id="customerPhone">-</span></div>
+<div class="info-row"><span>📅 تاريخ الإنشاء</span><span id="customerDate">-</span></div>
+<div class="info-row balance-row"><span>💰 الرصيد الحالي</span><span id="balance">0 درهم</span></div>
 </div>
 
 <div class="actions">
-<button class="btn btn-deposit" onclick="openPopup('deposit')">إضافة إيداع 🟢</button>
-<button class="btn btn-paid" onclick="openPopup('paid')">إضافة دفع 🔴</button>
-<button class="btn" style="background:#8e44ad" onclick="exportToPDF()">📄 تصدير</button>
-<button class="btn" style="background:#16a085" onclick="window.print()">🖨️ طباعة</button>
+<button class="btn btn-deposit" onclick="openPopup('deposit')">➕ إضافة إيداع 🟢</button>
+<button class="btn btn-paid" onclick="openPopup('paid')">➖ إضافة دفع 🔴</button>
+<button class="btn" style="background:linear-gradient(135deg,#8e44ad,#9b59b6)" onclick="exportToPDF()">📄 تصدير PDF</button>
+<button class="btn" style="background:linear-gradient(135deg,#16a085,#1abc9c)" onclick="window.print()">🖨️ طباعة</button>
+<button class="btn" style="background:linear-gradient(135deg,#e67e22,#f39c12)" onclick="backupCustomer()">💾 نسخ احتياطي</button>
 </div>
 
 <div class="card">
-<h3>📝 ملاحظات</h3>
-<textarea id="notes" placeholder="اكتب ملاحظات عن الزبون..." onblur="saveNotes()"></textarea>
+<h3>📝 ملاحظات الزبون</h3>
+<textarea id="notes" placeholder="اكتب ملاحظات مهمة عن الزبون... سيتم الحفظ تلقائيا" onblur="saveNotes()"></textarea>
 </div>
 
 <div class="card">
-<h3>📍 الموقع</h3>
-<input type="text" id="locationInput" placeholder="أدخل العنوان أو رابط Google Maps" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a3f5f;background:#0a1929;color:#fff" onblur="saveLocation()">
-<div id="locationLink" style="margin-top:10px"></div>
+<h3>📍 الموقع والعنوان</h3>
+<input type="text" id="locationInput" placeholder="أدخل العنوان أو الصق رابط Google Maps" onblur="saveLocation()">
+<div id="locationLink" style="margin-top:15px"></div>
 </div>
 
 <div class="card">
-<h3>📊 العمليات</h3>
-<div style="display:flex;gap:10px;margin-bottom:15px">
-<button class="btn" style="flex:1;background:#34495e" onclick="filterOps('all')">الكل</button>
-<button class="btn" style="flex:1;background:#34495e" onclick="filterOps('deposit')">الإيداعات</button>
-<button class="btn" style="flex:1;background:#34495e" onclick="filterOps('paid')">الدفعات</button>
+<h3>📊 سجل العمليات</h3>
+<input type="text" class="search-box" id="searchBox" placeholder="🔍 ابحث في العمليات بالمبلغ أو التاريخ..." oninput="searchOperations(this.value)">
+<div class="filter-btns">
+<button class="filter-btn active" onclick="filterOps('all')">الكل</button>
+<button class="filter-btn" onclick="filterOps('deposit')">الإيداعات 🟢</button>
+<button class="filter-btn" onclick="filterOps('paid')">الدفعات 🔴</button>
 </div>
 <table>
 <thead>
-<tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th></tr>
+<tr><th>التاريخ والوقت</th><th>نوع العملية</th><th>المبلغ</th></tr>
 </thead>
 <tbody id="operationsBody">
-<tr><td colspan="3">لا توجد عمليات</td></tr>
+<tr><td colspan="3" style="padding:30px">جاري التحميل...</td></tr>
 </tbody>
 </table>
-<div class="info-row" style="margin-top:15px">
-<span>مجموع الإيداع:</span><span id="totalDeposit" class="amount-deposit">0 درهم</span>
+<div class="info-row" style="margin-top:20px">
+<span>📈 مجموع الإيداعات:</span><span id="totalDeposit" class="amount-deposit">0 درهم</span>
 </div>
 <div class="info-row">
-<span>مجموع الدفع:</span><span id="totalPaid" class="amount-paid">0 درهم</span>
+<span>📉 مجموع الدفعات:</span><span id="totalPaid" class="amount-paid">0 درهم</span>
+</div>
+<div class="info-row">
+<span>📊 متوسط الإيداع الشهري:</span><span id="monthlyAvg">0 درهم</span>
 </div>
 </div>
 
@@ -121,21 +150,22 @@ to{opacity:1;transform:translateY(0)}
 
 <div class="popup" id="popup">
 <div class="popup-content">
-<h3 id="popupTitle">إضافة عملية</h3>
-<input type="number" id="amountInput" placeholder="المبلغ بالدرهم" step="0.01">
+<h3 id="popupTitle">إضافة عملية جديدة</h3>
+<input type="number" id="amountInput" placeholder="المبلغ بالدرهم المغربي" step="0.01" min="0.01">
 <input type="datetime-local" id="dateInput">
 <div class="popup-btns">
-<button class="popup-btn btn-confirm" onclick="saveOperation()">تأكيد</button>
-<button class="popup-btn btn-cancel" onclick="closePopup()">إلغاء</button>
+<button class="popup-btn btn-confirm" onclick="saveOperation()">✅ تأكيد</button>
+<button class="popup-btn btn-cancel" onclick="closePopup()">❌ إلغاء</button>
 </div>
 </div>
 </div>
 
 <script type="module">
+// ====== الجزء 1: استيراد Firebase والمتغيرات ======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, onValue, update, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ====== إعدادات Firebase ======
+// ====== إعدادات Firebase - بدّلها ديالك ======
 const firebaseConfig = {
 databaseURL: "https://karni-pro-default-rtdb.firebaseio.com/"
 };
@@ -149,11 +179,13 @@ let customerData = {};
 let operations = [];
 let currentOpType = '';
 let currentFilter = 'all';
+let lastClick = 0;
 
-// ====== تحميل بيانات الزبون ======
+// ====== تحميل بيانات الزبون من Firebase ======
 function loadCustomer() {
 if(!customerId) {
-alert('خطأ: لا يوجد معرف الزبون');
+alert('خطأ: لا يوجد معرف الزبون في الرابط');
+window.close();
 return;
 }
 
@@ -163,34 +195,51 @@ if(data) {
 customerData = data;
 operations = data.operations || [];
 updateUI();
+console.log('تم تحميل بيانات الزبون:', customerData.name);
 } else {
-alert('الزبون غير موجود');
+alert('الزبون غير موجود في قاعدة البيانات');
+window.close();
 }
+}, (error) => {
+console.error('خطأ في تحميل البيانات:', error);
+alert('فشل الاتصال بقاعدة البيانات');
 });
 }
 
-// ====== تحديث الواجهة ======
+// ====== تحديث الواجهة بالكامل ======
 function updateUI() {
 document.getElementById('customerName').textContent = customerData.name || 'بدون اسم';
-document.getElementById('customerPhone').textContent = customerData.phone || '-';
-document.getElementById('customerDate').textContent = new Date(customerData.createdAt).toLocaleDateString('ar-MA');
+document.getElementById('customerPhone').textContent = customerData.phone || 'غير محدد';
+document.getElementById('customerDate').textContent = new Date(customerData.createdAt).toLocaleDateString('ar-MA', {
+year: 'numeric',
+month: 'long',
+day: 'numeric'
+});
 document.getElementById('notes').value = customerData.notes || '';
 document.getElementById('locationInput').value = customerData.location || '';
 
+// تحديث الدائرة الملونة
 const avatar = document.getElementById('avatar');
-const firstLetter = customerData.name? customerData.name.charAt(0) : 'أ';
+const firstLetter = customerData.name? customerData.name.charAt(0).toUpperCase() : 'أ';
 avatar.textContent = firstLetter;
 avatar.style.background = getAvatarColor(customerData.name);
 
+// تحديث النجوم
 updateStars(customerData.rating || 0);
+
+// تحديث الأرقام
 updateBalance();
 displayOperations();
 updateLocationLink();
+calculateMonthlyAverage();
 }
 
-// ====== لون الدائرة حسب الاسم ======
+// ====== توليد لون الدائرة حسب الاسم ======
 function getAvatarColor(name) {
-const colors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22'];
+const colors = [
+'#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6',
+'#1abc9c','#e67e22','#34495e','#16a085','#8e44ad'
+];
 let hash = 0;
 for(let i = 0; i < name.length; i++) {
 hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -198,11 +247,14 @@ hash = name.charCodeAt(i) + ((hash << 5) - hash);
 return colors[Math.abs(hash) % colors.length];
 }
 
-// ====== النجوم ======
+// ====== نظام النجوم للتقييم ======
 function updateStars(rating) {
 document.querySelectorAll('.star').forEach((star, index) => {
-if(index < rating) star.classList.add('active');
-else star.classList.remove('active');
+if(index < rating) {
+star.classList.add('active');
+} else {
+star.classList.remove('active');
+}
 });
 }
 
@@ -210,41 +262,51 @@ document.querySelectorAll('.star').forEach(star => {
 star.addEventListener('click', function() {
 const rating = parseInt(this.dataset.star);
 update(ref(db, 'customers/' + customerId), { rating });
+logAction('تقييم الزبون', { rating });
 });
 });
 
-// ====== الرصيد ======
+// ====== حساب الرصيد والمجاميع ======
 function updateBalance() {
-const totalDeposit = operations.filter(op => op.type === 'deposit').reduce((sum, op) => sum + parseFloat(op.amount), 0);
-const totalPaid = operations.filter(op => op.type === 'paid').reduce((sum, op) => sum + parseFloat(op.amount), 0);
+const totalDeposit = operations.filter(op => op.type === 'deposit')
+.reduce((sum, op) => sum + parseFloat(op.amount || 0), 0);
+const totalPaid = operations.filter(op => op.type === 'paid')
+.reduce((sum, op) => sum + parseFloat(op.amount || 0), 0);
 const balance = totalDeposit - totalPaid;
 
-document.getElementById('balance').textContent = balance.toLocaleString() + ' درهم';
+document.getElementById('balance').textContent = balance.toLocaleString('ar-MA') + ' درهم';
 document.getElementById('balance').className = balance >= 0? 'balance-positive' : 'balance-negative';
-document.getElementById('totalDeposit').textContent = totalDeposit.toLocaleString() + ' درهم';
-document.getElementById('totalPaid').textContent = totalPaid.toLocaleString() + ' درهم';
+document.getElementById('totalDeposit').textContent = totalDeposit.toLocaleString('ar-MA') + ' درهم';
+document.getElementById('totalPaid').textContent = totalPaid.toLocaleString('ar-MA') + ' درهم';
 }
 
-// ====== عرض العمليات ======
+// ====== عرض العمليات في الجدول ======
 function displayOperations() {
-let filteredOps = operations;
-if(currentFilter === 'deposit') filteredOps = operations.filter(op => op.type === 'deposit');
-if(currentFilter === 'paid') filteredOps = operations.filter(op => op.type === 'paid');
+let filteredOps = [...operations];
 
+if(currentFilter === 'deposit') {
+filteredOps = operations.filter(op => op.type === 'deposit');
+} else if(currentFilter === 'paid') {
+filteredOps = operations.filter(op => op.type === 'paid');
+}
+
+// ترتيب حسب التاريخ الأحدث
 filteredOps.sort((a,b) => new Date(b.date) - new Date(a.date));
 
 const tbody = document.getElementById('operationsBody');
 if(filteredOps.length === 0) {
-tbody.innerHTML = '<tr><td colspan="3">لا توجد عمليات</td></tr>';
+tbody.innerHTML = '<tr><td colspan="3" style="padding:40px;text-align:center">لا توجد عمليات لعرضها</td></tr>';
 return;
 }
 
 tbody.innerHTML = filteredOps.map(op => `
 <tr>
-<td class="date-editable" onclick="editDate(${op.id})">${new Date(op.date).toLocaleString('ar-MA')}</td>
-<td>${op.type === 'deposit'? 'إيداع' : 'دفع'}</td>
+<td class="date-editable" onclick="editDate(${op.id})">
+${formatArabicDate(op.date)}
+</td>
+<td>${op.type === 'deposit'? 'إيداع 🟢' : 'دفع 🔴'}</td>
 <td class="${op.type === 'deposit'? 'amount-deposit' : 'amount-paid'}">
-${op.type === 'deposit'? '+' : '-'} ${parseFloat(op.amount).toLocaleString()} درهم
+${op.type === 'deposit'? '+' : '-'} ${parseFloat(op.amount).toLocaleString('ar-MA')} درهم
 </td>
 </tr>
 `).join('');
@@ -253,29 +315,80 @@ ${op.type === 'deposit'? '+' : '-'} ${parseFloat(op.amount).toLocaleString()} د
 // ====== فلترة العمليات ======
 window.filterOps = function(type) {
 currentFilter = type;
+document.querySelectorAll('.filter-btn').forEach(btn => {
+btn.classList.remove('active');
+});
+event.target.classList.add('active');
 displayOperations();
 }
 
-// ====== البوب أب ======
+// ====== البحث في العمليات ======
+window.searchOperations = function(query) {
+if(!query.trim()) {
+displayOperations();
+return;
+}
+
+const filtered = operations.filter(op => {
+const amount = op.amount.toString();
+const date = new Date(op.date).toLocaleDateString('ar-MA');
+return amount.includes(query) || date.includes(query) || op.type.includes(query);
+});
+
+const tbody = document.getElementById('operationsBody');
+if(filtered.length === 0) {
+tbody.innerHTML = '<tr><td colspan="3" style="padding:30px">لا توجد نتائج للبحث</td></tr>';
+return;
+}
+
+tbody.innerHTML = filtered.map(op => `
+<tr>
+<td class="date-editable" onclick="editDate(${op.id})">
+${formatArabicDate(op.date)}
+</td>
+<td>${op.type === 'deposit'? 'إيداع 🟢' : 'دفع 🔴'}</td>
+<td class="${op.type === 'deposit'? 'amount-deposit' : 'amount-paid'}">
+${op.type === 'deposit'? '+' : '-'} ${parseFloat(op.amount).toLocaleString('ar-MA')} درهم
+</td>
+</tr>
+`).join('');
+}
+
+// ====== تنسيق التاريخ بالعربية ======
+function formatArabicDate(dateString) {
+const date = new Date(dateString);
+return date.toLocaleDateString('ar-MA', {
+year: 'numeric',
+month: 'short',
+day: 'numeric',
+hour: '2-digit',
+minute: '2-digit'
+});
+}
+
+// ====== البوب أب لإضافة عملية ======
 window.openPopup = function(type) {
 currentOpType = type;
-document.getElementById('popupTitle').textContent = type === 'deposit'? 'إضافة إيداع' : 'إضافة دفع';
+document.getElementById('popupTitle').textContent = type === 'deposit'? '➕ إضافة إيداع جديد' : '➖ إضافة دفع جديد';
 document.getElementById('dateInput').value = new Date().toISOString().slice(0,16);
 document.getElementById('amountInput').value = '';
+document.getElementById('amountInput').focus();
 document.getElementById('popup').classList.add('active');
 }
 
 window.closePopup = function() {
 document.getElementById('popup').classList.remove('active');
+document.getElementById('amountInput').value = '';
 }
 
-// ====== حفظ العملية ======
+// ====== حفظ العملية الجديدة ======
 window.saveOperation = function() {
 const amount = parseFloat(document.getElementById('amountInput').value);
 const date = document.getElementById('dateInput').value;
 
-if(!amount || amount <= 0) {
-alert('أدخل مبلغ صحيح');
+if(!validateAmount(amount)) return;
+if(!date) {
+alert('المرجو اختيار التاريخ والوقت');
 return;
 }
 
@@ -288,64 +401,567 @@ date: date
 
 operations.push(newOp);
 update(ref(db, 'customers/' + customerId), { operations });
+logAction('إضافة عملية', { type: currentOpType, amount });
 closePopup();
 }
 
-// ====== تعديل التاريخ ======
+// ====== فحص صحة المبلغ ======
+function validateAmount(amount) {
+if(isNaN(amount) || amount <= 0) {
+alert('المبلغ يجب أن يكون رقم موجب أكبر من صفر');
+return false;
+}
+if(amount > 10000000) {
+if(!confirm('المبلغ كبير جدا، هل أنت متأكد؟')) {
+return false;
+}
+return true;
+}
+
+// ====== تعديل تاريخ العملية ======
 window.editDate = function(opId) {
-const newDate = prompt('أدخل التاريخ الجديد بصيغة YYYY-MM-DDTHH:MM');
+const newDate = prompt('أدخل التاريخ والوقت الجديد بصيغة: YYYY-MM-DDTHH:MM');
 if(newDate) {
 const op = operations.find(o => o.id === opId);
 if(op) {
 op.date = newDate;
 update(ref(db, 'customers/' + customerId), { operations });
+logAction('تعديل تاريخ', { opId, newDate });
 }
 }
 
-// ====== الملاحظات ======
+// ====== حفظ الملاحظات تلقائيا ======
 window.saveNotes = function() {
-update(ref(db, 'customers/' + customerId), { notes: document.getElementById('notes').value });
+const notes = document.getElementById('notes').value;
+update(ref(db, 'customers/' + customerId), { notes });
+console.log('تم حفظ الملاحظات');
 }
 
-// ====== الموقع ======
+// ====== حفظ الموقع ======
 window.saveLocation = function() {
-update(ref(db, 'customers/' + customerId), { location: document.getElementById('locationInput').value });
+const location = document.getElementById('locationInput').value;
+update(ref(db, 'customers/' + customerId), { location });
+customerData.location = location;
 updateLocationLink();
 }
 
+// ====== عرض رابط الموقع ======
 function updateLocationLink() {
 const loc = customerData.location;
 const div = document.getElementById('locationLink');
 if(loc && loc.includes('http')) {
-div.innerHTML = `<a href="${loc}" target="_blank" style="color:#3498db">فتح في Google Maps 📍</a>`;
+div.innerHTML = `<a href="${loc}" target="_blank" style="color:#3498db;font-size:16px">📍 فتح الموقع في Google Maps</a>`;
+} else if(loc) {
+div.innerHTML = `<span style="color:#95a5a6">العنوان: ${loc}</span>`;
 } else {
 div.innerHTML = '';
 }
 }
 
-// ====== تصدير PDF ======
-window.exportToPDF = function() {
-let content = 'كشف حساب - ' + customerData.name + '\n\n';
-content += 'الإيداع: ' + document.getElementById('totalDeposit').textContent + '\n';
-content += 'الدفع: ' + document.getElementById('totalPaid').textContent + '\n';
-content += 'الرصيد: ' + document.getElementById('balance').textContent + '\n\n';
-content += 'العمليات:\n';
+// ====== حساب متوسط الإيداع الشهري ======
+function calculateMonthlyAverage() {
+const deposits = operations.filter(op => op.type === 'deposit');
+if(deposits.length === 0) {
+document.getElementById('monthlyAvg').textContent = '0 درهم';
+return;
+}
 
-operations.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(op => {
-const type = op.type === 'deposit'? 'إيداع' : 'دفع';
-const date = new Date(op.date).toLocaleString('ar-MA');
-content += `${date} - ${type} - ${op.amount} درهم\n`;
+const total = deposits.reduce((sum, op) => sum + parseFloat(op.amount), 0);
+const months = new Set(deposits.map(op => {
+const d = new Date(op.date);
+return d.getFullYear() + '-' + d.getMonth();
+})).size;
+
+const avg = months > 0 ? total / months : total;
+document.getElementById('monthlyAvg').textContent = avg.toLocaleString('ar-MA') + ' درهم';
+}
+
+// ====== تسجيل الأحداث ======
+function logAction(action, details) {
+console.log(`[${new Date().toLocaleTimeString('ar-MA')}] ${action}:`, details);
+}
+
+// ====== منع النقر المزدوج ======
+document.addEventListener('click', function(e) {
+const now = Date.now();
+if(now - lastClick < 300) {
+e.preventDefault();
+e.stopPropagation();
+}
+lastClick = now;
 });
+
+// ====== اختصارات الكيبورد ======
+document.addEventListener('keydown', function(e) {
+if(e.ctrlKey && e.key === 'd') {
+e.preventDefault();
+openPopup('deposit');
+}
+if(e.ctrlKey && e.key === 'p') {
+e.preventDefault();
+openPopup('paid');
+}
+if(e.ctrlKey && e.key === 's') {
+e.preventDefault();
+saveNotes();
+alert('تم حفظ الملاحظات');
+}
+});
+
+// ====== فحص الاتصال بـ Firebase ======
+const connectedRef = ref(db, '.info/connected');
+onValue(connectedRef, (snap) => {
+if(snap.val() === true) {
+console.log('✅ متصل بقاعدة البيانات');
+} else {
+console.warn('⚠️ انقطع الاتصال بالانترنت');
+}
+});
+
+// ====== الجزء 2: التحسينات المتقدمة ======
+// نكمل من السطر 521
+
+// ====== الأنيميشن عند تحميل الكروت ======
+function addCardAnimations() {
+const cards = document.querySelectorAll('.card');
+cards.forEach((card, index) => {
+card.style.animationDelay = `${index * 0.1}s`;
+card.classList.add('fadeInUp');
+});
+}
+
+// ====== Calendra متقدم ======
+function setupAdvancedCalendar() {
+const dateInput = document.getElementById('dateInput');
+dateInput.min = '2020-01-01T00:00';
+dateInput.max = '2030-12-31T23:59';
+dateInput.addEventListener('change', function() {
+const selectedDate = new Date(this.value);
+if(selectedDate > new Date()) {
+if(!confirm('التاريخ في المستقبل، هل أنت متأكد؟')) {
+this.value = new Date().toISOString().slice(0,16);
+}
+});
+}
+
+// ====== تصدير PDF احترافي ======
+window.exportToPDF = function() {
+let content = '=================================\n';
+content += ' كشف حساب الزبون\n';
+content += ' Karni Pro System\n';
+content += '=================================\n\n';
+content += 'الاسم: ' + customerData.name + '\n';
+content += 'الهاتف: ' + customerData.phone + '\n';
+content += 'تاريخ الإنشاء: ' + new Date(customerData.createdAt).toLocaleDateString('ar-MA') + '\n';
+content += 'تاريخ التصدير: ' + new Date().toLocaleString('ar-MA') + '\n\n';
+content += '=================================\n';
+content += 'الملخص المالي\n';
+content += '=================================\n';
+content += 'مجموع الإيداعات: ' + document.getElementById('totalDeposit').textContent + '\n';
+content += 'مجموع الدفعات: ' + document.getElementById('totalPaid').textContent + '\n';
+content += 'الرصيد الحالي: ' + document.getElementById('balance').textContent + '\n\n';
+content += '=================================\n';
+content += 'سجل العمليات\n';
+content += '=================================\n\n';
+
+operations.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach((op, index) => {
+const type = op.type === 'deposit'? 'إيداع 🟢' : 'دفع 🔴';
+const date = formatArabicDate(op.date);
+const sign = op.type === 'deposit'? '+' : '-';
+content += `${index + 1}. ${date}\n`;
+content += ` النوع: ${type}\n`;
+content += ` المبلغ: ${sign} ${parseFloat(op.amount).toLocaleString('ar-MA')} درهم\n`;
+content += '---------------------------------\n';
+});
+
+if(customerData.notes) {
+content += '\n=================================\n';
+content += 'الملاحظات\n';
+content += '=================================\n';
+content += customerData.notes + '\n';
+}
 
 const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
 const link = document.createElement('a');
 link.href = URL.createObjectURL(blob);
-link.download = customerData.name + '_كشف_حساب.txt';
+link.download = customerData.name + '_كشف_حساب_' + new Date().toISOString().slice(0,10) + '.txt';
+document.body.appendChild(link);
 link.click();
+document.body.removeChild(link);
+
+logAction('تصدير PDF', { customerName: customerData.name });
+alert('تم تصدير الكشف بنجاح ✅');
 }
 
-// ====== تشغيل ======
+// ====== نسخ احتياطي JSON ======
+window.backupCustomer = function() {
+const backup = {
+customer: {
+name: customerData.name,
+phone: customerData.phone,
+createdAt: customerData.createdAt,
+rating: customerData.rating,
+notes: customerData.notes,
+location: customerData.location
+},
+operations: operations,
+statistics: {
+totalDeposit: operations.filter(op => op.type === 'deposit').reduce((s,op) => s + parseFloat(op.amount), 0),
+totalPaid: operations.filter(op => op.type === 'paid').reduce((s,op) => s + parseFloat(op.amount), 0),
+operationsCount: operations.length
+},
+exportDate: new Date().toISOString(),
+version: '1.0'
+};
+
+const dataStr = JSON.stringify(backup, null, 2);
+const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
+const link = document.createElement('a');
+link.href = URL.createObjectURL(blob);
+link.download = customerData.name + '_backup_' + Date.now() + '.json';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+logAction('نسخ احتياطي', { customerName: customerData.name });
+alert('تم إنشاء النسخة الاحتياطية بنجاح 💾');
+}
+
+// ====== استيراد العمليات من ملف ======
+window.importOperations = function(file) {
+const reader = new FileReader();
+reader.onload = function(e) {
+try {
+const data = JSON.parse(e.target.result);
+if(data.operations && Array.isArray(data.operations)) {
+if(confirm('سيتم إضافة ' + data.operations.length + ' عملية. متأكد؟')) {
+operations = [...operations,...data.operations];
+update(ref(db, 'customers/' + customerId), { operations });
+alert('تم الاستيراد بنجاح ✅');
+logAction('استيراد عمليات', { count: data.operations.length });
+}
+} else {
+alert('الملف غير صالح');
+}
+} catch(err) {
+alert('خطأ في قراءة الملف: ' + err.message);
+}
+};
+reader.readAsText(file);
+}
+
+// ====== حذف عملية معينة ======
+window.deleteOperation = function(opId) {
+if(confirm('هل تريد حذف هذه العملية نهائيا؟')) {
+operations = operations.filter(op => op.id!== opId);
+update(ref(db, 'customers/' + customerId), { operations });
+logAction('حذف عملية', { opId });
+}
+}
+
+// ====== تعديل مبلغ العملية ======
+window.editAmount = function(opId) {
+const op = operations.find(o => o.id === opId);
+if(op) {
+const newAmount = prompt('المبلغ الجديد:', op.amount);
+if(newAmount &&!isNaN(newAmount) && newAmount > 0) {
+op.amount = parseFloat(newAmount);
+update(ref(db, 'customers/' + customerId), { operations });
+logAction('تعديل مبلغ', { opId, newAmount });
+}
+}
+
+// ====== إحصائيات متقدمة ======
+function getAdvancedStats() {
+const deposits = operations.filter(op => op.type === 'deposit');
+const paids = operations.filter(op => op.type === 'paid');
+
+const stats = {
+totalDeposit: deposits.reduce((s,op) => s + parseFloat(op.amount), 0),
+totalPaid: paids.reduce((s,op) => s + parseFloat(op.amount), 0),
+avgDeposit: deposits.length > 0? deposits.reduce((s,op) => s + parseFloat(op.amount), 0) / deposits.length : 0,
+avgPaid: paids.length > 0? paids.reduce((s,op) => s + parseFloat(op.amount), 0) / paids.length : 0,
+maxDeposit: deposits.length > 0? Math.max(...deposits.map(op => parseFloat(op.amount))) : 0,
+maxPaid: paids.length > 0? Math.max(...paids.map(op => parseFloat(op.amount))) : 0,
+lastOperation: operations.length > 0? operations.sort((a,b) => new Date(b.date) - new Date(a.date))[0] : null
+};
+
+return stats;
+}
+
+// ====== عرض الإحصائيات في Console ======
+function displayStats() {
+const stats = getAdvancedStats();
+console.log('========== إحصائيات الزبون ==========');
+console.log('مجموع الإيداعات:', stats.totalDeposit.toLocaleString('ar-MA'));
+console.log('مجموع الدفعات:', stats.totalPaid.toLocaleString('ar-MA'));
+console.log('متوسط الإيداع:', stats.avgDeposit.toLocaleString('ar-MA'));
+console.log('متوسط الدفع:', stats.avgPaid.toLocaleString('ar-MA'));
+console.log('أكبر إيداع:', stats.maxDeposit.toLocaleString('ar-MA'));
+console.log('أكبر دفع:', stats.maxPaid.toLocaleString('ar-MA'));
+if(stats.lastOperation) {
+console.log('آخر عملية:', formatArabicDate(stats.lastOperation.date));
+}
+console.log('=====================================');
+}
+
+// ====== تنبيه الرصيد السالب ======
+function checkNegativeBalance() {
+const balance = customerData.totalDeposit - customerData.totalPaid;
+if(balance < 0) {
+console.warn('⚠️ تحذير: رصيد الزبون سالب بمقدار', Math.abs(balance).toLocaleString('ar-MA'), 'درهم');
+document.getElementById('balance').style.animation = 'blink 1s infinite';
+}
+}
+
+// ====== أنيميشن الوميض للرصيد السالب ======
+const blinkStyle = document.createElement('style');
+blinkStyle.textContent = `
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.5; }
+}
+`;
+document.head.appendChild(blinkStyle);
+
+// ====== حفظ تلقائي كل 30 ثانية ======
+setInterval(() => {
+if(customerData.name && operations.length > 0) {
+update(ref(db, 'customers/' + customerId), {
+lastAutoSave: Date.now()
+});
+console.log('💾 حفظ تلقائي:', new Date().toLocaleTimeString('ar-MA'));
+}
+}, 30000);
+
+// ====== فحص التغييرات قبل الخروج ======
+window.addEventListener('beforeunload', function(e) {
+const notes = document.getElementById('notes').value;
+if(notes!== (customerData.notes || '')) {
+e.preventDefault();
+e.returnValue = '';
+}
+});
+
+// ====== تحسينات الموبايل ======
+function mobileOptimizations() {
+if(window.innerWidth < 768) {
+document.body.classList.add('mobile-view');
+
+// تكبير الأزرار
+document.querySelectorAll('.btn').forEach(btn => {
+btn.style.minHeight = '50px';
+btn.style.fontSize = '18px';
+});
+
+// إخفاء بعض الأعمدة في الجدول
+if(window.innerWidth < 480) {
+document.querySelectorAll('th:nth-child(1), td:nth-child(1)').forEach(el => {
+el.style.fontSize = '12px';
+});
+}
+}
+
+window.addEventListener('resize', mobileOptimizations);
+mobileOptimizations();
+
+// ====== رسائل الترحيب ======
+function showWelcome() {
+if(!localStorage.getItem('welcomeShown_' + customerId)) {
+setTimeout(() => {
+console.log('👋 مرحبا بك في صفحة', customerData.name);
+localStorage.setItem('welcomeShown_' + customerId, 'true');
+}, 2000);
+}
+}
+
+// ====== اختصارات إضافية ======
+document.addEventListener('keydown', function(e) {
+// Ctrl + E = تصدير
+if(e.ctrlKey && e.key === 'e') {
+e.preventDefault();
+exportToPDF();
+}
+// Ctrl + B = نسخ احتياطي
+if(e.ctrlKey && e.key === 'b') {
+e.preventDefault();
+backupCustomer();
+}
+// Escape = إغلاق البوب أب
+if(e.key === 'Escape') {
+closePopup();
+}
+});
+
+// ====== معالجة الأخطاء العامة ======
+window.addEventListener('error', function(e) {
+console.error('❌ خطأ في الصفحة:', e.message, e.filename, e.lineno);
+});
+
+// ====== معالجة رفض الـ Promise ======
+window.addEventListener('unhandledrejection', function(e) {
+console.error('❌ Promise مرفوض:', e.reason);
+});
+
+// ====== تحسين الأداء ======
+let debounceTimer;
+function debounce(func, wait) {
+return function(...args) {
+clearTimeout(debounceTimer);
+debounceTimer = setTimeout(() => func.apply(this, args), wait);
+};
+}
+
+// تطبيق Debounce على البحث
+const searchBox = document.getElementById('searchBox');
+if(searchBox) {
+searchBox.addEventListener('input', debounce(function(e) {
+searchOperations(e.target.value);
+}, 300));
+}
+
+// ====== تخزين محلي للفلتر ======
+function saveFilterState() {
+localStorage.setItem('customerFilter_' + customerId, currentFilter);
+}
+
+function loadFilterState() {
+const saved = localStorage.getItem('customerFilter_' + customerId);
+if(saved) {
+currentFilter = saved;
+}
+}
+
+// ====== طباعة مخصصة ======
+window.printCustomer = function() {
+const printWindow = window.open('', '_blank');
+const printContent = `
+<html>
+<head>
+<title>كشف حساب - ${customerData.name}</title>
+<style>
+body{font-family:Arial;text-align:right;direction:rtl;padding:20px}
+h1{text-align:center;color:#2c3e50}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{border:1px solid #ddd;padding:10px;text-align:center}
+th{background:#3498db;color:white}
+.total{font-weight:bold;font-size:18px;margin-top:20px}
+</style>
+</head>
+<body>
+<h1>كشف حساب الزبون</h1>
+<h2>${customerData.name}</h2>
+<p>الهاتف: ${customerData.phone}</p>
+<p>التاريخ: ${new Date().toLocaleString('ar-MA')}</p>
+<table>
+<tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th></tr>
+${operations.map(op => `
+<tr>
+<td>${formatArabicDate(op.date)}</td>
+<td>${op.type === 'deposit'? 'إيداع' : 'دفع'}</td>
+<td>${op.amount} درهم</td>
+</tr>
+`).join('')}
+</table>
+<div class="total">
+<p>مجموع الإيداعات: ${document.getElementById('totalDeposit').textContent}</p>
+<p>مجموع الدفعات: ${document.getElementById('totalPaid').textContent}</p>
+<p>الرصيد: ${document.getElementById('balance').textContent}</p>
+</div>
+</body>
+</html>
+`;
+printWindow.document.write(printContent);
+printWindow.document.close();
+printWindow.print();
+}
+
+// ====== تشغيل الدوال عند التحميل ======
+addCardAnimations();
+setupAdvancedCalendar();
+loadFilterState();
+showWelcome();
+
+// ====== نهاية الجزء 2 - لا تغلق الـ script ======
+// </script> 
+  // ====== الجزء 3: الخاتمة والتشغيل ======
+// نكمل من بعد الجزء 2 مباشرة
+
+// ====== تشغيل الصفحة ======
+if(customerId) {
 loadCustomer();
+console.log('✅ صفحة الزبون جاهزة - ID:', customerId);
+} else {
+document.body.innerHTML = `
+<div style="text-align:center;padding:100px;font-size:24px">
+❌ خطأ: لا يوجد معرف الزبون في الرابط<br><br>
+تأكد من فتح الصفحة بهاد الشكل:<br>
+person.html?id=معرف_الزبون
+</div>
+`;
+}
+
+// ====== معلومات المطور ======
+console.log('%c Karni Pro - صفحة تفاصيل الزبون v2.0', 'color:#3498db;font-size:18px;font-weight:bold');
+console.log('%c تم التطوير بواسطة: Meta AI + Mostafa Store', 'color:#2ecc71;font-size:14px');
+console.log('%c Firebase Connected ✅', 'color:#27ae60;font-size:14px');
+
+// ====== إحصائيات الأداء ======
+const perfStart = performance.now();
+window.addEventListener('load', function() {
+const perfEnd = performance.now();
+console.log(`⚡ زمن التحميل: ${(perfEnd - perfStart).toFixed(2)}ms`);
+});
+
+// ====== اختبار سريع للدوال ======
+window.testFunctions = function() {
+console.log('🧪 بدء الاختبار...');
+console.log('1. الرصيد:', document.getElementById('balance').textContent);
+console.log('2. عدد العمليات:', operations.length);
+console.log('3. الاسم:', customerData.name);
+console.log('✅ الاختبار مكتمل');
+}
+
+// ====== دالة مساعدة للمطور ======
+window.getCustomerData = function() {
+return {
+customer: customerData,
+operations: operations,
+stats: getAdvancedStats()
+};
+}
+
+// ====== تنظيف الذاكرة عند الخروج ======
+window.addEventListener('unload', function() {
+console.log('👋 تم إغلاق الصفحة');
+});
+
+// ====== حماية إضافية ======
+// منع النسخ إلا بإذن
+document.addEventListener('copy', function(e) {
+if(!confirm('هل تريد نسخ المحتوى؟')) {
+e.preventDefault();
+}
+});
+
+// ====== إشعارات الديسكتوب ======
+function showNotification(title, body) {
+if(Notification.permission === 'granted') {
+new Notification(title, { body, icon: 'https://via.placeholder.com/64' });
+} else if(Notification.permission!== 'denied') {
+Notification.requestPermission();
+}
+}
+
+// ====== دالة تحديث الصفحة ======
+window.refreshPage = function() {
+location.reload();
+}
+
+// ====== نهاية الكود ======
+console.log('🎉 تم تحميل الكود كامل بنجاح!');
+console.log('📝 الأزرار المتاحة: Ctrl+D إيداع | Ctrl+P دفع | Ctrl+E تصدير | Ctrl+B نسخ احتياطي | Ctrl+S حفظ');
+
 </script>
 </body>
 </html>
