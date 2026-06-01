@@ -764,7 +764,7 @@ const db = getDatabase(app);
                 const overdueClass = customer.date < today? 'overdue' : '';
 
                 const card = `
-                    <div class="customer-card ${overdueClass}" onclick="viewCustomer('${key}')" style="animation-delay: ${index * 0.05}s">
+                    <div class="customer-card ${overdueClass}" onclick="openDetails('${key}')" style="animation-delay: ${index * 0.05}s">
                         <div class="customer-header">
                             <div class="customer-avatar">${customer.name.charAt(0)}</div>
                             <div class="customer-info">
@@ -904,8 +904,13 @@ const db = getDatabase(app);
         }
 
         window.openReports = function() {
-            showToast('التقارير قريباً');
-        }
-    </script>
+  showToast('التقارير قريبا');
+}
+
+window.openDetails = function(id) {
+  alert('كنصيفط ID: ' + id);
+  window.location.href = 'person.html?id=' + id;
+}
+</script>
 </body>
 </html>
