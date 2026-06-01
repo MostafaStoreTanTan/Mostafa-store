@@ -1,199 +1,301 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karni Pro - مسار اليوم التلقائي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: #f8fafc; color: #0f172a; padding: 15px; }
-        .header { background: #0f766e; color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 15px; font-weight: 900; font-size: 20px; }
-        .date-badge { background: #14b8a6; color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .stat-card { background: white; padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .stat-num { font-size: 18px; font-weight: 900; color: #0f766e; }
-        .stat-label { font-size: 11px; color: #64748b; font-weight: 700; margin-top: 3px; }
-        
-        .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; }
-        .customer-card.status-collected { border-right-color: #22c55e; } 
-        .customer-card.status-no-pay { border-right-color: #ef4444; } 
-        .customer-card.status-callback { border-right-color: #f97316; } 
-        .customer-card.status-closed { border-right-color: #eab308; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Route - Karni Pro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
+body{background:#f5f7fa;min-height:100vh;padding-bottom:80px}
 
-        .card-body { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; text-align: right; }
-        .step-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; background: #cbd5e1; }
-        
-        .info-area { flex: 1; }
-        .cust-name { font-size: 16px; font-weight: 800; }
-        .cust-debt { font-size: 13px; font-weight: 700; color: #14b8a6; margin-top: 2px; }
-        .cust-note { font-size: 11px; color: #ef4444; margin-top: 3px; }
+.header{
+    background:white;
+    padding:15px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+.header h2{font-size:18px;color:#2d3436}
+.back-btn{background:none;border:none;font-size:24px;cursor:pointer;color:#2d3436}
 
-        .btn-panel { display: flex; flex-wrap: wrap; gap: 8px; }
-        .action-btn { border: none; padding: 8px 12px; border-radius: 8px; color: white; font-weight: bold; font-size: 12px; cursor: pointer; }
-        .btn-green { background: #22c55e; }
-        .btn-red { background: #ef4444; }
-        .btn-orange { background: #f97316; }
-        .btn-yellow { background: #eab308; }
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    padding:15px 20px;
+    background:white;
+    margin-bottom:15px;
+}
+.stat-box{text-align:center}
+.stat-num{font-size:22px;font-weight:bold;color:#2d3436}
+.stat-label{font-size:12px;color:#636e72;margin-top:3px}
+.stat-visited{color:#00b894}
+.stat-current{color:#0984e3}
+.stat-pending{color:#636e72}
 
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: white; width: 100%; max-width: 350px; padding: 20px; border-radius: 12px; text-align: right; }
-        .modal-input { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; text-align: right; }
-        .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .m-btn { border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .no-data { text-align: center; padding: 40px 20px; color: #94a3b8; font-weight: bold; background: white; border-radius: 15px; }
-        .finish-btn { width: 100%; border: none; background: #16a34a; color: white; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 15px; }
-    </style>
+.route-container{
+    padding:20px;
+    background:white;
+    margin:0 15px;
+    border-radius:20px;
+    box-shadow:0 3px 15px rgba(0,0,0,0.08);
+}
+
+.depot{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px;
+    background:#f0f0f0;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+.depot-icon{width:40px;height:40px;border-radius:50%;background:#00b894;color:white;display:flex;align-items:center;justify-content:center;font-size:20px}
+.depot-info.name{font-weight:bold;color:#2d3436}
+.depot-info.status{font-size:12px;color:#636e72}
+
+.customer-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:25px;
+    position:relative;
+}
+.customer-item::before{
+    content:'';
+    position:absolute;
+    right:20px;
+    top:50px;
+    width:2px;
+    height:40px;
+    border-right:2px dashed #dfe6e9;
+}
+.customer-item:last-child::before{display:none}
+
+.circle{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:bold;color:white;font-size:16px;
+    flex-shrink:0;
+}
+.circle.visited{background:#00b894}
+.circle.current{background:#0984e3}
+.circle.pending{background:#b2bec3}
+
+.card-info{
+    flex:1;
+    padding:12px 15px;
+    border-radius:12px;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    border-right:4px solid transparent;
+}
+.card-info.visited{border-right-color:#00b894}
+.card-info.current{border-right-color:#0984e3}
+.card-info.pending{border-right-color:#b2bec3}
+
+.card-name{font-weight:bold;color:#2d3436;margin-bottom:3px}
+.card-status{font-size:12px}
+.status-visited{color:#00b894}
+.status-current{color:#0984e3}
+.status-pending{color:#636e72}
+
+.btn-done{
+    background:#00b894;
+    color:white;
+    border:none;
+    padding:6px 15px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:5px;
+}
+.btn-done:active{transform:scale(0.95)}
+
+.legend{
+    display:flex;
+    justify-content:space-around;
+    padding:15px 20px;
+    font-size:12px;
+    color:#636e72;
+}
+.legend span{display:flex;align-items:center;gap:5px}
+
+.finish-btn{
+    position:fixed;
+    bottom:0;
+    right:0;
+    left:0;
+    padding:18px;
+    background:linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);
+    color:white;
+    border:none;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 -4px 15px rgba(9,132,227,0.3);
+}
+.finish-btn:active{transform:scale(0.98)}
+</style>
 </head>
 <body>
 
-    <div class="header"><i class="fas fa-map-marked-alt"></i> مسار التوزيع اليومي</div>
-    <div style="text-align: center;"><div class="date-badge" id="currentDateBadge">تاريخ اليوم: --</div></div>
+<div class="header">
+    <button class="back-btn" onclick="window.location.href='index.html'">⬅️</button>
+    <h2>🗺️ Route</h2>
+    <div style="width:24px"></div>
+</div>
 
-    <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num" id="countTotal">0</div><div class="stat-label">إجمالي زبائن اليوم</div></div>
-        <div class="stat-card"><div class="stat-num" id="countDone" style="color:#22c55e;">0</div><div class="stat-label">تم التحصيل</div></div>
-        <div class="stat-card"><div class="stat-num" id="countRem" style="color:#f97316;">0</div><div class="stat-label">المتبقي</div></div>
+<div class="stats">
+    <div class="stat-box">
+        <div class="stat-num" id="total">0</div>
+        <div class="stat-label">Total</div>
     </div>
-
-    <div id="routeCustomersList">
-        <div class="no-data">جاري مزامنة وجلب المسار...</div>
+    <div class="stat-box">
+        <div class="stat-num stat-visited" id="visited">0</div>
+        <div class="stat-label">Visited</div>
     </div>
+    <div class="stat-box">
+        <div class="stat-num stat-current" id="current">0</div>
+        <div class="stat-label">Current</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-num stat-pending" id="pending">0</div>
+        <div class="stat-label">Pending</div>
+    </div>
+</div>
 
-    <button class="finish-btn" onclick="window.finishRoute()"><i class="fas fa-check-double"></i> تصفير وإعادة تعيين المسار</button>
-
-    <div class="modal" id="noteModal">
-        <div class="modal-box">
-            <div class="modal-title" style="margin-bottom: 10px; font-weight:bold;">سبب عدم الدفع اليوم:</div>
-            <input type="text" id="modalNoteInput" class="modal-input" placeholder="مثال: المحل مغلق، لم يتوفر المال...">
-            <div class="modal-btns">
-                <button class="m-btn" onclick="window.submitNoPayNote()" style="background:#ef4444; color:white;">حفظ</button>
-                <button class="m-btn" onclick="window.closeModal()" style="background:#e2e8f0;">إلغاء</button>
-            </div>
+<div class="route-container">
+    <div class="depot">
+        <div class="depot-icon">🏠</div>
+        <div class="depot-info">
+            <div class="name">Depot</div>
+            <div class="status">Start</div>
         </div>
     </div>
 
+    <div id="routeList"></div>
+</div>
+
+<div class="legend">
+    <span>✅ Visited</span>
+    <span>🔵 Current</span>
+    <span>⚪ Pending</span>
+</div>
+
+<button class="finish-btn" id="finishBtn">Finish Route</button>
+
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-    const firebaseConfig = { databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com" };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+const firebaseConfig = {
+  apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
+  authDomain: "karni-b9b34.firebaseapp.com",
+  databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "karni-b9b34",
+  storageBucket: "karni-b9b34.firebasestorage.app",
+  messagingSenderId: "489835094040",
+  appId: "1:489835094040:web:109e20fe7b65516903236d"
+};
 
-    function getLocalTodayString() {
-        const d = new Date();
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-    const todayStr = getLocalTodayString();
-    document.getElementById('currentDateBadge').textContent = `تاريخ اليوم: ${todayStr}`;
+let customers = [];
+let currentIndex = 0;
+const today = new Date().toISOString().split('T')[0];
 
-    let customersData = [];
-    let activeNoPayIndex = null;
-
-    onValue(ref(db, 'customers'), (snapshot) => {
-        if (snapshot.exists()) {
-            const rawData = snapshot.val();
-            let filteredIndex = 1;
-            customersData = [];
-
-            Object.keys(rawData).forEach(key => {
-                const c = rawData[key];
-                if (c.date && c.date.trim() === todayStr) {
-                    customersData.push({
-                        id: key,
-                        name: c.name || "زبون مجهول",
-                        amount: parseFloat(c.amount) || 0,
-                        status: c.routeStatus || 'pending', 
-                        reason: c.routeReason || '',
-                        index: filteredIndex++
-                    });
-                }
-            });
-            renderRouteList();
-        } else {
-            showEmptyMessage();
-        }
-    });
-
-    function renderRouteList() {
-        const container = document.getElementById('routeCustomersList');
-        container.innerHTML = "";
-
-        if (customersData.length === 0) {
-            showEmptyMessage();
-            return;
-        }
-
-        let done = 0, rem = 0;
-
-        customersData.forEach((cust, idx) => {
-            if (cust.status === 'collected') done++;
-            else rem++;
-
-            const card = document.createElement('div');
-            card.className = `customer-card status-${cust.status}`;
-            card.innerHTML = `
-                <div class="card-body" onclick="window.location.href='person.html?id=${cust.id}'" style="cursor:pointer;">
-                    <div class="step-badge">${cust.index}</div>
-                    <div class="info-area">
-                        <div class="cust-name">${cust.name}</div>
-                        <div class="cust-debt">${cust.amount.toFixed(2)} درهم</div>
-                        ${cust.reason ? `<div class="cust-note"><i class="fas fa-info-circle"></i> ${cust.reason}</div>` : ''}
-                    </div>
-                </div>
-                <div class="btn-panel">
-                    <button class="action-btn btn-green" onclick="window.changeStatus(${idx}, 'collected')">اعطاني</button>
-                    <button class="action-btn btn-red" onclick="window.triggerNoPayModal(${idx})">لم يعطِ</button>
-                    <button class="action-btn btn-orange" onclick="window.changeStatus(${idx}, 'callback')">سأعود</button>
-                    <button class="action-btn btn-yellow" onclick="window.changeStatus(${idx}, 'closed')">مغلق</button>
-                </div>`;
-            container.appendChild(card);
+// جلب زبناء اليوم فقط
+get(ref(db, 'customers')).then((snapshot)=>{
+    if(snapshot.exists()){
+        snapshot.forEach(child => {
+            const data = child.val();
+            if(data.paymentDate === today && data.amount > 0){
+                customers.push({id: child.key,...data, status: 'pending'});
+            }
         });
 
-        document.getElementById('countTotal').textContent = customersData.length;
-        document.getElementById('countDone').textContent = done;
-        document.getElementById('countRem').textContent = rem;
+        // أول واحد current
+        if(customers.length > 0) customers[0].status = 'current';
+        renderRoute();
+    }else{
+        document.getElementById('routeList').innerHTML = '<div style="text-align:center;padding:40px;color:#999">لا توجد زبناء اليوم</div>';
     }
+});
 
-    function showEmptyMessage() {
-        document.getElementById('routeCustomersList').innerHTML = `<div class="no-data">لا يوجد زبناء مسجلين بتاريخ اليوم (${todayStr})</div>`;
-        document.getElementById('countTotal').textContent = "0";
-        document.getElementById('countDone').textContent = "0";
-        document.getElementById('countRem').textContent = "0";
-    }
+function renderRoute(){
+    const routeList = document.getElementById('routeList');
+    routeList.innerHTML = '';
 
-    window.changeStatus = function(index, newStatus, reason = "") {
-        const currentCust = customersData[index];
-        update(ref(db, `customers/${currentCust.id}`), { routeStatus: newStatus, routeReason: reason });
-    };
+    let visited = 0, current = 0, pending = 0;
 
-    window.triggerNoPayModal = function(index) {
-        activeNoPayIndex = index;
-        document.getElementById('modalNoteInput').value = "";
-        document.getElementById('noteModal').style.display = 'flex';
-    };
+    customers.forEach((c, i)=>{
+        if(c.status === 'visited') visited++;
+        if(c.status === 'current') current++;
+        if(c.status === 'pending') pending++;
 
-    window.submitNoPayNote = function() {
-        const txt = document.getElementById('modalNoteInput').value.trim() || "بدون سبب";
-        if (activeNoPayIndex !== null) window.changeStatus(activeNoPayIndex, 'no-pay', txt);
-        window.closeModal();
-    };
+        const div = document.createElement('div');
+        div.className = 'customer-item';
 
-    window.closeModal = function() {
-        document.getElementById('noteModal').style.display = 'none';
-        activeNoPayIndex = null;
-    };
+        let circleClass = c.status;
+        let statusText = c.status === 'visited'? 'Visited' : c.status === 'current'? 'Current' : 'Pending';
+        let statusClass = 'status-' + c.status;
+        let btn = '';
 
-    window.finishRoute = function() {
-        if(confirm("هل تريد تصفير حالات المسار؟")) {
-            customersData.forEach(c => {
-                update(ref(db, `customers/${c.id}`), { routeStatus: 'pending', routeReason: '' });
-            });
+        if(c.status === 'current'){
+            btn = `<button class="btn-done" onclick="markDone(${i})">✅ تم</button>`;
+        }else if(c.status === 'visited'){
+            btn = '✅';
         }
-    };
+
+        div.innerHTML = `
+            <div class="circle ${circleClass}">${i+1}</div>
+            <div class="card-info ${circleClass}">
+                <div class="card-name">${c.name}</div>
+                <div class="card-status ${statusClass}">${statusText}</div>
+                ${btn}
+            </div>
+        `;
+        routeList.appendChild(div);
+    });
+
+    document.getElementById('total').textContent = customers.length;
+    document.getElementById('visited').textContent = visited;
+    document.getElementById('current').textContent = current;
+    document.getElementById('pending').textContent = pending;
+}
+
+// دالة تم - ينقل للزبون اللي موراه
+window.markDone = function(index){
+    customers[index].status = 'visited';
+
+    // سجل فـ Firebase
+    update(ref(db, 'customers/' + customers[index].id), {
+        routeStatus: 'visited',
+        routeDate: today
+    });
+
+    // الشخص اللي موراه current
+    if(index + 1 < customers.length){
+        customers[index + 1].status = 'current';
+    }
+
+    renderRoute();
+}
+
+// إنهاء المسار
+document.getElementById('finishBtn').addEventListener('click', ()=>{
+    if(confirm('واش كملتي كل الزبناء؟')){
+        alert('تم إنهاء المسار بنجاح ✅');
+        window.location.href = 'index.html';
+    }
+});
 </script>
 </body>
 </html>
