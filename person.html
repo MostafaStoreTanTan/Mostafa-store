@@ -1,705 +1,105 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تفاصيل الزبون - Karni Pro</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --primary: #667eea;
-            --primary-dark: #5568d3;
-            --secondary: #764ba2;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --dark: #1f2937;
-            --gray: #6b7280;
-            --light-gray: #f3f4f6;
-            --white: #ffffff;
-            --shadow: 0 10px 40px rgba(0,0,0,0.1);
-            --shadow-lg: 0 20px 60px rgba(102,126,234,0.3);
-        }
-
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 0;
-            margin: 0;
-            color: var(--dark);
-        }
-
-     .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: var(--light-gray);
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            padding-bottom: 120px;
-        }
-
-     .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 20px;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-     .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-     .btn-back {
-            width: 45px;
-            height: 45px;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-        }
-
-     .btn-back:active {
-            transform: scale(0.9);
-        }
-
-     .header-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-        }
-
-     .firebase-status {
-            background: rgba(255,255,255,0.2);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            backdrop-filter: blur(10px);
-        }
-
-     .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-     .profile-section {
-            background: white;
-            padding: 35px 20px;
-            text-align: center;
-            margin-bottom: 15px;
-            border-radius: 0 0 30px 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-     .avatar-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-     .avatar {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            border: 5px solid white;
-            box-shadow: 0 10px 30px rgba(102,126,234,0.25);
-            overflow: hidden;
-        }
-
-     .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-     .btn-camera {
-            position: absolute;
-            bottom: 8px;
-            left: 8px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            border: 4px solid white;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
-        }
-
-     .btn-camera:active {
-            transform: scale(0.85);
-        }
-
-     .customer-name {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-     .rating {
-            color: #fbbf24;
-            font-size: 1.6rem;
-            margin-bottom: 12px;
-            letter-spacing: 6px;
-        }
-
-     .customer-phone {
-            color: var(--gray);
-            font-size: 1.15rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-     .quick-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding: 0 20px;
-            margin-bottom: 20px;
-        }
-
-     .btn-quick {
-            padding: 16px;
-            border-radius: 18px;
-            border: none;
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-     .btn-call {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-
-     .btn-whatsapp {
-            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-            color: white;
-        }
-
-     .btn-quick:active {
-            transform: scale(0.94);
-        }
-
-     .edit-buttons {
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-     .btn-edit {
-            padding: 18px 20px;
-            border-radius: 18px;
-            border: none;
-            background: white;
-            color: var(--primary);
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
-        }
-
-     .btn-edit:active {
-            transform: scale(0.97);
-        }
-
-     .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            padding: 0 20px;
-            margin-bottom: 25px;
-        }
-
-     .stat-card {
-            background: white;
-            padding: 22px 10px;
-            border-radius: 22px;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-        }
-
-     .stat-label {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-     .stat-value {
-            font-size: 1.6rem;
-            font-weight: 900;
-        }
-
-     .stat-depot { color: var(--success); }
-     .stat-paid { color: var(--danger); }
-     .stat-balance { color: var(--primary); }
-
-     .section {
-            background: white;
-            margin: 0 20px 20px;
-            padding: 25px 20px;
-            border-radius: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-        }
-
-     .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-     .card-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--dark);
-        }
-
-     .btn-add {
-            padding: 10px 18px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Cairo', sans-serif;
-        }
-
-     .date-input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid var(--light-gray);
-            border-radius: 15px;
-            font-size: 1.05rem;
-            font-family: 'Cairo', sans-serif;
-            background: var(--light-gray);
-            font-weight: 600;
-            margin-top: 15px;
-        }
-
-     .date-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-        }
-
-     .transaction-item {
-            background: var(--light-gray);
-            padding: 18px;
-            border-radius: 15px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-right: 5px solid var(--primary);
-        }
-
-     .transaction-item.taken {
-            border-right-color: var(--success);
-        }
-
-     .transaction-item.given {
-            border-right-color: var(--danger);
-        }
-
-     .trans-info {
-            flex: 1;
-        }
-
-     .trans-type {
-            font-weight: 700;
-            margin-bottom: 5px;
-            font-size: 1rem;
-        }
-
-     .trans-date {
-            font-size: 0.88rem;
-            color: var(--gray);
-            font-weight: 600;
-        }
-
-     .trans-amount {
-            font-size: 1.4rem;
-            font-weight: 900;
-        }
-
-     .trans-taken { color: var(--success); }
-     .trans-given { color: var(--danger); }
-
-     .btn-edit-trans {
-            background: none;
-            border: none;
-            color: var(--gray);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            margin-right: 10px;
-        }
-
-     .notes-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 18px;
-            border: 2px solid var(--light-gray);
-            border-radius: 15px;
-            font-size: 1.05rem;
-            font-family: 'Cairo', sans-serif;
-            resize: vertical;
-            background: var(--light-gray);
-            font-weight: 500;
-            margin-top: 15px;
-        }
-
-     .notes-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-        }
-
-     .btn-location {
-            width: 100%;
-            padding: 18px;
-            border-radius: 18px;
-            border: none;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            font-size: 1.15rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-family: 'Cairo', sans-serif;
-            box-shadow: 0 6px 20px rgba(239,68,68,0.3);
-        }
-
-     .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-     .modal.show {
-            display: flex;
-        }
-
-     .modal-content {
-            background: white;
-            border-radius: 28px;
-            padding: 35px 28px;
-            width: 100%;
-            max-width: 420px;
-            animation: slideUp 0.35s ease;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-     .modal-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            text-align: center;
-            color: var(--dark);
-        }
-
-     .modal-input,.modal-select {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid var(--light-gray);
-            border-radius: 14px;
-            font-size: 1.1rem;
-            font-family: 'Cairo', sans-serif;
-            margin-bottom: 18px;
-            font-weight: 600;
-            background: var(--light-gray);
-        }
-
-     .modal-input:focus,.modal-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-        }
-
-     .modal-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-     .btn-modal {
-            padding: 16px;
-            border-radius: 14px;
-            border: none;
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-        }
-
-     .btn-save {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-        }
-
-     .btn-cancel {
-            background: var(--light-gray);
-            color: var(--gray);
-        }
-
-     .loading {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--gray);
-        }
-
-     .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid var(--light-gray);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 25px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-     .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
-        }
-
-     .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            opacity: 0.3;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل الزبون</title>
+<style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Tahoma',sans-serif;background:#667eea;padding:20px}
+    .box{max-width:400px;margin:auto;background:white;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+    h2{text-align:center;color:#333;margin-bottom:30px}
+    label{display:block;margin:15px 0 5px;font-weight:bold;color:#555}
+    input{width:100%;padding:15px;border:2px solid #ddd;border-radius:10px;font-size:18px}
+    input:focus{border-color:#667eea;outline:none}
+    button{width:100%;padding:15px;margin-top:20px;border:none;border-radius:10px;background:#667eea;color:white;font-size:18px;font-weight:bold;cursor:pointer}
+    button:active{transform:scale(0.97)}
+    .back{margin-top:10px;background:#ccc;color:#333}
+    .info{margin:20px 0;padding:15px;background:#f3f4f6;border-radius:10px;text-align:center}
+</style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <div class="header-top">
-                <button class="btn-back" onclick="goBack()">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-                <div class="header-title">تفاصيل الزبون</div>
-                <div class="firebase-status">
-                    <span class="status-dot"></span>
-                    متصل
-                </div>
-            </div>
-        </div>
 
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p style="font-size: 1.1rem; font-weight: 600;">كنجيب بيانات الزبون...</p>
-        </div>
-
-        <div id="content" style="display: none;">
-            <div class="profile-section">
-                <div class="avatar-container">
-                    <div class="avatar" id="customerAvatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <button class="btn-camera" onclick="changeAvatar()">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                </div>
-                <h1 class="customer-name" id="customerName">...</h1>
-                <div class="rating" id="customerRating">★★★</div>
-                <div class="customer-phone">
-                    <i class="fas fa-phone"></i>
-                    <span id="customerPhone">-</span>
-                </div>
-            </div>
-
-            <div class="quick-actions">
-                <button class="btn-quick btn-call" onclick="callCustomer()">
-                    <i class="fas fa-phone"></i>
-                    اتصال
-                </button>
-                <button class="btn-quick btn-whatsapp" onclick="openWhatsApp()">
-                    <i class="fab fa-whatsapp"></i>
-                    واتساب
-                </button>
-            </div>
-
-            <div class="edit-buttons">
-                <button class="btn-edit" onclick="showEditNameModal()">
-                    <i class="fas fa-pen"></i>
-                    تعديل الاسم
-                </button>
-                <button class="btn-edit" onclick="showEditPhoneModal()">
-                    <i class="fas fa-phone"></i>
-                    تعديل الهاتف
-                </button>
-                <button class="btn-edit" onclick="showEditLocationModal()">
-                    <i class="fas fa-map-marker-alt"></i>
-                    تعديل الموقع
-                </button>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">المبلغ اللي أخدتي</div>
-                    <div class="stat-value stat-depot" id="totalTaken">0 درهم</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">المبلغ اللي عطيتي</div>
-                    <div class="stat-value stat-paid" id="totalGiven">0 درهم</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">الرصيد الحالي</div>
-                    <div class="stat-value stat-balance" id="currentBalance">0 درهم</div>
-                </div>
-            </div>
-
-            <div class="section">
-                <div class="card-title">
-                    <i class="fas fa-calendar-alt"></i>
-                    تاريخ الاستحقاق
-                </div>
-                <input type="date" class="date-input" id="paymentDate" onchange="updatePaymentDate()">
-            </div>
-
-            <div class="section">
-                <div class="section-header">
-                    <div class="card-title" style="margin: 0;">
-                        <i class="fas fa-exchange-alt"></i>
-                        سجل العمليات
-                    </div>
-                    <button class="btn-add" onclick="showAddTransactionModal()">
-                        <i class="fas fa-plus"></i>
-                        إضافة
-                    </button>
-                </div>
-                <div id="transactionsList"></div>
-            </div>
-
-            <div class="section">
-                <div class="card-title">
-                    <i class="fas fa-sticky-note"></i>
-                    ملاحظات
-                </div>
-                <textarea class="notes-textarea" id="customerNotes" placeholder="كتبي أي ملاحظة خاصة بالزبون هنا..."></textarea>
-                <button class="btn-edit" style="margin-top: 15px; background: var(--primary); color: white;" onclick="saveNotes()">
-                    <i class="fas fa-save"></i>
-                    حفظ الملاحظات
-                </button>
-            </div>
-
-            <div class="section">
-                <button class="btn-location" onclick="openLocation()">
-                    <i class="fas fa-map-marked-alt"></i>
-                    فتح الموقع على الخريطة
-                </button>
-            </div>
-        </div>
+<div class="box">
+    <h2>تعديل الزبون</h2>
+    
+    <div class="info">
+        <div style="font-size:24px;font-weight:bold" id="name">...</div>
+        <div style="color:#666;margin-top:5px" id="phone">...</div>
     </div>
 
-    <div class="modal" id="editNameModal">
-        <div class="modal-content">
-            <div class="mod
-                
-                </script>
-                </body)
-                </html)
+    <label>المبلغ بالدرهم</label>
+    <input type="number" id="amount" placeholder="0">
+
+    <label>تاريخ الأداء</label>
+    <input type="date" id="date">
+
+    <button onclick="save()">💾 حفظ التغييرات</button>
+    <button class="back" onclick="goBack()">⬅️ رجوع</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// ⚠️ بدل هاد الكود بالـ config ديالك من Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDUMMY-KEY-REPLACE-WITH-YOURS",
+    authDomain: "karni-pro.firebaseapp.com",
+    databaseURL: "https://karni-pro-default-rtdb.firebaseio.com",
+    projectId: "karni-pro",
+    storageBucket: "karni-pro.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef123456"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+
+if(!id){
+    alert('خطأ: ما كاينش id فالرابط');
+    goBack();
+}
+
+const ref = db.ref('customers/' + id);
+
+// قرا البيانات
+ref.once('value').then(snap=>{
+    if(snap.exists()){
+        const data = snap.val();
+        document.getElementById('name').textContent = data.name || 'بدون اسم';
+        document.getElementById('phone').textContent = data.phone || '';
+        document.getElementById('amount').value = data.amount || 0;
+        document.getElementById('date').value = data.paymentDate || '';
+    }else{
+        alert('الزبون غير موجود');
+        goBack();
+    }
+});
+
+// حفظ التغييرات
+function save(){
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const date = document.getElementById('date').value;
+    
+    ref.update({
+        amount: amount,
+        paymentDate: date,
+        updatedAt: new Date().toISOString()
+    }).then(()=>{
+        alert('✅ تم الحفظ بنجاح');
+        goBack();
+    }).catch(err=>{
+        alert('خطأ: ' + err.message);
+    });
+}
+
+function goBack(){
+    window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
