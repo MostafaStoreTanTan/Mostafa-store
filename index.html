@@ -1,965 +1,583 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ar" dir="rtl">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f766e">
+    <title>Karni - الكرني الذكي</title>
 
-<meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --gradient: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            --bg: #f0fdfd;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #ccfbf1;
+            --shadow: 0 4px 15px rgba(15, 118, 110, 0.1);
+            --radius: 18px;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
 
-<title>📒 Karni</title>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding-bottom: 100px;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
+      .header {
+            background: var(--gradient);
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+            border-radius: 0 0 35px 35px;
+            box-shadow: 0 10px 30px rgba(15, 118, 110, 0.3);
+        }
 
-body{
-background:#f4f7fb;
-padding-bottom:100px;
-}
+      .header h1 {
+            font-size: 34px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
 
-.header{
-background:#0F766E;
-color:white;
-padding:28px 20px;
-text-align:center;
-font-size:42px;
-font-weight:800;
-letter-spacing:1px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
-}
+      .sync-status {
+            background: rgba(255,255,255,0.25);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
 
-.dashboard{
-padding:15px;
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-}
+      .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            padding: 24px 20px;
+        }
 
-.stat-card{
-background:white;
-border-radius:18px;
-padding:15px;
-text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-cursor:pointer;
-}
+      .stat-card {
+            background: var(--card);
+            padding: 24px 15px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
 
-.stat-number{
-font-size:26px;
-font-weight:bold;
-color:#0F766E;
-}
+      .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
 
-.stat-label{
-font-size:14px;
-color:#666;
-margin-top:5px;
-}
+      .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
 
-.big-btn{
-width:calc(100% - 30px);
-margin:0 15px 10px;
-padding:16px;
-border:none;
-border-radius:18px;
-font-size:18px;
-font-weight:bold;
-color:white;
-cursor:pointer;
-}
+      .search-box {
+            margin: 0 20px 15px;
+            background: var(--card);
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid var(--border);
+        }
 
-.route-btn{
-background:#2563eb;
-}
+      .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            background: transparent;
+            color: var(--text);
+        }
 
-.calendar-btn{
-background:#0F766E;
-}
+      .customers-list {
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-.search-box{
-padding:15px;
-}
+      .customer-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            animation: slideUp 0.4s ease-out backwards;
+        }
 
-.search-box input{
-width:100%;
-padding:15px;
-border:none;
-border-radius:15px;
-background:white;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-font-size:16px;
-}
+      .customer-header {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
 
-.tabs{
-display:flex;
-gap:10px;
-overflow:auto;
-padding:0 15px 15px;
-}
+      .customer-avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+        }
 
-.tab-btn{
-padding:12px 18px;
-border:none;
-border-radius:15px;
-background:white;
-white-space:nowrap;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-cursor:pointer;
-}
+      .customer-info {
+            flex: 1;
+        }
 
-.people-list{
-padding:15px;
-}
+      .customer-name {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
 
-</style>
+      .customer-amount {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
 
+      .customer-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+      .customer-actions {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+      .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+      .btn-profile {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+      .btn-collect {
+            background: linear-gradient(135deg, var(--success) 0%, #16a34a 100%);
+            color: white;
+        }
+
+      .btn-delete {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            color: white;
+        }
+
+      .fab {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(15, 118, 110, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+      .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+      .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+      .modal-content {
+            background: var(--card);
+            border-radius: 25px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+      .form-group {
+            margin-bottom: 20px;
+        }
+
+      .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+      .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            background: var(--bg);
+        }
+
+      .form-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+      .btn-save {
+            background: var(--gradient);
+            color: white;
+        }
+
+      .btn-cancel {
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+        }
+
+      .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="header">
-📒 Karni
-</div>
-
-<div class="dashboard">
-
-<div class="stat-card">
-<div class="stat-number"
-id="totalAmount">
-0
-</div>
-<div class="stat-label">
-💰 Amount
-</div>
-</div>
-
-<div class="stat-card">
-<div class="stat-number"
-id="peopleCount">
-0
-</div>
-<div class="stat-label">
-👥 Customers
-</div>
-</div>
-
-<div class="stat-card">
-<div class="stat-number"
-id="overdueCount">
-0
-</div>
-<div class="stat-label">
-🔴 Overdue
-</div>
-</div>
-
-<div class="stat-card">
-<div class="stat-number"
-id="todayCount">
-0
-</div>
-<div class="stat-label">
-🟢 Today
-</div>
-</div>
-
-<div class="stat-card">
-<div class="stat-number"
-id="upcomingCount">
-0
-</div>
-<div class="stat-label">
-🟡 Upcoming
-</div>
-</div>
-
-<div class="stat-card"
-onclick="location.href='route.html'">
-
-<div class="stat-number"
-id="routeCount">
-0
-</div>
-
-<div class="stat-label">
-🗺️ Route
-</div>
-
-</div>
-
-</div>
-
-<a href="calendar.html">
-
-<button
-class="big-btn calendar-btn">
-
-📅 Calendar
-
-</button>
-
-</a>
-
-<div class="search-box">
-
-<input
-type="text"
-id="search"
-placeholder="🔍 Search Customer">
-
-</div>
-
-<div class="tabs">
-
-<button class="tab-btn">
-📋 All
-</button>
-
-<button class="tab-btn">
-⭐ Favorites
-</button>
-
-<button class="tab-btn">
-🔴 Overdue
-</button>
-
-<button class="tab-btn">
-🟢 Today
-</button>
-
-<button class="tab-btn">
-🟡 Upcoming
-</button>
-
-</div>
-
-<div
-class="people-list"
-id="peopleList">
-</div>
-
-<button
-class="fab"
-onclick="openModal()">
-+
-</button>
-
-<div
-class="modal"
-id="personModal">
-
-<div class="modal-content">
-
-<h2>
-➕ Add Customer
-</h2>
-
-<input
-type="text"
-id="personName"
-placeholder="Customer Name">
-
-<input
-type="tel"
-id="personPhone"
-placeholder="Phone Number">
-
-<input
-type="date"
-id="personDueDate">
-
-<input
-type="text"
-id="personLocation"
-placeholder="Google Maps Link">
-
-<textarea
-id="personNote"
-placeholder="First Note">
-</textarea>
-
-<button
-class="save-btn"
-id="savePersonBtn">
-Save Customer
-</button>
-
-</div>
-
-</div>
-
-<style>
-
-.person-card{
-background:white;
-padding:15px;
-border-radius:18px;
-margin-bottom:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.person-top{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.person-photo{
-width:60px;
-height:60px;
-border-radius:50%;
-background:#ddd;
-overflow:hidden;
-flex-shrink:0;
-}
-
-.person-photo img{
-width:100%;
-height:100%;
-object-fit:cover;
-}
-
-.person-data{
-flex:1;
-}
-
-.person-name{
-font-size:20px;
-font-weight:bold;
-}
-
-.person-balance{
-font-size:22px;
-font-weight:bold;
-color:#0F766E;
-margin-top:5px;
-}
-
-.person-info{
-font-size:14px;
-color:#666;
-margin-top:4px;
-}
-
-.person-actions{
-display:flex;
-gap:8px;
-margin-top:12px;
-flex-wrap:wrap;
-}
-
-.profile-btn{
-background:#2563eb;
-color:white;
-border:none;
-padding:10px 14px;
-border-radius:10px;
-}
-
-.favorite-btn{
-background:#fbbf24;
-border:none;
-padding:10px 14px;
-border-radius:10px;
-}
-
-.fab{
-position:fixed;
-right:20px;
-bottom:20px;
-width:70px;
-height:70px;
-border:none;
-border-radius:50%;
-background:#14B8A6;
-color:white;
-font-size:40px;
-font-weight:bold;
-}
-
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.45);
-justify-content:center;
-align-items:center;
-padding:20px;
-}
-
-.modal-content{
-background:white;
-width:100%;
-max-width:450px;
-padding:20px;
-border-radius:20px;
-}
-
-.modal-content h2{
-margin-bottom:15px;
-}
-
-.modal-content input,
-.modal-content textarea{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:1px solid #ddd;
-border-radius:12px;
-}
-
-.save-btn{
-width:100%;
-padding:14px;
-border:none;
-border-radius:12px;
-background:#14B8A6;
-color:white;
-font-size:16px;
-font-weight:bold;
-}
-
-</style>  
-
-<script>
-
-let people =
-JSON.parse(
-localStorage.getItem("people")
-) || [];
-
-let currentTab = "all";
-
-function savePeople(){
-
-localStorage.setItem(
-"people",
-JSON.stringify(people)
-);
-
-}
-
-function openModal(){
-
-document.getElementById(
-"personModal"
-).style.display =
-"flex";
-
-}
-
-function closeModal(){
-
-document.getElementById(
-"personModal"
-).style.display =
-"none";
-
-}
-
-document.getElementById(
-"savePersonBtn"
-).onclick = async function(){
-
-let name =
-document.getElementById(
-"personName"
-).value.trim();
-
-if(!name){
-
-alert(
-"Enter Customer Name"
-);
-
-return;
-
-}
-
-const newCustomer = {
-
-name:name,
-
-phone:
-document.getElementById(
-"personPhone"
-).value,
-
-dueDate:
-document.getElementById(
-"personDueDate"
-).value,
-
-location:
-document.getElementById(
-"personLocation"
-).value,
-
-rating:0,
-
-favorite:false,
-
-photo:"",
-
-operations:[],
-
-conversation:[],
-
-notes:[
-document.getElementById(
-"personNote"
-).value
-]
-
-};
-
-alert("Before Firebase");
-
-try {
-
-await addDoc(
-collection(window.db,"customers"),
-newCustomer
-);
-
-alert("Saved To Firebase");
-
-people.push(newCustomer);
-
-savePeople();
-
-closeModal();
-
-renderPeople();
-
-};
-
-function renderPeople(){
-
-let html = "";
-
-let totalAmount = 0;
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-let overdue = 0;
-let todayCount = 0;
-let upcoming = 0;
-
-let search =
-document.getElementById(
-"search"
-).value.toLowerCase();
-
-people.forEach(person=>{
-
-let balance = 0;
-
-if(person.operations){
-
-person.operations.forEach(op=>{
-
-if(op.type === "Depot"){
-balance += Number(op.amount);
-}
-
-if(op.type === "Paid"){
-balance -= Number(op.amount);
-}
-
-});
-
-}
-
-person.realBalance = balance;
-
-totalAmount += balance;
-
-if(balance > 0){
-
-if(
-person.dueDate &&
-person.dueDate < today
-){
-overdue++;
-}
-
-else if(
-person.dueDate === today
-){
-todayCount++;
-}
-
-else if(
-person.dueDate > today
-){
-upcoming++;
-}
-
-}
-
-});
-
-document.getElementById(
-"totalAmount"
-).innerText =
-totalAmount + " MAD";
-
-document.getElementById(
-"peopleCount"
-).innerText =
-people.length;
-
-document.getElementById(
-"overdueCount"
-).innerText =
-overdue;
-
-document.getElementById(
-"todayCount"
-).innerText =
-todayCount;
-
-document.getElementById(
-"upcomingCount"
-).innerText =
-upcoming;
-
-document.getElementById(
-"routeCount"
-).innerText =
-todayCount;
-
-people.forEach(
-(person,index)=>{
-
-if(
-search &&
-!person.name
-.toLowerCase()
-.includes(search)
-){
-return;
-}
-
-if(
-currentTab === "favorites" &&
-!person.favorite
-){
-return;
-}
-
-if(
-currentTab === "overdue" &&
-!(
-person.realBalance > 0 &&
-person.dueDate &&
-person.dueDate < today
-)
-){
-return;
-}
-
-if(
-currentTab === "today" &&
-!(
-person.realBalance > 0 &&
-person.dueDate === today
-)
-){
-return;
-}
-
-if(
-currentTab === "upcoming" &&
-!(
-person.realBalance > 0 &&
-person.dueDate > today
-)
-){
-return;
-}
-
-let stars =
-"⭐".repeat(
-person.rating || 0
-);
-
-let lastNote = "";
-
-if(
-person.notes &&
-person.notes.length
-){
-
-let note =
-person.notes[
-person.notes.length - 1
-];
-
-if(
-typeof note === "object"
-){
-lastNote =
-note.text || "";
-}
-else{
-lastNote =
-note;
-}
-
-}
-
-html += `
-
-<div class="person-card">
-
-<div class="person-top">
-
-<div class="person-photo">
-
-${
-person.photo
-?
-`<img src="${person.photo}">`
-:
-""
-}
-
-</div>
-
-<div class="person-data">
-
-<div class="person-name">
-
-${stars}
-${person.name}
-
-</div>
-
-<div class="person-balance">
-
-${person.realBalance}
-MAD
-
-</div>
-
-</div>
-
-</div>
-
-<div class="person-info">
-📞 ${person.phone || "-"}
-</div>
-
-${
-person.dueDate
-?
-`
-<div class="person-info">
-📅 ${person.dueDate}
-</div>
-`
-:
-""
-}
-
-${
-person.location
-?
-`
-<div class="person-info">
-📍 Location Saved
-</div>
-`
-:
-""
-}
-
-${
-lastNote
-?
-`
-<div class="person-info">
-📝 ${lastNote}
-</div>
-`
-:
-""
-}
-
-<div class="person-actions">
-
-<button
-class="profile-btn"
-onclick="openProfile(${index})">
-👤 Profile
-</button>
-
-<button
-class="favorite-btn"
-onclick="toggleFavorite(${index})">
-⭐
-</button>
-
-<button
-style="
-background:#ef4444;
-color:white;
-border:none;
-padding:10px 14px;
-border-radius:10px;
-"
-onclick="deleteCustomer(${index})">
-🗑 Delete
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"peopleList"
-).innerHTML =
-html;
-
-}
-
-function toggleFavorite(index){
-
-people[index].favorite =
-!people[index].favorite;
-
-savePeople();
-
-renderPeople();
-
-}
-
-function openProfile(index){
-
-localStorage.setItem(
-"selectedCustomer",
-index
-);
-
-window.location.href =
-"person.html";
-
-}
-
-document
-.querySelectorAll(".tab-btn")
-.forEach((btn,index)=>{
-
-btn.onclick = function(){
-
-if(index === 0)
-currentTab = "all";
-
-if(index === 1)
-currentTab = "favorites";
-
-if(index === 2)
-currentTab = "overdue";
-
-if(index === 3)
-currentTab = "today";
-
-if(index === 4)
-currentTab = "upcoming";
-
-renderPeople();
-
-};
-
-});
-
-document.getElementById(
-"search"
-).addEventListener(
-"input",
-renderPeople
-);
-
-function deleteCustomer(index){
-
-if(
-confirm(
-"Delete this customer?"
-)
-){
-
-people.splice(index,1);
-
-savePeople();
-
-renderPeople();
-
-}
-
-}
-  
-renderPeople();
-
-</script>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyD5KnoOye-Ns7RNQq9KqGNSmakYydIoLAw",
-
-authDomain: "my-store-4f430.firebaseapp.com",
-
-projectId: "my-store-4f430",
-
-storageBucket: "my-store-4f430.firebasestorage.app",
-
-messagingSenderId: "674007434765",
-
-appId: "1:674007434765:web:c4005d096ab86167cc3744"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const db =
-getFirestore(app);
-
-window.db = db;
-window.addDoc = addDoc;
-window.getDocs = getDocs;
-window.collection = collection;
-window.initializeApp = initializeApp;
-  
-console.log("Firebase Ready");
-
-</script>
-  
-</body>
-</html>
+    <!-- Header -->
+    <header class="header">
+        <h1>
+            <span>📓</span>
+            Karni
+        </h1>
+        <div class="sync-status" id="syncStatus">
+            <i class="fas fa-circle"></i>
+            جاري الاتصال...
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number"><span id="totalAmount">0</span> درهم</div>
+            <div class="stat-label">💰 المبلغ الإجمالي</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalCustomers">0</div>
+            <div class="stat-label">👥 الزبناء</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="overdueCount">0</div>
+            <div class="stat-label">🔴 متأخر</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="todayCount">0</div>
+            <div class="stat-label">🟢 اليوم</div>
+        </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="ابحث عن زبون..." id="searchInput" onkeyup="searchCustomer()">
+    </div>
+
+    <!-- Customers List -->
+    <div class="customers-list" id="customersList">
+        <div class="empty-state">
+            <p>جاري تحميل الزبناء من Firebase...</p>
+        </div>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="fab" onclick="showAddModal()">+</button>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; font-size: 22px;">إضافة زبون جديد</h3>
+            <form id="customerForm" onsubmit="saveCustomer(event)">
+                <input type="hidden" id="customerId">
+                <div class="form-group">
+                    <label class="form-label">اسم الزبون *</label>
+                    <input type="text" class="form-input" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">المبلغ بالدرهم *</label>
+                    <input type="number" class="form-input" id="customerAmount" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="form-input" id="customerPhone">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">تاريخ الاستحقاق *</label>
+                    <input type="date" class="form-input" id="customerDate" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-save">
+                        <i class="fas fa-save"></i>
+                        حفظ
+                    </button>
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK + JavaScript -->
+    <script type="module">
+        // 1. استيراد Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, onValue, set, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // 2. الكونفيج ديالك
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5KnoOye-Ns7RNQq9KqGNSmakYydIoLAw",
+            authDomain: "my-store-4f430.firebaseapp.com",
+            databaseURL: "https://my-store-4f430-default-rtdb.firebaseio.com",
+            projectId: "my-store-4f430",
+            storageBucket: "my-store-4f430.firebasestorage.app",
+            messagingSenderId: "674007434765",
+            appId: "1:674007434765:web:c4005d096ab86167cc3744",
+            measurementId: "G-QZH7T1DYL1"
+        };
+
+        // 3. تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const customersRef = ref(db, 'customers');
+
+        let allCustomers = {};
+
+        // 4. قراءة الداتا من Firebase Realtime
+        onValue(customersRef, (snapshot) => {
+            const data = snapshot.val();
+            allCustomers = data || {};
+            renderCustomers(allCustomers);
+            updateSyncStatus(true);
+        }, (error) => {
+            console.error(error);
+            updateSyncStatus(false);
+        });
+
+        // 5. عرض الزبناء
+        function renderCustomers(customers) {
+            const list = document.getElementById('customersList');
+            list.innerHTML = '';
+
+            if(!customers || Object.keys(customers).length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>لا توجد زبناء. اضغط + لإضافة زبون</p></div>';
+                updateStats({});
+                return;
+            }
+
+            let totalAmount = 0;
+            let customersCount = 0;
+            let todayCount = 0;
+            let overdueCount = 0;
+            const today = new Date().toISOString().split('T')[0];
+
+            Object.keys(customers).forEach(key => {
+                const customer = customers[key];
+                customersCount++;
+                totalAmount += parseInt(customer.amount) || 0;
+
+                if(customer.date === today) todayCount++;
+                else if(customer.date < today) overdueCount++;
+
+                const card = `
+                    <div class="customer-card">
+                        <div class="customer-header">
+                            <div class="customer-avatar">${customer.name.charAt(0)}</div>
+                            <div class="customer-info">
+                                <div class="customer-name">${customer.name}</div>
+                                <div class="customer-amount">${customer.amount} درهم</div>
+                                <div class="customer-meta">
+                                    <span><i class="fas fa-phone"></i> ${customer.phone || '-'}</span>
+                                    <span><i class="fas fa-calendar"></i> ${customer.date}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="customer-actions">
+                            <button class="btn btn-profile" onclick="openProfile('${key}')"><i class="fas fa-user"></i> التفاصيل</button>
+                            <button class="btn btn-collect" onclick="collectMoney('${key}')"><i class="fas fa-check"></i></button>
+                            <button class="btn btn-delete" onclick="deleteCustomer('${key}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += card;
+            });
+
+            updateStats({totalAmount, customersCount, todayCount, overdueCount});
+        }
+
+        // 6. تحديث الإحصائيات
+        function updateStats(stats) {
+            document.getElementById('totalAmount').textContent = stats.totalAmount || 0;
+            document.getElementById('totalCustomers').textContent = stats.customersCount || 0;
+            document.getElementById('todayCount').textContent = stats.todayCount || 0;
+            document.getElementById('overdueCount').textContent = stats.overdueCount || 0;
+        }
+
+        // 7. حالة الاتصال
+        function updateSyncStatus(online) {
+            const status = document.getElementById('syncStatus');
+            if(online) {
+                status.innerHTML = '<i class="fas fa-circle" style="color: #4ade80"></i> متصل بـ Firebase';
+            } else {
+                status.innerHTML = '<i class="fas fa-circle" style="color: #ef4444"></i> غير متصل';
+            }
+        }
+
+        // 8. إضافة زبون
+        window.showAddModal = function() {
+            document.getElementById('customerId').value = '';
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerAmount').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('customerModal').classList.add('active');
+        }
+
+        window.closeModal = function() {
+            document.getElementById('customerModal').classList.remove('active');
+        }
+
+        window.saveCustomer = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('customerId').value;
+            const data = {
+                name: document.getElementById('customerName').value,
+                amount: parseInt(document.getElementById('customerAmount').value),
+                phone: document.getElementById('customerPhone').value,
+                date: document.getElementById('customerDate').value,
+                createdAt: new Date().toISOString()
+            };
+
+            if(id) {
+                update(ref(db, 'customers/' + id), data);
+            } else {
+                push(customersRef, data);
+            }
+            closeModal();
+        }
+
+        // 9. حذف زبون
+        window.deleteCustomer = function(id) {
+            if(confirm('متأكد بغيتي تحذف الزبون؟')) {
+                remove(ref(db, 'customers/' + id));
+            }
+        }
+
+        // 10. تم التحصيل
+        window.collectMoney = function(id) {
+            const amount = prompt('المبلغ اللي تحصّلتيه:');
+            if(amount) {
+                update(ref(db, 'customers/' + id), {
+                    collected: parseInt(amount),
+                    status: 'collected',
+                    collectedAt: new Date().toISOString()
+                });
+            }
+        }
+
+        // 11. البحث
+        window.searchCustomer = function() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = {};
+            Object.keys(allCustomers).forEach(key => {
+                if(allCustomers[key].name.toLowerCase().includes(search)) {
+                    filtered[key] = allCustomers[key];
+                }
+            });
+            renderCustomers(filtered);
+        }
+
+        window.openProfile = function(id) {
+            localStorage.setItem('customerId', id);
+            window.location.href = 'person.html';
+        }
+
+        // تعيين تاريخ اليوم
+        document.getElementById('customerDate').value = new Date().toISOString().split('T')[0];
+    </script>
+<body/>
+<html/>
