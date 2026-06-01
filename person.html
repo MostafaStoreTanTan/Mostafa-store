@@ -8,20 +8,20 @@
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
     body{background:#f5f7fa;min-height:100vh}
 
-   .header{
+  .header{
         background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
         padding:30px 20px 60px;
         border-radius:0 0 30px 30px;
         box-shadow:0 4px 20px rgba(0,184,148,0.3);
         position:relative;
     }
-   .header h1{
+  .header h1{
         color:white;
         font-size:28px;
         text-align:center;
         margin-bottom:10px;
     }
-   .back-btn{
+  .back-btn{
         position:absolute;
         top:20px;
         right:20px;
@@ -35,16 +35,16 @@
         cursor:pointer;
         backdrop-filter:blur(10px);
     }
-   .back-btn:active{transform:scale(0.95)}
+  .back-btn:active{transform:scale(0.95)}
 
-   .container{
+  .container{
         padding:20px;
         margin-top:-40px;
         position:relative;
         z-index:2;
     }
 
-   .card{
+  .card{
         background:white;
         border-radius:25px;
         padding:25px;
@@ -57,7 +57,7 @@
         to{opacity:1;transform:translateY(0)}
     }
 
-   .avatar{
+  .avatar{
         width:80px;
         height:80px;
         border-radius:25px;
@@ -71,7 +71,7 @@
         margin:0 auto 15px;
     }
 
-   .name{
+  .name{
         text-align:center;
         font-size:24px;
         font-weight:bold;
@@ -79,14 +79,14 @@
         margin-bottom:5px;
     }
 
-   .phone{
+  .phone{
         text-align:center;
         color:#636e72;
         font-size:16px;
         margin-bottom:20px;
     }
 
-   .total-box{
+  .total-box{
         background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
         color:white;
         padding:20px;
@@ -94,10 +94,10 @@
         text-align:center;
         margin-bottom:20px;
     }
-   .total-label{font-size:14px;opacity:0.9;margin-bottom:5px}
-   .total-value{font-size:32px;font-weight:bold}
+  .total-label{font-size:14px;opacity:0.9;margin-bottom:5px}
+  .total-value{font-size:32px;font-weight:bold}
 
-   .label{
+  .label{
         display:block;
         font-weight:bold;
         color:#2d3436;
@@ -105,7 +105,7 @@
         font-size:15px;
     }
 
-   .input{
+  .input{
         width:100%;
         padding:16px;
         border:2px solid #dfe6e9;
@@ -114,20 +114,25 @@
         background:#f8f9fa;
         transition:0.3s;
     }
-   .input:focus{
+  .input:focus{
         border-color:#00b894;
         background:white;
         outline:none;
         box-shadow:0 0 0 3px rgba(0,184,148,0.1);
     }
+  .input[readonly]{
+        background:#e9ecef;
+        color:#6c757d;
+        cursor:not-allowed;
+    }
 
-   .row{
+  .row{
         display:grid;
         grid-template-columns:1fr 1fr;
         gap:12px;
     }
 
-   .save-btn{
+  .save-btn{
         width:100%;
         padding:18px;
         border:none;
@@ -141,19 +146,19 @@
         box-shadow:0 4px 15px rgba(0,184,148,0.3);
         transition:0.2s;
     }
-   .save-btn:active{
+  .save-btn:active{
         transform:scale(0.97);
         box-shadow:0 2px 8px rgba(0,184,148,0.2);
     }
 
-   .loading{
+  .loading{
         text-align:center;
         padding:50px;
         color:#636e72;
         font-size:18px;
     }
 
-   .date-label{
+  .date-label{
         font-size:12px;
         color:#74b9ff;
         margin-top:5px;
@@ -183,21 +188,21 @@
             </div>
 
             <label class="label">💰 المبلغ الأساسي</label>
-            <input type="number" id="amount" class="input" placeholder="0">
+            <input type="number" id="amount" class="input" placeholder="0" readonly>
 
             <label class="label">📅 تاريخ الأداء</label>
             <input type="date" id="date" class="input">
 
             <div class="row">
                 <div>
-                    <label class="label">📤 دفع - انت عطيتي</label>
-                    <input type="number" id="paid" class="input" placeholder="0">
-                    <div class="date-label" id="paidDate">تاريخ الدفع: --</div>
-                </div>
-                <div>
                     <label class="label">📥 استلام - انت خديتي</label>
                     <input type="number" id="received" class="input" placeholder="0">
                     <div class="date-label" id="receivedDate">تاريخ الاستلام: --</div>
+                </div>
+                <div>
+                    <label class="label">📤 دفع - انت عطيتي</label>
+                    <input type="number" id="paid" class="input" placeholder="0">
+                    <div class="date-label" id="paidDate">تاريخ الدفع: --</div>
                 </div>
             </div>
 
@@ -236,12 +241,12 @@ if(!id){
 
 const customerRef = ref(db, 'customers/' + id);
 
-// دالة حساب المبلغ الإجمالي
+// دالة حساب المبلغ الإجمالي - مربوط بالمبلغ الأساسي
 function calculateTotal(){
     const amount = parseFloat(document.getElementById('amount').value) || 0;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
-    const total = amount + received - paid;
+    const total = amount - paid + received;
     document.getElementById('totalAmount').textContent = total.toFixed(2) + ' درهم';
 }
 
@@ -275,8 +280,7 @@ get(customerRef).then((snapshot)=>{
     window.location.href = 'index.html';
 });
 
-// حساب تلقائي منين كتبدل أي مبلغ
-document.getElementById('amount').addEventListener('input', calculateTotal);
+// حساب تلقائي منين كتبدل الدفع أو الاستلام فقط
 document.getElementById('paid').addEventListener('input', calculateTotal);
 document.getElementById('received').addEventListener('input', calculateTotal);
 
@@ -290,11 +294,12 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     const date = document.getElementById('date').value;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
+    const newTotal = amount - paid + received; // المبلغ الجديد
 
     const today = new Date().toISOString().split('T')[0];
 
     const updateData = {
-        amount: amount,
+        amount: newTotal, // هنا كنحفظو المبلغ الجديد باش يبان فـ index
         paymentDate: date,
         paid: paid,
         received: received,
