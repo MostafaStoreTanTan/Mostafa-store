@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karni Pro - الحساب المالي المختصر</title>
+    <title>Karni Pro - الحساب المالي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -16,15 +16,15 @@
         .fin-card.debt { border-top-color: #22c55e; }
         .fin-card.paid { border-top-color: #ef4444; }
         .fin-card.balance { border-top-color: #2563eb; }
-        .fin-label { font-size: 12px; color: #64748b; font-weight: bold; }
-        .fin-val { font-size: 14px; font-weight: 900; margin-top: 5px; }
+        .fin-label { font-size: 11px; color: #64748b; font-weight: bold; }
+        .fin-val { font-size: 13px; font-weight: 900; margin-top: 5px; }
         .form-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
         .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; text-align: right; }
         .input-group label { font-size: 13px; font-weight: bold; color: #64748b; }
         .input-field { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; outline: none; font-size: 15px; text-align: right; }
         .input-field:focus { border-color: #14b8a6; }
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { border: none; padding: 14px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; }
+        .btn { border: none; padding: 14px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
         .btn.give { background: #16a34a; }
         .btn.take { background: #dc2626; }
         .log-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.01); border-right: 5px solid #cbd5e1; }
@@ -36,23 +36,22 @@
         .log-amount { font-weight: 900; font-size: 16px; }
         .btn-del { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 16px; padding-right: 10px; }
         .btn-del:hover { color: #ef4444; }
+        .no-data { text-align: center; color: #94a3b8; font-size: 14px; padding: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h2 id="customerName">جاري التحميل...</h2>
+        <h2 id="customerName">جاري الاتصال بقاعدة البيانات...</h2>
     </div>
 
-    <!-- بطاقات الحسابات الثلاثة -->
     <div class="fin-grid">
-        <div class="fin-card debt"><div class="fin-label">له (Depot)</div><div class="fin-val" id="viewDebt">0.00</div></div>
-        <div class="fin-card paid"><div class="fin-label">منه (Paid)</div><div class="fin-val" id="viewPaid">0.00</div></div>
-        <div class="fin-card balance"><div class="fin-label">الباقي (Balance)</div><div class="fin-val" id="viewBalance">0.00</div></div>
+        <div class="fin-card debt"><div class="fin-label">له (Depot)</div><div class="fin-val" id="viewDebt">0.00 درهم</div></div>
+        <div class="fin-card paid"><div class="fin-label">منه (Paid)</div><div class="fin-val" id="viewPaid">0.00 درهم</div></div>
+        <div class="fin-card balance"><div class="fin-label">الباقي (Balance)</div><div class="fin-val" id="viewBalance">0.00 درهم</div></div>
     </div>
 
-    <!-- استمارة إدخال ميزانية اليوم والمذكرة -->
     <div class="form-box">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div class="input-group"><label>المبلغ (درهم) *</label><input type="number" step="0.01" id="amount" class="input-field" placeholder="0.00"></div>
@@ -65,53 +64,54 @@
         </div>
     </div>
 
-    <!-- كشف الحساب التاريخي المعروض للزبون -->
     <h4 style="text-align: right; margin-bottom: 10px; color: #64748b;">سجل المعاملات اليومية</h4>
     <div id="logsList"></div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push, set, remove, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-    // إعدادات الفايربيس الأساسية لمشروعك
-    const firebaseConfig = {
-        databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com"
-    };
-
+    const firebaseConfig = { databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com" };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     
-    // جلب معرف العميل من الرابط المباشر
+    // التقاط المعرف الذكي (يتحقق من الحالتين id أو key القادمة من الرابط الرئيسي)
     const urlParams = new URLSearchParams(window.location.search);
-    const customerId = urlParams.get('id') || "test_customer_123";
+    const customerId = urlParams.get('id') || urlParams.get('key');
 
-    // تعيين تاريخ اليوم تلقائياً في خانة التاريخ
+    if (!customerId) {
+        document.getElementById('customerName').textContent = "خطأ: لم يتم العثور على معرف الزبون";
+    }
+
     document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
-    // الاستماع المباشر للتغيرات في السيرفر
-    onValue(ref(db, `customers/${customerId}`), (snapshot) => {
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            document.getElementById('customerName').textContent = data.name || "زبون غير مسجل";
-            calculateAndRender(data.transactions);
-        } else {
-            document.getElementById('customerName').textContent = "زبون جديد";
-            calculateAndRender(null);
-        }
-    });
+    // جلب البيانات فورا عند تحميل الصفحة
+    if (customerId) {
+        onValue(ref(db, `customers/${customerId}`), (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                document.getElementById('customerName').textContent = data.name || "زبون بدون اسم";
+                calculateAndRender(data.transactions, data.amount || 0);
+            } else {
+                document.getElementById('customerName').textContent = "الحساب غير موجود بالسيرفر";
+                calculateAndRender(null, 0);
+            }
+        }, (error) => {
+            document.getElementById('customerName').textContent = "خطأ في جلب البيانات";
+        });
+    }
 
-    // معالجة الحسابات وعرض البيانات في السجل
-    function calculateAndRender(transactions) {
+    function calculateAndRender(transactions, currentAmount) {
         const list = document.getElementById('logsList');
         list.innerHTML = "";
         let totalDebt = 0, totalPaid = 0;
 
         if (!transactions) {
-            document.getElementById('viewDebt').textContent = "0.00 MAD";
-            document.getElementById('viewPaid').textContent = "0.00 MAD";
-            document.getElementById('viewBalance').textContent = "0.00 MAD";
-            list.innerHTML = "<p style='text-align:center;color:#94a3b8;font-size:14px;'>لا توجد أي معاملات مسجلة بعد.</p>";
+            document.getElementById('viewDebt').textContent = "0.00 درهم";
+            document.getElementById('viewPaid').textContent = "0.00 -درهم";
+            document.getElementById('viewBalance').textContent = parseFloat(currentAmount).toFixed(2) + " درهم";
+            list.innerHTML = '<div class="no-data">لا توجد معاملات مسجلة حالياً لهذا الزبون.</div>';
             return;
         }
 
@@ -125,10 +125,10 @@
             item.className = `log-item ${t.type}`;
             item.innerHTML = `
                 <div class="log-details">
-                    <div class="log-note">${t.note || (t.type === 'debt' ? 'أخذ سلع' : 'تسديد الدفع')}</div>
+                    <div class="log-note">${t.note || (t.type === 'debt' ? 'أخذ سلع (دين)' : 'تسديد الدفع')}</div>
                     <div class="log-date"><i class="far fa-calendar-alt"></i> ${t.date}</div>
                 </div>
-                <div style="display:flex; align-items:center;">
+                <div style="display:flex; align-items:center; gap: 10px;">
                     <span class="log-amount" style="color:${t.type === 'debt' ? '#16a34a' : '#dc2626'}">
                         ${t.type === 'debt' ? '+' : '-'}${amt.toFixed(2)}
                     </span>
@@ -137,12 +137,15 @@
             list.appendChild(item);
         });
 
-        document.getElementById('viewDebt').textContent = totalDebt.toFixed(2) + " MAD";
-        document.getElementById('viewPaid').textContent = totalPaid.toFixed(2) + " MAD";
-        document.getElementById('viewBalance').textContent = (totalDebt - totalPaid).toFixed(2) + " MAD";
+        let finalBalance = totalDebt - totalPaid;
+        document.getElementById('viewDebt').textContent = totalDebt.toFixed(2) + " درهم";
+        document.getElementById('viewPaid').textContent = totalPaid.toFixed(2) + " درهم";
+        document.getElementById('viewBalance').textContent = finalBalance.toFixed(2) + " درهم";
+
+        // تحديث إجمالي الدين الرئيسي للعميل لكي يظهر متزامناً في الصفحة الأساسية والمسار
+        update(ref(db, `customers/${customerId}`), { amount: finalBalance });
     }
 
-    // تصدير الدالة للنطاق العام لكي يراها الـ HTML عند الضغط
     window.addTransaction = function(type) {
         const amtInput = document.getElementById('amount');
         const dateInput = document.getElementById('date');
@@ -153,26 +156,24 @@
         const note = noteInput.value.trim();
 
         if (isNaN(amount) || amount <= 0 || !date) {
-            alert("الرجاء إدخال المبلغ وتحديد التاريخ بشكل صحيح!");
+            alert("الرجاء إدخال مبلغ صحيح وتحديد التاريخ!");
             return;
         }
 
         const transRef = ref(db, `customers/${customerId}/transactions`);
         const newTransRef = push(transRef);
-        const dataUpdate = { amount, date, note, type };
 
-        set(newTransRef, dataUpdate).then(() => {
+        set(newTransRef, { amount, date, note, type }).then(() => {
             amtInput.value = "";
             noteInput.value = "";
-            alert("تم تسجيل المعاملة وحفظها بنجاح!");
-        }).catch((error) => {
-            alert("خطأ في الاتصال بقاعدة البيانات: " + error.message);
+            alert("تم الحفظ بنجاح!");
+        }).catch((err) => {
+            alert("فشل الحفظ: " + err.message);
         });
     };
 
-    // تصدير دالة الحذف للنطاق العام
     window.deleteItem = function(key) {
-        if (confirm("هل تريد حذف هذه العملية المالية نهائياً؟")) {
+        if (confirm("هل تريد حذف هذه العملية نهائياً؟")) {
             remove(ref(db, `customers/${customerId}/transactions/${key}`));
         }
     };
