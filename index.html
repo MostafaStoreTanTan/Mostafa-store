@@ -521,13 +521,21 @@ document.getElementById(
 };
 
 alert("Before Firebase");
-  
+
+try {
+
 await addDoc(
 collection(window.db,"customers"),
 newCustomer
 );
 
 alert("Saved To Firebase");
+
+} catch(error) {
+
+alert(error.message);
+
+}
   
 savePeople();
 
