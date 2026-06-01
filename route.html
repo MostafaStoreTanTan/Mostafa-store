@@ -3,91 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Route Today</title>
+<title>Route Manual</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
 body{background:#f5f7fa;padding:15px;padding-bottom:100px}
 .header{background:#0F766E;color:white;padding:25px;border-radius:25px;text-align:center;font-size:26px;font-weight:bold;margin-bottom:15px;position:relative}
 .back-btn{position:absolute;right:15px;top:20px;background:none;border:none;color:white;font-size:24px;cursor:pointer}
-.date-picker{background:white;padding:15px;border-radius:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;justify-content:space-between}
-.date-picker label{font-weight:bold;color:#334155;font-size:16px}
-.date-picker input{padding:10px;border:2px solid #e2e8f0;border-radius:12px;font-size:16px}
+
+.add-section{background:white;padding:20px;border-radius:20px;margin-bottom:15px;box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.add-section input{width:100%;padding:15px;border:2px solid #e2e8f0;border-radius:12px;font-size:16px;margin-bottom:10px}
+.add-section input:focus{border-color:#0F766E;outline:none}
+.add-btn{width:100%;padding:15px;border:none;border-radius:12px;background:#0F766E;color:white;font-size:16px;font-weight:bold;cursor:pointer}
+.add-btn:active{transform:scale(0.98)}
+
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
 .stat-card{background:white;padding:20px 10px;border-radius:20px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.08)}
-.stat-number{font-size:32px;font-weight:bold;color:#0F766E;margin-bottom:5px}
-.stat-label{font-size:14px;color:#64748b;font-weight:500}
-.legend{display:flex;overflow:auto;gap:10px;padding:10px 0;margin-bottom:20px}
-.legend-item{background:white;padding:12px 18px;border-radius:15px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);white-space:nowrap;font-size:14px;font-weight:500;color:#334155}
-.dot{width:12px;height:12px;border-radius:50%}
-.gray{background:#94a3b8}.blue{background:#2563eb}.green{background:#16a34a}.yellow{background:#facc15}.orange{background:#f97316}
+.stat-number{font-size:32px;font-weight:bold;color:#0F766E}
+.stat-label{font-size:14px;color:#64748b;margin-top:5px}
+
 .route-list{margin-top:15px}
-.route-card{background:white;padding:18px;border-radius:20px;margin-bottom:12px;box-shadow:0 3px 12px rgba(0,0,0,.08)}
-.route-top{display:flex;align-items:center;gap:15px;margin-bottom:12px}
-.route-number{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;flex-shrink:0}
-.route-number.pending{background:#94a3b8}
-.route-number.current{background:#2563eb}
-.route-number.visited{background:#16a34a}
-.route-number.closed{background:#facc15;color:#000}
-.route-number.comeback{background:#f97316}
-.route-info{flex:1}
-.route-name{font-size:20px;font-weight:bold;color:#1e293b;margin-bottom:4px}
-.route-balance{font-size:18px;font-weight:bold;color:#0F766E}
-.route-status{margin-top:6px;font-weight:bold;font-size:14px}
-.status-pending{color:#94a3b8}.status-current{color:#2563eb}.status-visited{color:#16a34a}.status-closed{color:#facc15}.status-comeback{color:#f97316}
-.actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
-.actions button{border:none;padding:10px 12px;border-radius:12px;color:white;font-weight:bold;cursor:pointer;font-size:13px;flex:1;min-width:80px}
-.actions button:disabled{opacity:0.4}
-.btn-gray{background:#cbd5e1;color:#475569}
-.btn-green{background:#16a34a}
-.btn-yellow{background:#facc15;color:#000}
-.btn-orange{background:#f97316}
-.finish-btn{width:100%;padding:20px;border:none;border-radius:20px;background:#16a34a;color:white;font-size:19px;font-weight:bold;margin-top:15px;box-shadow:0 4px 15px rgba(22,163,74,0.3);cursor:pointer}
-.no-route{text-align:center;padding:60px 20px;color:#999;font-size:18px}
-.debug{background:#fef3c7;border:2px dashed #f59e0b;padding:15px;border-radius:15px;margin-bottom:15px;font-size:13px;color:#92400e}
+.route-card{background:white;padding:18px;border-radius:20px;margin-bottom:12px;box-shadow:0 3px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:15px}
+.route-number{width:50px;height:50px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;flex-shrink:0}
+.route-name{flex:1;font-size:20px;font-weight:bold;color:#1e293b}
+.delete-btn{background:#ef4444;color:white;border:none;padding:10px 15px;border-radius:10px;font-weight:bold;cursor:pointer}
+
+.clear-btn{width:100%;padding:20px;border:none;border-radius:20px;background:#ef4444;color:white;font-size:19px;font-weight:bold;margin-top:20px;box-shadow:0 4px 15px rgba(239,68,68,0.3);cursor:pointer}
+.clear-btn:active{transform:scale(0.98)}
+
+.empty{text-align:center;padding:60px 20px;color:#999;font-size:18px}
 </style>
 </head>
 <body>
 
 <div class="header">
 <button class="back-btn" onclick="window.location.href='index.html'">⬅️</button>
-Route Today 🗺️
+Route Manual 🗺️
 </div>
 
-<div class="debug" id="debugBox">جار التحميل...</div>
-
-<div class="date-picker">
-<label>📅 التاريخ:</label>
-<input type="date" id="dateInput">
+<div class="add-section">
+<input type="text" id="nameInput" placeholder="اكتب اسم الزبون + Enter">
+<button class="add-btn" onclick="addCustomer()">➕ إضافة زبون</button>
 </div>
 
 <div class="stats">
 <div class="stat-card">
+<div class="stat-number" id="totalCount">0</div>
+<div class="stat-label">المجموع</div>
+</div>
+<div class="stat-card">
+<div class="stat-number" id="visitedCount">0</div>
+<div class="stat-label">تمت الزيارة</div>
+</div>
+<div class="stat-card">
 <div class="stat-number" id="pendingCount">0</div>
-<div class="stat-label">Pending</div>
+<div class="stat-label">متبقي</div>
 </div>
-<div class="stat-card">
-<div class="stat-number" id="collectedCount">0</div>
-<div class="stat-label">Collected</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="totalCustomers">0</div>
-<div class="stat-label">Customers</div>
-</div>
-</div>
-
-<div class="legend">
-<div class="legend-item"><div class="dot gray"></div>Pending</div>
-<div class="legend-item"><div class="dot blue"></div>Current</div>
-<div class="legend-item"><div class="dot green"></div>Collected</div>
 </div>
 
 <div id="routeList" class="route-list"></div>
 
-<button id="finishRouteBtn" class="finish-btn">✅ Finish Route</button>
+<button class="clear-btn" onclick="clearAll()">🗑️ مسح كل شيء</button>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
@@ -102,245 +81,106 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let allCustomers = [];
-let routeCustomers = [];
-let selectedDate = '';
+let routeList = [];
 
-function getTodayDate(){
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+// حمل الليست من Firebase منين تفتح الصفحة
+loadRoute();
+
+function loadRoute(){
+    get(ref(db, 'routeManual')).then((snapshot)=>{
+        if(snapshot.exists()){
+            routeList = snapshot.val();
+        }else{
+            routeList = [];
+        }
+        renderRoute();
+    });
 }
 
-function normalizeDate(dateStr){
-    if(!dateStr) return '';
-    dateStr = dateStr.toString().trim();
-    // 03/06/2026 -> 2026-06-03
-    if(dateStr.includes('/')){
-        let parts = dateStr.split('/');
-        return `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+window.addCustomer = function(){
+    const nameInput = document.getElementById('nameInput');
+    const name = nameInput.value.trim();
+    
+    if(!name){
+        alert('كتب الاسم عاد');
+        return;
     }
-    return dateStr;
+
+    routeList.push({
+        id: Date.now(),
+        name: name,
+        status: 'pending'
+    });
+
+    saveToFirebase();
+    nameInput.value = '';
+    nameInput.focus();
 }
 
-const today = getTodayDate();
-document.getElementById('dateInput').value = today;
-selectedDate = today;
-
-function debugLog(msg){
-    document.getElementById('debugBox').innerHTML += msg + '<br>';
-    console.log(msg);
-}
-
-loadCustomers();
-
-document.getElementById('dateInput').addEventListener('change', (e)=>{
-    selectedDate = e.target.value;
-    document.getElementById('debugBox').innerHTML = '';
-    loadCustomers();
+// Enter باش تزيد
+document.getElementById('nameInput').addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter') addCustomer();
 });
 
-function loadCustomers(){
-    debugLog('📅 التاريخ المحدد: ' + selectedDate);
-    debugLog('📅 تاريخ اليوم: ' + today);
+window.deleteCustomer = function(id){
+    if(confirm('مسح هاد الزبون؟')){
+        routeList = routeList.filter(c => c.id !== id);
+        saveToFirebase();
+    }
+}
 
-    get(ref(db, 'customers')).then((snapshot)=>{
-        allCustomers = [];
-        routeCustomers = [];
-        let debugCount = 0;
+window.toggleStatus = function(id){
+    let customer = routeList.find(c => c.id === id);
+    if(customer){
+        customer.status = customer.status === 'pending' ? 'visited' : 'pending';
+        saveToFirebase();
+    }
+}
 
-        if(snapshot.exists()){
-            snapshot.forEach(child => {
-                const data = child.val();
-                const amount = parseFloat(data.amount) || 0;
-                const rawDate = data.paymentDate;
-                const payDate = normalizeDate(rawDate);
+window.clearAll = function(){
+    if(confirm('واش متأكد بغيتي تمسح كلشي؟')){
+        routeList = [];
+        remove(ref(db, 'routeManual'));
+        renderRoute();
+        alert('تم مسح كل شيء ✅');
+    }
+}
 
-                debugCount++;
-
-                // شرط 1: المامحددش ليه تاريخ لا يظهر
-                if(!payDate){
-                    debugLog(`❌ ${data.name}: ماكاينش تاريخ`);
-                    return;
-                }
-                if(amount <= 0){
-                    debugLog(`❌ ${data.name}: المبلغ 0`);
-                    return;
-                }
-
-                // شرط 2: جيب جميع الأشخاص ديال التاريخ المحدد
-                if(payDate === selectedDate){
-                    debugLog(`✅ ${data.name}: مطابق - المبلغ ${amount} MAD`);
-                    let status = data.routeStatus || 'pending';
-                    allCustomers.push({
-                        id: child.key,
-                        name: data.name,
-                        amount: amount,
-                        status: status
-                    });
-
-                    // شرط 3: غير اللي تاريخو = اليوم يدوز للمسار
-                    if(payDate === today){
-                        routeCustomers.push({
-                            id: child.key,
-                            name: data.name,
-                            amount: amount,
-                            status: status
-                        });
-                    }
-                }else{
-                    debugLog(`⏭️ ${data.name}: تاريخ مختلف ${payDate}`);
-                }
-            });
-
-            debugLog(`<br>📊 النتيجة: ${allCustomers.length} زبون فالتاريخ، ${routeCustomers.length} فالمسار`);
-
-            if(allCustomers.length === 0){
-                debugLog(`⚠️ ما لقيت حتى شي زبون بتاريخ ${selectedDate}`);
-                debugLog(`💡 تأكد أن paymentDate فـ Firebase = ${selectedDate}`);
-            }
-
-            routeCustomers.sort((a,b)=>{
-                const order = {visited: 1, current: 2, pending: 3, closed: 4, comeback: 5};
-                return order[a.status] - order[b.status];
-            });
-
-            if(routeCustomers.length > 0 &&!routeCustomers.find(c => c.status === 'current')){
-                routeCustomers[0].status = 'current';
-                update(ref(db, 'customers/' + routeCustomers[0].id), {routeStatus: 'current'});
-            }
-
-            renderRoute();
-        }else{
-            debugLog('❌ ما كاينش حتى شي زبون فـ Firebase');
-        }
-    }).catch(err=>{
-        debugLog('❌ خطأ فـ Firebase: ' + err.message);
-    });
+function saveToFirebase(){
+    set(ref(db, 'routeManual'), routeList);
+    renderRoute();
 }
 
 function renderRoute(){
-let html = "";
-let collected = 0;
-let pending = 0;
+    let html = '';
+    let visited = 0;
+    let pending = 0;
 
-document.getElementById("totalCustomers").innerText = allCustomers.length;
+    if(routeList.length === 0){
+        html = '<div class="empty">📝 ما كاين حتى شي زبون<br>زيد الأسماء من الفوق</div>';
+    }else{
+        routeList.forEach((item, index)=>{
+            if(item.status === 'visited') visited++;
+            else pending++;
 
-let isToday = selectedDate === today;
-
-if(routeCustomers.length === 0){
-    html = `<div class="no-route">📭 لا توجد زبناء ${isToday? 'لهذا اليوم' : 'لهذا التاريخ'}</div>`;
-    document.getElementById("finishRouteBtn").style.display = 'none';
-}else{
-    document.getElementById("finishRouteBtn").style.display = isToday? 'block' : 'none';
-
-    routeCustomers.forEach((item,index)=>{
-        if(item.status==="visited") collected++;
-        if(item.status==="pending" || item.status==="current") pending++;
-
-        let colorClass = "pending";
-        let text = "⚪ Pending";
-
-        if(item.status==="current"){colorClass="current";text="🔵 Current";}
-        if(item.status==="visited"){colorClass="visited";text="🟢 Collected";}
-        if(item.status==="closed"){colorClass="closed";text="🟡 Closed";}
-        if(item.status==="comeback"){colorClass="comeback";text="🟠 Come Back";}
-
-        html += `
-        <div class="route-card">
-            <div class="route-top">
-                <div class="route-number ${colorClass}">${index+1}</div>
-                <div class="route-info">
-                    <div class="route-name">${item.name}</div>
-                    <div class="route-balance">💰 ${item.amount} MAD</div>
-                    <div class="route-status status-${colorClass}">${text}</div>
+            html += `
+            <div class="route-card" onclick="toggleStatus(${item.id})" style="cursor:pointer">
+                <div class="route-number" style="background:${item.status==='visited'?'#16a34a':'#2563eb'}">
+                    ${index+1}
                 </div>
+                <div class="route-name" style="text-decoration:${item.status==='visited'?'line-through':'none'};color:${item.status==='visited'?'#999':'#1e293b'}">
+                    ${item.name}
+                </div>
+                <button class="delete-btn" onclick="event.stopPropagation();deleteCustomer(${item.id})">🗑️</button>
             </div>
-            ${isToday? `
-            <div class="actions">
-                <button class="btn-gray" onclick="moveUp(${index})" ${index===0?'disabled':''}>⬆️ Up</button>
-                <button class="btn-gray" onclick="moveDown(${index})" ${index===routeCustomers.length-1?'disabled':''}>⬇️ Down</button>
-                <button class="btn-green" onclick="markCollected(${index})">🟢 Collected</button>
-                <button class="btn-yellow" onclick="markClosed(${index})">🟡 Closed</button>
-                <button class="btn-orange" onclick="markComeBack(${index})">🟠 Come Back</button>
-            </div>
-            ` : ''}
-        </div>
-        `;
-    });
-}
+            `;
+        });
+    }
 
-document.getElementById("routeList").innerHTML = html;
-document.getElementById("collectedCount").innerText = collected;
-document.getElementById("pendingCount").innerText = pending;
-}
-
-function setNextCurrent(){
-routeCustomers.forEach(item=>{
-if(item.status === "current"){
-item.status = "pending";
-update(ref(db, 'customers/' + item.id), {routeStatus: 'pending'});
-}
-});
-
-for(let i = 0; i < routeCustomers.length; i++){
-if(routeCustomers[i].status === "pending"){
-routeCustomers[i].status = "current";
-update(ref(db, 'customers/' + routeCustomers[i].id), {routeStatus: 'current'});
-break;
-}
-}
-
-window.markCollected = function(index){
-routeCustomers[index].status = "visited";
-update(ref(db, 'customers/' + routeCustomers[index].id), {
-routeStatus: 'visited',
-routeDate: today
-});
-setNextCurrent();
-renderRoute();
-}
-
-window.markClosed = function(index){
-routeCustomers[index].status = "closed";
-update(ref(db, 'customers/' + routeCustomers[index].id), {routeStatus: 'closed'});
-setNextCurrent();
-renderRoute();
-}
-
-window.markComeBack = function(index){
-let customer = routeCustomers[index];
-customer.status = "comeback";
-update(ref(db, 'customers/' + customer.id), {routeStatus: 'comeback'});
-routeCustomers.splice(index, 1);
-routeCustomers.push(customer);
-setNextCurrent();
-renderRoute();
-}
-
-document.getElementById("finishRouteBtn").onclick = function(){
-if(confirm("واش كملتي المسار؟")){
-alert("تم إنهاء المسار بنجاح ✅");
-window.location.href = "index.html";
-}
-};
-
-window.moveUp = function(index){
-if(index === 0) return;
-let temp = routeCustomers[index];
-routeCustomers[index] = routeCustomers[index - 1];
-routeCustomers[index - 1] = temp;
-renderRoute();
-}
-
-window.moveDown = function(index){
-if(index === routeCustomers.length - 1) return;
-let temp = routeCustomers[index];
-routeCustomers[index] = routeCustomers[index + 1];
-routeCustomers[index + 1] = temp;
-renderRoute();
+    document.getElementById('routeList').innerHTML = html;
+    document.getElementById('totalCount').innerText = routeList.length;
+    document.getElementById('visitedCount').innerText = visited;
+    document.getElementById('pendingCount').innerText = pending;
 }
 </script>
 </body>
