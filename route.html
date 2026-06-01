@@ -8,21 +8,34 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
 body{background:#f5f5f5;padding:15px;padding-bottom:120px}
 
-.header{background:#0F766E;color:white;padding:20px;border-radius:25px;text-align:center;font-size:22px;font-weight:bold;margin-bottom:18px;position:relative;box-shadow:0 4px 12px rgba(15,118,110,0.2)}
-.back-btn{position:absolute;left:15px;top:15px;background:white;width:40px;height:40px;border-radius:12px;border:none;font-size:22px;cursor:pointer;color:#0F766E;display:flex;align-items:center;justify-content:center}
-.reset-btn{position:absolute;right:15px;top:15px;background:#ef4444;color:white;border:none;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:bold;cursor:pointer}
+.header{background:#0F766E;color:white;padding:18px 20px;border-radius:25px;text-align:center;font-size:22px;font-weight:bold;margin-bottom:18px;position:relative;display:flex;align-items:center;justify-content:space-between}
+.back-btn{background:white;width:40px;height:40px;border-radius:12px;border:none;font-size:22px;cursor:pointer;color:#0F766E;display:flex;align-items:center;justify-content:center}
+.reset-btn{background:#ef4444;color:white;border:none;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:bold;cursor:pointer}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px}
 .stat-card{background:white;padding:18px 8px;border-radius:18px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .stat-number{font-size:28px;font-weight:bold;color:#0F766E;margin-bottom:4px}
 .stat-label{font-size:13px;color:#6b7280}
 
-.route-card{background:white;padding:18px;border-radius:20px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:15px;position:relative;border-right:5px solid transparent;transition:0.3s}
+.legend{display:flex;justify-content:space-around;margin:15px 0 20px;font-size:12px;color:#6b7280;flex-wrap:wrap;gap:8px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend-dot{width:12px;height:12px;border-radius:50%}
+
+.add-box{background:white;padding:20px;border-radius:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.add-box input{width:100%;padding:16px;border:2px solid #e5e7eb;border-radius:14px;font-size:16px;text-align:right;background:#f9fafb}
+.add-box input:focus{border-color:#0F766E;outline:none;background:white}
+.add-btn{width:100%;padding:16px;margin-top:12px;border:none;border-radius:14px;background:#0F766E;color:white;font-size:17px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+
+.route-card{background:white;padding:16px;border-radius:20px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px;position:relative;border-right:5px solid transparent;transition:0.2s;cursor:grab}
+.route-card.dragging{opacity:0.5;transform:scale(0.98)}
 .route-card.current{border-right-color:#2563eb}
 .route-card.visited{border-right-color:#9ca3af;opacity:0.7}
 .route-card.closed{border-right-color:#1f2937;opacity:0.6}
 .route-card.closed-note{border-right-color:#dc2626}
 .route-card.postponed{border-right-color:#f97316}
+
+.drag-handle{font-size:24px;color:#d1d5db;cursor:grab;padding:5px;user-select:none}
+.drag-handle:active{cursor:grabbing}
 
 .route-number{width:50px;height:50px;border-radius:50%;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:20px;flex-shrink:0}
 .route-number.visited{background:#9ca3af}
@@ -32,68 +45,59 @@ body{background:#f5f5f5;padding:15px;padding-bottom:120px}
 
 .route-info{flex:1;text-align:right}
 .route-name{font-size:18px;font-weight:bold;color:#1f2937;margin-bottom:3px}
-.route-status{font-size:13px;color:#2563eb}
+.route-status{font-size:13px;color:#2563eb;margin-bottom:8px}
 .route-status.visited{color:#9ca3af}
 .route-status.closed{color:#1f2937}
 .route-status.closed-note{color:#dc2626}
 .route-status.postponed{color:#f97316}
 .route-note{font-size:12px;color:#dc2626;margin-top:4px;display:flex;align-items:center;gap:5px}
 
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.actions button{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-size:13px;font-weight:bold}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.actions button{padding:7px 10px;border-radius:10px;border:none;cursor:pointer;font-size:12px;font-weight:bold;white-space:nowrap}
 .btn-done{background:#16a34a;color:white}
 .btn-closed{background:#1f2937;color:white}
 .btn-note{background:#dc2626;color:white}
 .btn-postpone{background:#f97316;color:white}
-.btn-delete{background:#fee2e2;color:#ef4444}
-
-.add-box{background:white;padding:20px;border-radius:20px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.add-box input{width:100%;padding:16px;border:2px solid #e5e7eb;border-radius:14px;font-size:16px;text-align:right;background:#f9fafb}
-.add-box input:focus{border-color:#0F766E;outline:none;background:white}
-.add-btn{width:100%;padding:16px;margin-top:12px;border:none;border-radius:14px;background:#0F766E;color:white;font-size:17px;font-weight:bold;cursor:pointer}
+.btn-delete{background:#fee2e2;color:#ef4444;padding:7px 10px}
 
 .clear-btn{width:100%;padding:18px;border:none;border-radius:18px;background:#ef4444;color:white;font-size:18px;font-weight:bold;margin-top:25px}
 
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#16a34a;color:white;padding:12px 24px;border-radius:12px;z-index:999;font-weight:bold;box-shadow:0 4px 12px rgba(22,163,74,0.3)}
-
-.legend{display:flex;justify-content:space-around;margin:15px 0;font-size:12px;color:#6b7280}
-.legend span{display:flex;align-items:center;gap:5px}
-.legend-dot{width:12px;height:12px;border-radius:50%}
 </style>
 </head>
 <body>
 
 <div class="header">
 <button class="back-btn" onclick="window.location.href='index.html'">⬅️</button>
-Route 🗺️
+🗺️ Route
 <button class="reset-btn" onclick="resetRoute()">إعادة تعيين</button>
 </div>
 
 <div class="stats">
 <div class="stat-card">
-<div class="stat-number" id="pendingCount">0</div>
-<div class="stat-label">Pending</div>
-</div>
-<div class="stat-card">
-<div class="stat-number" id="currentCount">0</div>
-<div class="stat-label">Current</div>
+<div class="stat-number" id="totalCount">0</div>
+<div class="stat-label">Total</div>
 </div>
 <div class="stat-card">
 <div class="stat-number" id="visitedCount">0</div>
 <div class="stat-label">Visited</div>
 </div>
 <div class="stat-card">
-<div class="stat-number" id="totalCount">0</div>
-<div class="stat-label">Total</div>
+<div class="stat-number" id="currentCount">0</div>
+<div class="stat-label">Current</div>
+</div>
+<div class="stat-card">
+<div class="stat-number" id="pendingCount">0</div>
+<div class="stat-label">Pending</div>
 </div>
 </div>
 
 <div class="legend">
-<span><div class="legend-dot" style="background:#2563eb"></div> Current</span>
-<span><div class="legend-dot" style="background:#9ca3af"></div> Visited</span>
-<span><div class="legend-dot" style="background:#1f2937"></div> Closed</span>
-<span><div class="legend-dot" style="background:#dc2626"></div> Note</span>
 <span><div class="legend-dot" style="background:#f97316"></div> Postponed</span>
+<span><div class="legend-dot" style="background:#dc2626"></div> Note</span>
+<span><div class="legend-dot" style="background:#1f2937"></div> Closed</span>
+<span><div class="legend-dot" style="background:#9ca3af"></div> Visited</span>
+<span><div class="legend-dot" style="background:#2563eb"></div> Current</span>
 </div>
 
 <div class="add-box">
@@ -123,6 +127,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let routeList = [];
+let draggedItem = null;
 
 onValue(ref(db, 'routeManual'), (snapshot)=>{
     routeList = snapshot.exists()? snapshot.val() : [];
@@ -158,6 +163,10 @@ window.addCustomer = function(){
     nameInput.value = '';
 }
 
+document.getElementById('nameInput').addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter') addCustomer();
+});
+
 window.markDone = function(id){
     let idx = routeList.findIndex(c => c.id === id);
     if(idx!== -1){
@@ -192,7 +201,7 @@ window.postpone = function(id){
     if(idx!== -1){
         let customer = routeList.splice(idx, 1)[0];
         customer.status = 'postponed';
-        routeList.push(customer); // يحطو آخر واحد
+        routeList.push(customer);
         saveToFirebase();
     }
 }
@@ -234,7 +243,6 @@ function renderRoute(){
             if(item.status === 'current') current++;
             if(item.status === 'visited') visited++;
 
-            // أول واحد pending يولي current تلقائياً
             if(pending > 0 && item.status === 'pending' && current === 0){
                 item.status = 'current';
                 current = 1;
@@ -250,20 +258,21 @@ function renderRoute(){
                             item.status === 'postponed'? 'Postponed' : 'Pending';
 
             html += `
-            <div class="route-card ${cardClass}">
+            <div class="route-card ${cardClass}" draggable="true" data-index="${index}">
+                <div class="drag-handle">⋮</div>
+                <div class="route-number ${numberClass}">${index+1}</div>
                 <div class="route-info">
                     <div class="route-name">${item.name}</div>
                     <div class="route-status ${item.status}">${statusText}</div>
                     ${item.note? `<div class="route-note">✏️ ${item.note}</div>` : ''}
-                    <div class="actions" style="margin-top:10px">
-                        ${item.status!== 'visited'? `<button class="btn-done" onclick="markDone(${item.id})">تم ✅</button>` : ''}
+                    <div class="actions">
+                        ${item.status!== 'visited'? `<button class="btn-done" onclick="markDone(${item.id})">✅ تم</button>` : ''}
                         <button class="btn-closed" onclick="markClosed(${item.id})">مسدود</button>
-                        <button class="btn-note" onclick="addNote(${item.id})">رسالة ✏️</button>
+                        <button class="btn-note" onclick="addNote(${item.id})">✏️ رسالة</button>
                         <button class="btn-postpone" onclick="postpone(${item.id})">أجل</button>
                         <button class="btn-delete" onclick="deleteCustomer(${item.id})">🗑️</button>
                     </div>
                 </div>
-                <div class="route-number ${numberClass}">${index+1}</div>
             </div>
             `;
         });
@@ -274,6 +283,30 @@ function renderRoute(){
     document.getElementById('currentCount').innerText = current;
     document.getElementById('visitedCount').innerText = visited;
     document.getElementById('totalCount').innerText = routeList.length;
+
+    // تفعيل السحب والإفلات
+    document.querySelectorAll('.route-card').forEach(card=>{
+        card.addEventListener('dragstart', e=>{
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+        });
+        card.addEventListener('dragend', e=>{
+            e.target.classList.remove('dragging');
+        });
+        card.addEventListener('dragover', e=>e.preventDefault());
+        card.addEventListener('drop', e=>{
+            e.preventDefault();
+            if(draggedItem && draggedItem!== e.currentTarget){
+                let fromIndex = parseInt(draggedItem.dataset.index);
+                let toIndex = parseInt(e.currentTarget.dataset.index);
+
+                let item = routeList.splice(fromIndex, 1)[0];
+                routeList.splice(toIndex, 0, item);
+
+                saveToFirebase();
+            }
+        });
+    });
 }
 </script>
 </body>
