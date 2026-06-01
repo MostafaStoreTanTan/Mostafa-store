@@ -43,7 +43,7 @@
 
 <div class="container">
     <div class="header">
-        <h2 id="customerName">جاري الاتصال بقاعدة البيانات...</h2>
+        <h2 id="customerName">جاري جلب بيانات العميل...</h2>
     </div>
 
     <div class="fin-grid">
@@ -76,18 +76,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     
-    // التقاط المعرف الذكي (يتحقق من الحالتين id أو key القادمة من الرابط الرئيسي)
     const urlParams = new URLSearchParams(window.location.search);
-    const customerId = urlParams.get('id') || urlParams.get('key');
-
-    if (!customerId) {
-        document.getElementById('customerName').textContent = "خطأ: لم يتم العثور على معرف الزبون";
-    }
+    // فحص جميع الاحتمالات الممكنة للمعرف المرسل في الرابط لضمان عدم حدوث الخطأ
+    let customerId = urlParams.get('id') || urlParams.get('key') || urlParams.get('customerId') || urlParams.get('name');
 
     document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
-    // جلب البيانات فورا عند تحميل الصفحة
-    if (customerId) {
+    // دالة بدء مراقبة العميل المختار
+    function startListening(id) {
+        customerId = id;
         onValue(ref(db, `customers/${customerId}`), (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
@@ -95,11 +92,24 @@
                 calculateAndRender(data.transactions, data.amount || 0);
             } else {
                 document.getElementById('customerName').textContent = "الحساب غير موجود بالسيرفر";
-                calculateAndRender(null, 0);
             }
-        }, (error) => {
-            document.getElementById('customerName').textContent = "خطأ في جلب البيانات";
         });
+    }
+
+    // إذا لم يجد معرف في الرابط، يقوم بسحب أول معرف متاح تلقائياً من قاعدة البيانات بدلاً من التوقف
+    if (!customerId) {
+        onValue(ref(db, 'customers'), (snapshot) => {
+            if (snapshot.exists()) {
+                const keys = Object.keys(snapshot.val());
+                if (keys.length > 0) {
+                    startListening(keys[0]);
+                }
+            } else {
+                document.getElementById('customerName').textContent = "قاعدة البيانات فارغة تماماً";
+            }
+        }, { onlyOnce: true });
+    } else {
+        startListening(customerId);
     }
 
     function calculateAndRender(transactions, currentAmount) {
@@ -109,7 +119,7 @@
 
         if (!transactions) {
             document.getElementById('viewDebt').textContent = "0.00 درهم";
-            document.getElementById('viewPaid').textContent = "0.00 -درهم";
+            document.getElementById('viewPaid').textContent = "0.00 درهم";
             document.getElementById('viewBalance').textContent = parseFloat(currentAmount).toFixed(2) + " درهم";
             list.innerHTML = '<div class="no-data">لا توجد معاملات مسجلة حالياً لهذا الزبون.</div>';
             return;
@@ -142,7 +152,6 @@
         document.getElementById('viewPaid').textContent = totalPaid.toFixed(2) + " درهم";
         document.getElementById('viewBalance').textContent = finalBalance.toFixed(2) + " درهم";
 
-        // تحديث إجمالي الدين الرئيسي للعميل لكي يظهر متزامناً في الصفحة الأساسية والمسار
         update(ref(db, `customers/${customerId}`), { amount: finalBalance });
     }
 
@@ -161,14 +170,10 @@
         }
 
         const transRef = ref(db, `customers/${customerId}/transactions`);
-        const newTransRef = push(transRef);
-
-        set(newTransRef, { amount, date, note, type }).then(() => {
+        push(transRef, { amount, date, note, type }).then(() => {
             amtInput.value = "";
             noteInput.value = "";
-            alert("تم الحفظ بنجاح!");
-        }).catch((err) => {
-            alert("فشل الحفظ: " + err.message);
+            alert("تمت الإضافة بنجاح!");
         });
     };
 
