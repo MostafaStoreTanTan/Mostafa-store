@@ -105,32 +105,37 @@ function getTodayDate(){
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`.trim();
+    return `${year}${month}${day}`; // 20260601 بدون شرطات باش المقارنة تكون صارمة
 }
 
 const today = getTodayDate();
+console.log('تاريخ اليوم بدون شرطات:', today);
+
+function normalizeDate(dateStr){
+    // مسح كلشي وخلي غير الأرقام
+    return (dateStr || '').toString().replace(/\D/g, '');
+}
 
 get(ref(db, 'customers')).then((snapshot)=>{
     if(snapshot.exists()){
         snapshot.forEach(child => {
             const data = child.val();
             const amount = parseFloat(data.amount) || 0;
-            const payDate = (data.paymentDate || '').toString().trim();
+            const payDate = normalizeDate(data.paymentDate);
+
+            console.log(`${data.name} - التاريخ فـ Firebase: ${data.paymentDate} - بعد التنظيف: ${payDate} - يطابق؟ ${payDate === today}`);
 
             if(payDate === today && amount > 0){
-                // قرا الحالة من Firebase، إلا ماكايناش دير pending
                 let status = data.routeStatus || 'pending';
                 customers.push({id: child.key,...data, status: status});
             }
         });
 
-        // رتب: visited الأول، من بعد current، من بعد pending
         customers.sort((a,b)=>{
             const order = {visited: 1, current: 2, pending: 3};
             return order[a.status] - order[b.status];
         });
 
-        // إلا ما كاينش current، دير أول pending current
         if(customers.length > 0 &&!customers.find(c => c.status === 'current')){
             customers[0].status = 'current';
             update(ref(db, 'customers/' + customers[0].id), {routeStatus: 'current'});
@@ -140,8 +145,6 @@ get(ref(db, 'customers')).then((snapshot)=>{
             document.getElementById('routeList').innerHTML = '<div style="text-align:center;padding:40px;color:#999">لا توجد زبناء اليوم</div>';
         }
         renderRoute();
-    }else{
-        document.getElementById('routeList').innerHTML = '<div style="text-align:center;padding:40px;color:#999">لا توجد بيانات</div>';
     }
 });
 
@@ -183,32 +186,25 @@ function renderRoute(){
 
 window.markDone = function(index){
     const customerId = customers[index].id;
-
-    // سجل الحالي visited
     customers[index].status = 'visited';
     update(ref(db, 'customers/' + customerId), {
         routeStatus: 'visited',
-        routeDate: today
+        routeDate: new Date().toISOString().split('T')[0]
     });
 
-    // اللي موراه current
     if(index + 1 < customers.length){
         customers[index + 1].status = 'current';
         update(ref(db, 'customers/' + customers[index + 1].id), {
             routeStatus: 'current'
         });
     }
-
     renderRoute();
 }
 
-// إعادة تعيين المسار
 document.getElementById('resetRoute').addEventListener('click', ()=>{
-    if(confirm('واش بغيتي تصفر المسار وترجعو كامل pending؟')){
+    if(confirm('واش بغيتي تصفر المسار؟')){
         customers.forEach(c => {
-            update(ref(db, 'customers/' + c.id), {
-                routeStatus: 'pending'
-            });
+            update(ref(db, 'customers/' + c.id), {routeStatus: 'pending'});
         });
         setTimeout(()=>location.reload(), 500);
     }
