@@ -43,7 +43,7 @@
 
 <div class="container">
     <div class="header">
-        <h2 id="customerName">جاري جلب بيانات العميل...</h2>
+        <h2 id="customerName">جاري المزامنة مع السيرفر...</h2>
     </div>
 
     <div class="fin-grid">
@@ -70,25 +70,24 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, onValue, push, set, remove, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
     const firebaseConfig = { databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com" };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     
     const urlParams = new URLSearchParams(window.location.search);
-    // فحص جميع الاحتمالات الممكنة للمعرف المرسل في الرابط لضمان عدم حدوث الخطأ
-    let customerId = urlParams.get('id') || urlParams.get('key') || urlParams.get('customerId') || urlParams.get('name');
+    let customerId = urlParams.get('id') || urlParams.get('key') || urlParams.get('customerId');
 
     document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
-    // دالة بدء مراقبة العميل المختار
     function startListening(id) {
         customerId = id;
         onValue(ref(db, `customers/${customerId}`), (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                document.getElementById('customerName').textContent = data.name || "زبون بدون اسم";
+                // تحديث الاسم فوراً بمجرد العثور على زبون
+                document.getElementById('customerName').textContent = data.name || "زبون مجهول";
                 calculateAndRender(data.transactions, data.amount || 0);
             } else {
                 document.getElementById('customerName').textContent = "الحساب غير موجود بالسيرفر";
@@ -96,16 +95,14 @@
         });
     }
 
-    // إذا لم يجد معرف في الرابط، يقوم بسحب أول معرف متاح تلقائياً من قاعدة البيانات بدلاً من التوقف
+    // التحقق من الرابط أو اختيار أول عميل تلقائياً كخطة بديلة لعدم تعليق الصفحة
     if (!customerId) {
         onValue(ref(db, 'customers'), (snapshot) => {
             if (snapshot.exists()) {
                 const keys = Object.keys(snapshot.val());
-                if (keys.length > 0) {
-                    startListening(keys[0]);
-                }
+                if (keys.length > 0) startListening(keys[0]);
             } else {
-                document.getElementById('customerName').textContent = "قاعدة البيانات فارغة تماماً";
+                document.getElementById('customerName').textContent = "لا يوجد أي زبناء في قاعدة البيانات";
             }
         }, { onlyOnce: true });
     } else {
@@ -117,6 +114,7 @@
         list.innerHTML = "";
         let totalDebt = 0, totalPaid = 0;
 
+        // مصلح: تحديث المبالغ الأساسية حتى لو كانت قائمة العمليات فارغة
         if (!transactions) {
             document.getElementById('viewDebt').textContent = "0.00 درهم";
             document.getElementById('viewPaid').textContent = "0.00 درهم";
@@ -152,6 +150,7 @@
         document.getElementById('viewPaid').textContent = totalPaid.toFixed(2) + " درهم";
         document.getElementById('viewBalance').textContent = finalBalance.toFixed(2) + " درهم";
 
+        // مزامنة الحساب الإجمالي تلقائياً
         update(ref(db, `customers/${customerId}`), { amount: finalBalance });
     }
 
@@ -173,7 +172,7 @@
         push(transRef, { amount, date, note, type }).then(() => {
             amtInput.value = "";
             noteInput.value = "";
-            alert("تمت الإضافة بنجاح!");
+            alert("تمت إضافة العملية بنجاح!");
         });
     };
 
