@@ -520,10 +520,14 @@ document.getElementById(
 
 };
 
+alert("Before Firebase");
+  
 await addDoc(
 collection(window.db,"customers"),
 newCustomer
 );
+
+alert("Saved To Firebase");
   
 savePeople();
 
