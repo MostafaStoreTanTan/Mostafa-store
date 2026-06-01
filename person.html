@@ -3,49 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تفاصيل الزبون</title>
+<title>تفاصيل الزبون - Karni Pro</title>
 <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Tahoma',sans-serif;background:#667eea;min-height:100vh;padding:20px;display:flex;align-items:center;justify-content:center}
-    .box{width:100%;max-width:400px;background:white;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
-    h2{text-align:center;color:#333;margin-bottom:30px;font-size:26px}
-    label{display:block;margin:15px 0 5px;font-weight:bold;color:#555;font-size:16px}
-    input{width:100%;padding:15px;border:2px solid #ddd;border-radius:10px;font-size:18px}
-    input:focus{border-color:#667eea;outline:none}
-    button{width:100%;padding:15px;margin-top:20px;border:none;border-radius:10px;background:#667eea;color:white;font-size:18px;font-weight:bold;cursor:pointer}
-    button:active{transform:scale(0.97)}
-    .back{margin-top:10px;background:#ccc;color:#333}
-    .info{margin:20px 0;padding:15px;background:#f3f4f6;border-radius:10px;text-align:center}
-    #name{font-size:24px;font-weight:bold;color:#333}
-    #phone{color:#666;margin-top:5px;font-size:16px}
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
+    body{background:#f5f7fa;min-height:100vh}
+
+   .header{
+        background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        padding:30px 20px 60px;
+        border-radius:0 0 30px 30px;
+        box-shadow:0 4px 20px rgba(0,184,148,0.3);
+        position:relative;
+    }
+   .header h1{
+        color:white;
+        font-size:28px;
+        text-align:center;
+        margin-bottom:10px;
+    }
+   .back-btn{
+        position:absolute;
+        top:20px;
+        right:20px;
+        width:45px;
+        height:45px;
+        border-radius:15px;
+        background:rgba(255,255,255,0.2);
+        border:none;
+        color:white;
+        font-size:22px;
+        cursor:pointer;
+        backdrop-filter:blur(10px);
+    }
+   .back-btn:active{transform:scale(0.95)}
+
+   .container{
+        padding:20px;
+        margin-top:-40px;
+        position:relative;
+        z-index:2;
+    }
+
+   .card{
+        background:white;
+        border-radius:25px;
+        padding:25px;
+        margin-bottom:15px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.08);
+        animation:slideUp 0.4s ease;
+    }
+    @keyframes slideUp{
+        from{opacity:0;transform:translateY(20px)}
+        to{opacity:1;transform:translateY(0)}
+    }
+
+   .avatar{
+        width:80px;
+        height:80px;
+        border-radius:25px;
+        background:linear-gradient(135deg, #00b894, #00cec9);
+        color:white;
+        font-size:36px;
+        font-weight:bold;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        margin:0 auto 15px;
+    }
+
+   .name{
+        text-align:center;
+        font-size:24px;
+        font-weight:bold;
+        color:#2d3436;
+        margin-bottom:5px;
+    }
+
+   .phone{
+        text-align:center;
+        color:#636e72;
+        font-size:16px;
+        margin-bottom:20px;
+    }
+
+   .total-box{
+        background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color:white;
+        padding:20px;
+        border-radius:20px;
+        text-align:center;
+        margin-bottom:20px;
+    }
+   .total-label{font-size:14px;opacity:0.9;margin-bottom:5px}
+   .total-value{font-size:32px;font-weight:bold}
+
+   .label{
+        display:block;
+        font-weight:bold;
+        color:#2d3436;
+        margin:15px 0 8px;
+        font-size:15px;
+    }
+
+   .input{
+        width:100%;
+        padding:16px;
+        border:2px solid #dfe6e9;
+        border-radius:15px;
+        font-size:18px;
+        background:#f8f9fa;
+        transition:0.3s;
+    }
+   .input:focus{
+        border-color:#00b894;
+        background:white;
+        outline:none;
+        box-shadow:0 0 0 3px rgba(0,184,148,0.1);
+    }
+
+   .row{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+    }
+
+   .save-btn{
+        width:100%;
+        padding:18px;
+        border:none;
+        border-radius:15px;
+        background:linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        color:white;
+        font-size:18px;
+        font-weight:bold;
+        cursor:pointer;
+        margin-top:25px;
+        box-shadow:0 4px 15px rgba(0,184,148,0.3);
+        transition:0.2s;
+    }
+   .save-btn:active{
+        transform:scale(0.97);
+        box-shadow:0 2px 8px rgba(0,184,148,0.2);
+    }
+
+   .loading{
+        text-align:center;
+        padding:50px;
+        color:#636e72;
+        font-size:18px;
+    }
+
+   .date-label{
+        font-size:12px;
+        color:#74b9ff;
+        margin-top:5px;
+        font-weight:normal;
+    }
 </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>تعديل الزبون</h2>
-    
-    <div class="info">
-        <div id="name">جاري التحميل...</div>
-        <div id="phone">...</div>
+<div class="header">
+    <button class="back-btn" id="backBtn">⬅️</button>
+    <h1>📒 Karni Pro</h1>
+</div>
+
+<div class="container">
+    <div id="loading" class="loading">جاري التحميل...</div>
+
+    <div id="content" style="display:none">
+        <div class="card">
+            <div class="avatar" id="avatar">B</div>
+            <div class="name" id="name">...</div>
+            <div class="phone" id="phone">...</div>
+
+            <div class="total-box">
+                <div class="total-label">المبلغ الإجمالي</div>
+                <div class="total-value" id="totalAmount">0 درهم</div>
+            </div>
+
+            <label class="label">💰 المبلغ الأساسي</label>
+            <input type="number" id="amount" class="input" placeholder="0">
+
+            <label class="label">📅 تاريخ الأداء</label>
+            <input type="date" id="date" class="input">
+
+            <div class="row">
+                <div>
+                    <label class="label">📤 دفع - انت عطيتي</label>
+                    <input type="number" id="paid" class="input" placeholder="0">
+                    <div class="date-label" id="paidDate">تاريخ الدفع: --</div>
+                </div>
+                <div>
+                    <label class="label">📥 استلام - انت خديتي</label>
+                    <input type="number" id="received" class="input" placeholder="0">
+                    <div class="date-label" id="receivedDate">تاريخ الاستلام: --</div>
+                </div>
+            </div>
+
+            <button class="save-btn" id="saveBtn">💾 حفظ التغييرات</button>
+        </div>
     </div>
-
-    <label>المبلغ بالدرهم</label>
-    <input type="number" id="amount" placeholder="0">
-
-    <label>تاريخ الأداء</label>
-    <input type="date" id="date">
-
-    <button id="saveBtn">💾 حفظ التغييرات</button>
-    <button class="back" id="backBtn">⬅️ رجوع</button>
 </div>
 
 <script type="module">
-// Import the functions you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-// Your web app's Firebase configuration - الكود ديالك
 const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
   authDomain: "karni-b9b34.firebaseapp.com",
@@ -56,57 +220,106 @@ const firebaseConfig = {
   appId: "1:489835094040:web:109e20fe7b65516903236d"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// جيب الـ id من الرابط
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
 
+const loading = document.getElementById('loading');
+const content = document.getElementById('content');
+
 if(!id){
-    alert('خطأ: ما كاينش id فالرابط\nسير لـ index.html وضغط على التفاصيل');
-    document.getElementById('name').textContent = 'خطأ في الرابط';
+    alert('خطأ: ما كاينش id\nرجع لـ index.html');
+    window.location.href = 'index.html';
 }
 
-// المرجع ديال الزبون
 const customerRef = ref(db, 'customers/' + id);
 
-// قرا البيانات من Firebase
+// دالة حساب المبلغ الإجمالي
+function calculateTotal(){
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const paid = parseFloat(document.getElementById('paid').value) || 0;
+    const received = parseFloat(document.getElementById('received').value) || 0;
+    const total = amount + received - paid;
+    document.getElementById('totalAmount').textContent = total.toFixed(2) + ' درهم';
+}
+
+// قرا البيانات
 get(customerRef).then((snapshot)=>{
+    loading.style.display = 'none';
+    content.style.display = 'block';
+
     if(snapshot.exists()){
         const data = snapshot.val();
-        document.getElementById('name').textContent = data.name || 'بدون اسم';
-        document.getElementById('phone').textContent = data.phone || '';
+        const name = data.name || 'بدون اسم';
+
+        document.getElementById('name').textContent = name;
+        document.getElementById('phone').textContent = data.phone || 'لا يوجد هاتف';
+        document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
         document.getElementById('amount').value = data.amount || 0;
         document.getElementById('date').value = data.paymentDate || '';
+        document.getElementById('paid').value = data.paid || 0;
+        document.getElementById('received').value = data.received || 0;
+
+        if(data.paidDate) document.getElementById('paidDate').textContent = 'تاريخ الدفع: ' + data.paidDate;
+        if(data.receivedDate) document.getElementById('receivedDate').textContent = 'تاريخ الاستلام: ' + data.receivedDate;
+
+        calculateTotal();
     }else{
         alert('الزبون غير موجود');
-        document.getElementById('name').textContent = 'غير موجود';
+        window.location.href = 'index.html';
     }
 }).catch((error)=>{
-    alert('خطأ في قراءة البيانات: ' + error.message);
-    console.error(error);
+    alert('خطأ: ' + error.message);
+    window.location.href = 'index.html';
 });
 
-// زر الحفظ
+// حساب تلقائي منين كتبدل أي مبلغ
+document.getElementById('amount').addEventListener('input', calculateTotal);
+document.getElementById('paid').addEventListener('input', calculateTotal);
+document.getElementById('received').addEventListener('input', calculateTotal);
+
+// حفظ
 document.getElementById('saveBtn').addEventListener('click', ()=>{
+    const btn = document.getElementById('saveBtn');
+    btn.textContent = '⏳ جاري الحفظ...';
+    btn.disabled = true;
+
     const amount = parseFloat(document.getElementById('amount').value) || 0;
     const date = document.getElementById('date').value;
-    
-    update(customerRef, {
+    const paid = parseFloat(document.getElementById('paid').value) || 0;
+    const received = parseFloat(document.getElementById('received').value) || 0;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const updateData = {
         amount: amount,
         paymentDate: date,
+        paid: paid,
+        received: received,
         updatedAt: new Date().toISOString()
-    }).then(()=>{
-        alert('✅ تم الحفظ بنجاح');
-        window.location.href = 'index.html';
+    };
+
+    // إلا عطيتي مبلغ، سجل تاريخ الدفع
+    if(paid > 0) updateData.paidDate = today;
+
+    // إلا خديتي مبلغ، سجل تاريخ الاستلام
+    if(received > 0) updateData.receivedDate = today;
+
+    update(customerRef, updateData).then(()=>{
+        btn.textContent = '✅ تم الحفظ';
+        setTimeout(()=>{
+            window.location.href = 'index.html';
+        }, 800);
     }).catch((error)=>{
-        alert('خطأ في الحفظ: ' + error.message);
+        alert('خطأ: ' + error.message);
+        btn.textContent = '💾 حفظ التغييرات';
+        btn.disabled = false;
     });
 });
 
-// زر الرجوع
+// رجوع
 document.getElementById('backBtn').addEventListener('click', ()=>{
     window.location.href = 'index.html';
 });
