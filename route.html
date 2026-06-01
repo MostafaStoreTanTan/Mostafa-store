@@ -209,19 +209,21 @@ const db = getDatabase(app);
 
 let customers = [];
 let currentIndex = 0;
-const today = new Date().toISOString().split('T')[0];
 
-// جلب زبناء اليوم فقط
+// التاريخ المحلي ديال المغرب بصيغة YYYY-MM-DD
+const today = new Date().toLocaleDateString('en-CA');
+console.log('تاريخ اليوم:', today);
+
 get(ref(db, 'customers')).then((snapshot)=>{
     if(snapshot.exists()){
         snapshot.forEach(child => {
             const data = child.val();
+            // غير زبناء اليوم + المبلغ > 0
             if(data.paymentDate === today && data.amount > 0){
                 customers.push({id: child.key,...data, status: 'pending'});
             }
         });
 
-        // أول واحد current
         if(customers.length > 0) customers[0].status = 'current';
         renderRoute();
     }else{
@@ -271,17 +273,14 @@ function renderRoute(){
     document.getElementById('pending').textContent = pending;
 }
 
-// دالة تم - ينقل للزبون اللي موراه
 window.markDone = function(index){
     customers[index].status = 'visited';
 
-    // سجل فـ Firebase
     update(ref(db, 'customers/' + customers[index].id), {
         routeStatus: 'visited',
         routeDate: today
     });
 
-    // الشخص اللي موراه current
     if(index + 1 < customers.length){
         customers[index + 1].status = 'current';
     }
@@ -289,7 +288,6 @@ window.markDone = function(index){
     renderRoute();
 }
 
-// إنهاء المسار
 document.getElementById('finishBtn').addEventListener('click', ()=>{
     if(confirm('واش كملتي كل الزبناء؟')){
         alert('تم إنهاء المسار بنجاح ✅');
