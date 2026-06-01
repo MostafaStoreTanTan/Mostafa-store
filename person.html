@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>نظام إدارة الزبناء الاحترافي</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karni Pro - نظام إدارة الزبناء</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -12,90 +12,65 @@
 --danger:#ef476f;
 --warning:#ffd166;
 --dark:#1d3557;
---light:#f8f9fa;
---card-shadow:0 10px 30px rgba(0,0,0,0.08);
+--bg:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
 }
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif}
-body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px;color:#2d3436}
-.container{max-width:1200px;margin:0 auto}
-.header{background:white;border-radius:25px;padding:25px;margin-bottom:25px;box-shadow:var(--card-shadow);text-align:center}
-.header h1{font-size:28px;font-weight:900;color:var(--dark);margin-bottom:10px}
-.header p{color:#636e72;font-size:16px}
-.nav{display:flex;gap:12px;margin-bottom:25px;flex-wrap:wrap}
-.nav-btn{flex:1;min-width:120px;padding:15px;background:white;border:3px solid var(--primary);color:var(--primary);border-radius:15px;cursor:pointer;font-weight:700;font-size:16px;transition:0.3s}
-.nav-btn.active{background:var(--primary);color:white;transform:translateY(-3px);box-shadow:0 8px 20px rgba(67,97,238,0.3)}
-.nav-btn:hover{transform:translateY(-2px)}
+body{background:var(--bg);min-height:100vh;padding:20px}
+.container{max-width:1000px;margin:0 auto}
+.header-card{background:white;border-radius:25px;padding:30px;text-align:center;margin-bottom:25px;box-shadow:0 10px 40px rgba(0,0,0,0.15)}
+.header-card h1{font-size:32px;font-weight:900;color:var(--dark);margin-bottom:10px}
+.header-card p{color:#636e72;font-size:16px}
+.nav-buttons{display:flex;gap:15px;margin-bottom:25px}
+.nav-btn{flex:1;padding:18px;background:white;border:3px solid var(--primary);color:var(--primary);border-radius:18px;cursor:pointer;font-weight:800;font-size:17px;transition:0.3s;display:flex;align-items:center;justify-content:center;gap:8px}
+.nav-btn.active{background:var(--primary);color:white;transform:translateY(-3px);box-shadow:0 8px 25px rgba(67,97,238,0.4)}
 .page{display:none;animation:fadeIn 0.4s}
 .page.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.card{background:white;border-radius:25px;padding:30px;margin-bottom:20px;box-shadow:var(--card-shadow);border-top:5px solid var(--primary)}
-.avatar-container{text-align:center;margin-bottom:25px}
-.avatar{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-size:60px;color:white;margin:0 auto 15px;box-shadow:0 8px 25px rgba(102,126,234,0.4);cursor:pointer;transition:0.3s}
-.avatar:hover{transform:scale(1.05)}
-.customer-name{font-size:32px;font-weight:900;text-align:center;margin-bottom:10px;color:var(--dark)}
-.stars{text-align:center;font-size:28px;margin-bottom:20px}
-.star{color:#ddd;cursor:pointer;transition:0.2s;display:inline-block;margin:0 3px}
-.star.active{color:#ffd700;transform:scale(1.2)}
+.card{background:white;border-radius:25px;padding:30px;margin-bottom:20px;box-shadow:0 8px 30px rgba(0,0,0,0.1)}
+.avatar{width:130px;height:130px;border-radius:50%;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-size:65px;color:white;margin:0 auto 20px;box-shadow:0 10px 30px rgba(102,126,234,0.4)}
+.customer-name{font-size:34px;font-weight:900;text-align:center;margin-bottom:15px;color:var(--dark)}
+.stars-container{text-align:center;margin-bottom:25px}
+.star{font-size:35px;color:#ddd;cursor:pointer;transition:0.2s;display:inline-block;margin:0 5px}
+.star.active{color:#ffd700;transform:scale(1.3)}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:25px 0}
-.stat-card{background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);padding:20px;border-radius:18px;text-align:center;border:2px solid #e0e0e0}
-.stat-label{font-size:14px;color:#636e72;font-weight:500;margin-bottom:8px}
-.stat-value{font-size:26px;font-weight:900}
+.stat-card{background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);padding:22px;border-radius:18px;text-align:center;border:2px solid #dee2e6}
+.stat-label{font-size:15px;color:#6c757d;font-weight:600;margin-bottom:8px}
+.stat-value{font-size:28px;font-weight:900}
 .stat-depot{color:#06d6a0}
 .stat-paid{color:#ef476f}
 .stat-balance{color:#4361ee}
-.input-group{margin-bottom:20px}
-.input-group label{display:block;font-weight:700;margin-bottom:8px;color:var(--dark);font-size:15px}
-.input{width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:12px;font-size:16px;transition:0.3s;background:#fafafa}
-.input:focus{border-color:var(--primary);outline:none;background:white;box-shadow:0 0 0 3px rgba(67,97,238,0.1)}
-textarea.input{min-height:100px;resize:vertical}
-.btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:17px;font-weight:800;margin:10px 0;cursor:pointer;transition:0.3s;text-align:center;text-decoration:none}
+.input-group{margin-bottom:22px}
+.input-group label{display:block;font-weight:700;margin-bottom:10px;color:var(--dark);font-size:16px}
+.input{width:100%;padding:16px;border:2px solid #e0e0e0;border-radius:14px;font-size:16px;background:#fafafa;transition:0.3s}
+.input:focus{border-color:var(--primary);background:white;outline:none;box-shadow:0 0 0 4px rgba(67,97,238,0.1)}
+textarea.input{min-height:110px;resize:vertical}
+.btn{width:100%;padding:17px;border:none;border-radius:15px;font-size:17px;font-weight:800;margin:10px 0;cursor:pointer;transition:0.3s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
 .btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white}
 .btn-success{background:linear-gradient(135deg,#06d6a0 0%,#1dd1a1 100%);color:white}
 .btn-danger{background:linear-gradient(135deg,#ef476f 0%,#ff6b6b 100%);color:white}
 .btn-warning{background:linear-gradient(135deg,#ffd166 0%,#ff9f1c 100%);color:white}
 .btn-outline{background:white;border:2px solid var(--primary);color:var(--primary)}
-.actions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
-.table-container{overflow-x:auto;border-radius:15px;margin-top:20px}
-table{width:100%;border-collapse:collapse;background:white;border-radius:15px;overflow:hidden}
-th{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:18px;text-align:right;font-weight:800;font-size:15px}
-td{padding:16px;text-align:right;border-bottom:1px solid #f1f2f6;font-size:15px}
-tr:hover{background:#f8f9ff;cursor:pointer}
-.badge{padding:6px 14px;border-radius:25px;font-size:13px;font-weight:700;display:inline-block}
-.badge-pending{background:#fff3cd;color:#856404}
-.badge-paid{background:#d4edda;color:#155724}
-.badge-overdue{background:#f8d7da;color:#721c24}
-.search-box{margin-bottom:20px}
-.search-input{width:100%;padding:15px 20px;border:2px solid #e0e0e0;border-radius:15px;font-size:16px;background:white}
-.filter-buttons{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.filter-btn{padding:10px 20px;border:2px solid #ddd;background:white;border-radius:12px;cursor:pointer;font-weight:600;transition:0.3s}
-.filter-btn.active{background:var(--primary);color:white;border-color:var(--primary)}
-.summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:25px}
-.summary-card{background:white;padding:20px;border-radius:18px;text-align:center;box-shadow:var(--card-shadow)}
+.actions-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.actions-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.customer-card{background:white;border-radius:20px;padding:22px;margin-bottom:18px;box-shadow:0 4px 15px rgba(0,0,0,0.08);border-right:5px solid var(--primary);transition:0.3s}
+.customer-card:hover{transform:translateX(-5px);box-shadow:0 6px 20px rgba(0,0,0,0.12)}
+.search-input{width:100%;padding:16px 20px;border:2px solid #e0e0e0;border-radius:16px;font-size:16px;margin-bottom:20px}
+.summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:25px}
+.summary-card{background:white;padding:22px;border-radius:18px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.08)}
 .summary-value{font-size:32px;font-weight:900;margin:10px 0}
-.summary-label{color:#636e72;font-weight:600}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center}
-.modal.active{display:flex}
-.modal-content{background:white;border-radius:25px;padding:30px;max-width:500px;width:90%;max-height:90vh;overflow-y:auto}
-.close-btn{float:left;font-size:28px;cursor:pointer;color:#999}
-.close-btn:hover{color:#333}
-.loading{text-align:center;padding:40px;font-size:18px;color:#636e72}
+.loading{text-align:center;padding:50px;font-size:18px;color:white}
 .empty-state{text-align:center;padding:60px 20px;color:#999}
-.empty-state-icon{font-size:80px;margin-bottom:20px}
+.empty-state-icon{font-size:90px;margin-bottom:20px}
 @media(max-width:768px){
 .stats-grid{grid-template-columns:1fr}
-.actions-grid{grid-template-columns:1fr}
-.nav-btn{min-width:100%}
-.customer-name{font-size:24px}
-.stat-value{font-size:20px}
+.actions-2,.actions-3{grid-template-columns:1fr}
+.nav-buttons{flex-direction:column}
+.customer-name{font-size:26px}
 </style>
 
 <script type="importmap">
-{
-"imports": {
-"firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-"firebase/database": "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
-}
+{"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js","firebase/database":"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"}}
 </script>
 
 <script type="module">
@@ -114,8 +89,6 @@ appId: "1:927647092908:web:9e7e7ccfe90e68b0"
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-// جعل الدوال عالمية باش نستعملوها فباقي الأجزاء
 window.db = db;
 window.dbRef = ref;
 window.dbPush = push;
@@ -125,18 +98,17 @@ window.dbUpdate = update;
 window.dbRemove = remove;
 window.dbGet = get;
 window.dbChild = child;
-
-console.log('Firebase متصل بنجاح ✅');
+console.log('Firebase متصل ✅');
 </script>
 </head>
 <body>
 <div class="container">
-<div class="header">
+<div class="header-card">
 <h1>📊 نظام إدارة الزبناء الاحترافي</h1>
 <p>إدارة الديون والتحصيل بسهولة وأمان</p>
 </div>
 
-<div class="nav">
+<div class="nav-buttons">
 <button class="nav-btn active" onclick="showPage('list')">👥 لائحة الزبناء</button>
 <button class="nav-btn" onclick="showPage('add')">➕ إضافة زبون</button>
 <button class="nav-btn" onclick="showPage('reports')">📈 التقارير</button>
@@ -147,9 +119,8 @@ console.log('Firebase متصل بنجاح ✅');
 <div id="person" class="page"></div>
 <div id="reports" class="page"></div>
 </div>
-
 <script>
-// دوال التنقل بين الصفحات
+// التنقل
 function showPage(pageId){
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 document.getElementById(pageId).classList.add('active');
@@ -159,26 +130,25 @@ if(pageId=='list') loadCustomersList();
 if(pageId=='reports') loadReports();
 }
 
-// صفحة الإضافة - ~150 سطر من أصل 500
+// صفحة الإضافة - زر إضافة زبون هنا فقط
 function renderAddPage(){
 return `
 <div class="card">
-<h2 style="margin-bottom:25px;color:var(--dark)">➕ إضافة زبون جديد</h2>
+<h2 style="margin-bottom:25px;color:var(--dark);font-size:26px">➕ إضافة زبون جديد</h2>
 <div class="input-group">
 <label>👤 اسم الزبون *</label>
-<input class="input" id="add_name" placeholder="اكتب الاسم الكامل" required>
+<input class="input" id="add_name" placeholder="الاسم الكامل" required>
 </div>
 <div class="input-group">
-<label>📞 رقم الهاتف</label>
-<input class="input" id="add_phone" placeholder="0612345678 - اختياري" type="tel">
-<small style="color:#999">يمكن تركه فارغ</small>
+<label>📞 رقم الهاتف - اختياري</label>
+<input class="input" id="add_phone" placeholder="0612345678" type="tel">
 </div>
 <div class="input-group">
-<label>💰 المبلغ الأصلي - Depot *</label>
+<label>💰 المبلغ الأصلي Depot *</label>
 <input class="input" id="add_depot" placeholder="0.00" type="number" step="0.01" required>
 </div>
 <div class="input-group">
-<label>✅ المبلغ المدفوع - Paid</label>
+<label>✅ المبلغ المدفوع Paid</label>
 <input class="input" id="add_paid" placeholder="0.00" type="number" step="0.01" value="0">
 </div>
 <div class="input-group">
@@ -186,20 +156,19 @@ return `
 <input class="input" id="add_payment_date" type="date">
 </div>
 <div class="input-group">
-<label>📅 تاريخ أخذ النقود - Depot Date</label>
+<label>📅 تاريخ أخذ النقود</label>
 <input class="input" id="add_depot_date" type="date" value="${new Date().toISOString().split('T')[0]}">
 </div>
 <div class="input-group">
-<label>📍 رابط موقع Google Maps</label>
-<input class="input" id="add_location" placeholder="https://maps.google.com/... - اختياري">
-<small style="color:#999">الصق رابط الموقع من Google Maps</small>
+<label>📍 رابط Google Maps - اختياري</label>
+<input class="input" id="add_location" placeholder="https://maps.google.com/...">
 </div>
 <div class="input-group">
 <label>📝 ملاحظة</label>
-<textarea class="input" id="add_note" placeholder="أي ملاحظات خاصة بالزبون..."></textarea>
+<textarea class="input" id="add_note" placeholder="أي ملاحظات..."></textarea>
 </div>
 <button class="btn btn-primary" onclick="saveNewCustomer()">💾 حفظ الزبون</button>
-<button class="btn btn-outline" onclick="showPage('list')">↩️ رجوع</button>
+<button class="btn btn-outline" onclick="showPage('list')">↩️ إلغاء</button>
 </div>`;
 }
 
@@ -214,19 +183,15 @@ return;
 }
 
 const customer = {
-name: name,
-phone: document.getElementById('add_phone').value.trim(),
-depot: depot,
-paid: paid,
-balance: depot - paid,
+name, phone: document.getElementById('add_phone').value.trim(),
+depot, paid, balance: depot - paid,
 paymentDate: document.getElementById('add_payment_date').value || '',
 depotDate: document.getElementById('add_depot_date').value || new Date().toISOString().split('T')[0],
 location: document.getElementById('add_location').value.trim(),
 note: document.getElementById('add_note').value.trim(),
-status: paid >= depot? 'paid' : 'pending',
 rating: 0,
-createdAt: Date.now(),
-updatedAt: Date.now()
+status: paid >= depot? 'paid' : 'pending',
+createdAt: Date.now(), updatedAt: Date.now()
 };
 
 try{
@@ -236,13 +201,11 @@ alert('✅ تم حفظ الزبون بنجاح!');
 document.getElementById('add').innerHTML = renderAddPage();
 showPage('list');
 }catch(e){
-alert('❌ خطأ في الحفظ: ' + e.message);
+alert('❌ خطأ: ' + e.message);
 }
-}
-
 document.getElementById('add').innerHTML = renderAddPage();
 
-// صفحة لائحة الزبناء + البحث + الفلترة ~200 سطر
+// لائحة الزبناء بالكروت + زر التفاصيل
 function loadCustomersList(){
 const listDiv = document.getElementById('list');
 listDiv.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
@@ -250,399 +213,244 @@ listDiv.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
 dbOnValue(dbRef(window.db, 'customers'), (snapshot)=>{
 const data = snapshot.val() || {};
 let customers = [];
-let totalDepot = 0;
-let totalPaid = 0;
 let totalBalance = 0;
 
 for(let id in data){
 customers.push({id,...data[id]});
-totalDepot += data[id].depot || 0;
-totalPaid += data[id].paid || 0;
 totalBalance += (data[id].depot - data[id].paid) || 0;
 }
-
-// ترتيب حسب التاريخ الجديد
 customers.sort((a,b)=>b.createdAt - a.createdAt);
 
 let html = `
 <div class="summary-cards">
 <div class="summary-card">
-<div class="summary-label">مجموع الديون</div>
-<div class="summary-value" style="color:var(--danger)">${totalBalance.toFixed(2)} درهم</div>
+<div style="color:#6c757d;font-weight:600">مجموع الديون</div>
+<div class="summary-value" style="color:var(--danger)">${totalBalance.toFixed(2)}</div>
+<div style="color:#999">درهم</div>
 </div>
 <div class="summary-card">
-<div class="summary-label">المبلغ الأصلي</div>
-<div class="summary-value" style="color:var(--success)">${totalDepot.toFixed(2)} درهم</div>
-</div>
-<div class="summary-card">
-<div class="summary-label">المبلغ المحصل</div>
-<div class="summary-value" style="color:var(--primary)">${totalPaid.toFixed(2)} درهم</div>
-</div>
-<div class="summary-card">
-<div class="summary-label">عدد الزبناء</div>
+<div style="color:#6c757d;font-weight:600">عدد الزبناء</div>
 <div class="summary-value" style="color:var(--dark)">${customers.length}</div>
 </div>
 </div>
 
 <div class="card">
-<div class="search-box">
-<input class="search-input" id="searchInput" placeholder="🔍 بحث بالاسم أو الهاتف..." onkeyup="filterCustomers()">
-</div>
-
-<div class="filter-buttons">
-<button class="filter-btn active" onclick="filterByStatus('all', this)">الكل</button>
-<button class="filter-btn" onclick="filterByStatus('pending', this)">الباقي</button>
-<button class="filter-btn" onclick="filterByStatus('paid', this)">المخلصين</button>
-<button class="filter-btn" onclick="filterByStatus('overdue', this)">متأخرين</button>
-</div>
-
-<div class="table-container">
-<table id="customersTable">
-<thead>
-<tr>
-<th>الاسم</th>
-<th>الهاتف</th>
-<th>المبلغ</th>
-<th>تاريخ الدفع</th>
-<th>الحالة</th>
-</tr>
-</thead>
-<tbody id="customersBody">
-`;
+<h2 style="margin-bottom:20px;font-size:24px">👥 لائحة الزبناء</h2>
+<input class="search-input" id="searchInput" placeholder="🔍 ابحث بالاسم أو الهاتف..." onkeyup="filterCustomers()">
+<div id="customersCards">`;
 
 if(customers.length === 0){
-html += `<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">👥</div><p>لا يوجد زبناء بعد</p></div></td></tr>`;
+html += `<div class="empty-state"><div class="empty-state-icon">📭</div><p>لا يوجد زبناء بعد</p><button class="btn btn-primary" onclick="showPage('add')">➕ أضف أول زبون</button></div>`;
 }else{
 customers.forEach(c=>{
-const balance = c.depot - c.paid;
-const isOverdue = c.paymentDate && new Date(c.paymentDate) < new Date() && balance > 0;
-const statusClass = isOverdue? 'overdue' : c.status;
-const statusText = isOverdue? 'متأخر' : c.status === 'paid'? 'مخلص' : 'باقي';
+const balance = (c.depot - c.paid) || 0;
+const firstLetter = c.name.charAt(0).toUpperCase();
+const stars = '★'.repeat(c.rating||0) + '☆'.repeat(5-(c.rating||0));
 
 html += `
-<tr onclick="showCustomerPage('${c.id}')">
-<td><strong>${c.name}</strong></td>
-<td>${c.phone || '-'}</td>
-<td style="font-weight:800;color:${balance>0?'var(--danger)':'var(--success)'}">${balance.toFixed(2)} درهم</td>
-<td>${c.paymentDate || '-'}</td>
-<td><span class="badge badge-${statusClass}">${statusText}</span></td>
-</tr>`;
+<div class="customer-card" style="border-right-color:${balance>0?'#ef476f':'#06d6a0'}">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+<div style="display:flex;align-items:center;gap:15px">
+<div style="width:55px;height:55px;border-radius:14px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:white">${firstLetter}</div>
+<div>
+<div style="font-weight:900;font-size:19px;margin-bottom:5px">${c.name}</div>
+<div style="color:#ffd700;font-size:18px">${stars}</div>
+</div>
+</div>
+<div style="text-align:left">
+<div style="font-size:26px;font-weight:900;color:${balance>0?'#ef476f':'#06d6a0'}">${balance.toFixed(0)} درهم</div>
+</div>
+</div>
+<div style="display:flex;gap:15px;color:#666;font-size:14px;margin-bottom:15px">
+<span>📅 ${c.paymentDate || 'بدون تاريخ'}</span>
+<span>📞 ${c.phone || 'بدون هاتف'}</span>
+</div>
+<div class="actions-3">
+<button class="btn btn-danger" style="padding:12px;font-size:14px" onclick="deleteCustomerConfirm('${c.id}','${c.name}')">🗑️ حذف</button>
+<button class="btn btn-success" style="padding:12px;font-size:14px" onclick="markFullyPaid('${c.id}',${balance})">✓ تحصيل</button>
+<button class="btn btn-primary" style="padding:12px;font-size:14px" onclick="showCustomerPage('${c.id}')">👤 التفاصيل</button>
+</div>
+</div>`;
 });
 }
-html += `</tbody></table></div></div>`;
+html += `</div></div>`;
 listDiv.innerHTML = html;
-
-// حفظ البيانات للفلترة
-window.allCustomers = customers;
 });
-}
-
-let currentFilter = 'all';
-function filterByStatus(status, btn){
-currentFilter = status;
-document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-filterCustomers();
 }
 
 function filterCustomers(){
-const searchVal = document.getElementById('searchInput').value.toLowerCase();
-const tbody = document.getElementById('customersBody');
-const rows = tbody.querySelectorAll('tr');
-
-rows.forEach(row=>{
-const text = row.innerText.toLowerCase();
-const statusBadge = row.querySelector('.badge');
-const isMatch = text.includes(searchVal);
-
-let statusMatch = true;
-if(currentFilter === 'pending') statusMatch = statusBadge.classList.contains('badge-pending');
-if(currentFilter === 'paid') statusMatch = statusBadge.classList.contains('badge-paid');
-if(currentFilter === 'overdue') statusMatch = statusBadge.classList.contains('badge-overdue');
-
-row.style.display = (isMatch && statusMatch)? '' : 'none';
+const val = document.getElementById('searchInput').value.toLowerCase();
+document.querySelectorAll('.customer-card').forEach(card=>{
+card.style.display = card.innerText.toLowerCase().includes(val)? '' : 'none';
 });
 }
 
-// صفحة الزبون الفردية بحال الصورة ~300 سطر
-function showCustomerPage(id){
-const personDiv = document.getElementById('person');
-personDiv.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
-showPage('person');
+<script>
+// التنقل
+function showPage(pageId){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(pageId).classList.add('active');
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+event.target.classList.add('active');
+if(pageId=='list') loadCustomersList();
+if(pageId=='reports') loadReports();
+}
 
-dbOnValue(dbRef(window.db, 'customers/' + id), (snapshot)=>{
-const c = snapshot.val();
-if(!c) return;
-
-const balance = c.depot - c.paid;
-const stars = renderStars(c.rating || 0, id);
-
-personDiv.innerHTML = `
+// صفحة الإضافة - زر إضافة زبون هنا فقط
+function renderAddPage(){
+return `
 <div class="card">
-<div class="avatar-container">
-<div class="avatar" onclick="uploadPhoto('${id}')">📷</div>
-<div class="customer-name" id="custName">${c.name}</div>
-<div class="stars" id="starsContainer">${stars}</div>
-</div>
-
-<div class="stats-grid">
-<div class="stat-card">
-<div class="stat-label">💰 Depot</div>
-<div class="stat-value stat-depot">${c.depot.toFixed(2)} MAD</div>
-</div>
-<div class="stat-card">
-<div class="stat-label">✅ Paid</div>
-<div class="stat-value stat-paid">${c.paid.toFixed(2)} MAD</div>
-</div>
-<div class="stat-card">
-<div class="stat-label">📊 Balance</div>
-<div class="stat-value stat-balance">${balance.toFixed(2)} MAD</div>
-</div>
-</div>
-
+<h2 style="margin-bottom:25px;color:var(--dark);font-size:26px">➕ إضافة زبون جديد</h2>
 <div class="input-group">
-<label>📅 Payment Date - تاريخ الدفع</label>
-<input class="input" type="date" id="edit_payment_date" value="${c.paymentDate || ''}" onchange="updateCustomerField('${id}','paymentDate',this.value)">
+<label>👤 اسم الزبون *</label>
+<input class="input" id="add_name" placeholder="الاسم الكامل" required>
 </div>
-
 <div class="input-group">
-<label>📅 Depot Date - تاريخ الأخذ</label>
-<input class="input" type="date" id="edit_depot_date" value="${c.depotDate || ''}" onchange="updateCustomerField('${id}','depotDate',this.value)">
+<label>📞 رقم الهاتف - اختياري</label>
+<input class="input" id="add_phone" placeholder="0612345678" type="tel">
 </div>
-
 <div class="input-group">
-<label>💰 إضافة دفعة جديدة</label>
-<div style="display:flex;gap:10px">
-<input class="input" type="number" step="0.01" id="add_payment" placeholder="المبلغ المدفوع">
-<button class="btn btn-success" style="width:auto;padding:15px 25px" onclick="addPayment('${id}',${c.paid},${c.depot})">إضافة</button>
+<label>💰 المبلغ الأصلي Depot *</label>
+<input class="input" id="add_depot" placeholder="0.00" type="number" step="0.01" required>
 </div>
-</div>
-
 <div class="input-group">
-<label>📍 الموقع - Google Maps</label>
-<input class="input" id="edit_location" value="${c.location || ''}" placeholder="الصق رابط Google Maps هنا" onchange="updateCustomerField('${id}','location',this.value)">
-${c.location? `<button class="btn btn-primary" onclick="openMap('${c.location}')">🗺️ فتح الخريطة</button>` : ''}
+<label>✅ المبلغ المدفوع Paid</label>
+<input class="input" id="add_paid" placeholder="0.00" type="number" step="0.01" value="0">
 </div>
-
+<div class="input-group">
+<label>📅 تاريخ الدفع المتوقع</label>
+<input class="input" id="add_payment_date" type="date">
+</div>
+<div class="input-group">
+<label>📅 تاريخ أخذ النقود</label>
+<input class="input" id="add_depot_date" type="date" value="${new Date().toISOString().split('T')[0]}">
+</div>
+<div class="input-group">
+<label>📍 رابط Google Maps - اختياري</label>
+<input class="input" id="add_location" placeholder="https://maps.google.com/...">
+</div>
 <div class="input-group">
 <label>📝 ملاحظة</label>
-<textarea class="input" id="edit_note" onchange="updateCustomerField('${id}','note',this.value)">${c.note || ''}</textarea>
+<textarea class="input" id="add_note" placeholder="أي ملاحظات..."></textarea>
 </div>
-
-<div class="actions-grid">
-<button class="btn btn-success" onclick="callCustomer('${c.phone}')">📞 Call</button>
-<button class="btn btn-success" onclick="whatsappCustomer('${c.phone}','${c.name}',${balance})">💬 WhatsApp</button>
-<button class="btn btn-primary" onclick="editCustomerName('${id}','${c.name}')">✏️ Edit Name</button>
-<button class="btn btn-primary" onclick="editCustomerPhone('${id}','${c.phone || ''}')">📞 Edit Phone</button>
-</div>
-
-<button class="btn btn-warning" onclick="markAsPaid('${id}',${balance})">✅ تم التحصيل كاملاً</button>
-<button class="btn btn-danger" onclick="deleteCustomer('${id}')">🗑️ حذف الزبون</button>
-<button class="btn btn-outline" onclick="showPage('list')">↩️ رجوع للقائمة</button>
+<button class="btn btn-primary" onclick="saveNewCustomer()">💾 حفظ الزبون</button>
+<button class="btn btn-outline" onclick="showPage('list')">↩️ إلغاء</button>
 </div>`;
-});
 }
 
- // ===== الجزء 3/3 - الدوال المساعدة + التقارير + الإغلاق =====
+async function saveNewCustomer(){
+const name = document.getElementById('add_name').value.trim();
+const depot = parseFloat(document.getElementById('add_depot').value) || 0;
+const paid = parseFloat(document.getElementById('add_paid').value) || 0;
 
-// تحديث أي حقل مباشرة فـ Firebase
-async function updateField(id, field, value){
+if(!name || depot <= 0){
+alert('⚠️ المرجو ملء الاسم والمبلغ الأصلي');
+return;
+}
+
+const customer = {
+name, phone: document.getElementById('add_phone').value.trim(),
+depot, paid, balance: depot - paid,
+paymentDate: document.getElementById('add_payment_date').value || '',
+depotDate: document.getElementById('add_depot_date').value || new Date().toISOString().split('T')[0],
+location: document.getElementById('add_location').value.trim(),
+note: document.getElementById('add_note').value.trim(),
+rating: 0,
+status: paid >= depot? 'paid' : 'pending',
+createdAt: Date.now(), updatedAt: Date.now()
+};
+
 try{
-await dbUpdate(dbRef(window.db, 'customers/'+id), {[field]: value, updatedAt: Date.now()});
-console.log(`تم تحديث ${field}`);
+const newRef = dbPush(dbRef(window.db, 'customers'));
+await dbSet(newRef, customer);
+alert('✅ تم حفظ الزبون بنجاح!');
+document.getElementById('add').innerHTML = renderAddPage();
+showPage('list');
 }catch(e){
 alert('❌ خطأ: ' + e.message);
 }
-}
+document.getElementById('add').innerHTML = renderAddPage();
 
-// إضافة دفعة جديدة
-async function addNewPayment(id, currentPaid, depot){
-const amountInput = document.getElementById('newPaymentAmount');
-const amount = parseFloat(amountInput.value);
-
-if(!amount || amount <= 0){
-alert('⚠️ المرجو إدخال مبلغ صحيح');
-return;
-}
-
-const newPaid = (currentPaid || 0) + amount;
-const newBalance = depot - newPaid;
-const newStatus = newBalance <= 0? 'paid' : 'pending';
-
-try{
-await dbUpdate(dbRef(window.db, 'customers/'+id), {
-paid: newPaid,
-balance: newBalance,
-status: newStatus,
-updatedAt: Date.now()
-});
-alert(`✅ تم إضافة ${amount.toFixed(2)} درهم بنجاح!\nالباقي الآن: ${newBalance.toFixed(2)} درهم`);
-amountInput.value = '';
-}catch(e){
-alert('❌ خطأ في الحفظ: ' + e.message);
-}
-}
-
-// الاتصال بالزبون
-function makeCall(phone){
-if(phone && phone.trim()!== ''){
-window.location.href = 'tel:' + phone;
-}else{
-alert('⚠️ لا يوجد رقم هاتف محفوظ لهذا الزبون');
-}
-}
-
-// واتساب برسالة جاهزة
-function sendWhatsApp(phone, name, balance){
-if(!phone || phone.trim() === ''){
-alert('⚠️ لا يوجد رقم هاتف محفوظ');
-return;
-}
-const cleanPhone = '212' + phone.replace(/^0/, '').replace(/\D/g, '');
-const msg = encodeURIComponent(`السلام عليكم ${name} 👋\n\nتذكير بمستحقاتكم:\nالمبلغ المتبقي: ${balance.toFixed(2)} درهم\nشكراً لتعاملكم معنا 🙏`);
-window.open(`https://wa.me/${cleanPhone}?text=${msg}`, '_blank');
-}
-
-// تعديل الاسم
-async function editNamePrompt(id, oldName){
-const newName = prompt('📝 أدخل الاسم الجديد:', oldName);
-if(newName && newName.trim()!== '' && newName!== oldName){
-await updateField(id, 'name', newName.trim());
-document.getElementById('displayName').innerText = newName.trim();
-alert('✅ تم تحديث الاسم');
-}
-}
-
-// تعديل الهاتف
-async function editPhonePrompt(id, oldPhone){
-const newPhone = prompt('📞 أدخل رقم الهاتف الجديد:', oldPhone);
-if(newPhone!== null){
-await updateField(id, 'phone', newPhone.trim());
-alert('✅ تم تحديث رقم الهاتف');
-}
-}
-
-// وضع علامة مخلص كامل
-async function markFullyPaid(id, balance){
-if(balance <= 0){
-alert('الزبون مخلص بالفعل');
-return;
-}
-if(confirm(`هل تريد وضع علامة "مخلص كاملاً" على مبلغ ${balance.toFixed(2)} درهم؟`)){
-const snap = await dbGet(dbChild(dbRef(window.db), 'customers/'+id));
-const c = snap.val();
-await dbUpdate(dbRef(window.db, 'customers/'+id), {
-paid: c.depot,
-balance: 0,
-status: 'paid',
-updatedAt: Date.now()
-});
-alert('✅ تم وضع علامة مخلص كاملاً');
-}
-}
-
-// حذف الزبون
-async function deleteCustomerConfirm(id, name){
-if(confirm(`🗑️ تحذير: سيتم حذف الزبون "${name}" نهائياً من قاعدة البيانات!\nهل أنت متأكد 100%؟`)){
-try{
-await dbRemove(dbRef(window.db, 'customers/'+id));
-alert('✅ تم حذف الزبون بنجاح');
-showPage('list');
-}catch(e){
-alert('❌ خطأ في الحذف: ' + e.message);
-}
-}
-
-// فتح الخريطة
-function openGoogleMap(location){
-if(location && location.trim()!== ''){
-window.open(location, '_blank');
-}else{
-alert('لا يوجد موقع محفوظ');
-}
-}
-
-// تقييم النجوم
-async function rateCustomer(id, rating){
-await updateField(id, 'rating', rating);
-// إعادة رسم النجوم
-const starsContainer = document.getElementById('ratingStars');
-if(starsContainer) starsContainer.innerHTML = renderStars(rating, id);
-}
-
-// صفحة التقارير
-function loadReports(){
-const reportsDiv = document.getElementById('reports');
-reportsDiv.innerHTML = '<div class="loading">⏳ جاري تحميل التقارير...</div>';
+// لائحة الزبناء بالكروت + زر التفاصيل
+function loadCustomersList(){
+const listDiv = document.getElementById('list');
+listDiv.innerHTML = '<div class="loading">⏳ جاري التحميل...</div>';
 
 dbOnValue(dbRef(window.db, 'customers'), (snapshot)=>{
 const data = snapshot.val() || {};
-let customers = Object.values(data);
-
-let paidCount = 0;
-let pendingCount = 0;
-let overdueCount = 0;
+let customers = [];
 let totalBalance = 0;
-let todayCollected = 0;
 
-const today = new Date().toISOString().split('T')[0];
+for(let id in data){
+customers.push({id,...data[id]});
+totalBalance += (data[id].depot - data[id].paid) || 0;
+}
+customers.sort((a,b)=>b.createdAt - a.createdAt);
 
-customers.forEach(c=>{
-const balance = (c.depot - c.paid) || 0;
-totalBalance += balance;
-if(c.status === 'paid') paidCount++;
-else pendingCount++;
-
-if(c.paymentDate && new Date(c.paymentDate) < new Date() && balance > 0) overdueCount++;
-if(c.updatedAt && new Date(c.updatedAt).toISOString().split('T')[0] === today && c.paid > 0) todayCollected += c.paid;
-});
-
-reportsDiv.innerHTML = `
-<div class="card">
-<h2 style="margin-bottom:25px;color:var(--dark)">📈 التقارير والإحصائيات</h2>
-
+let html = `
 <div class="summary-cards">
 <div class="summary-card">
-<div class="summary-label">الديون المتبقية</div>
+<div style="color:#6c757d;font-weight:600">مجموع الديون</div>
 <div class="summary-value" style="color:var(--danger)">${totalBalance.toFixed(2)}</div>
-<div style="color:#999;font-size:13px">درهم</div>
+<div style="color:#999">درهم</div>
 </div>
 <div class="summary-card">
-<div class="summary-label">زبناء مخلصين</div>
-<div class="summary-value" style="color:var(--success)">${paidCount}</div>
-</div>
-<div class="summary-card">
-<div class="summary-label">زبناء باقي</div>
-<div class="summary-value" style="color:var(--warning)">${pendingCount}</div>
-</div>
-<div class="summary-card">
-<div class="summary-label">متأخرين</div>
-<div class="summary-value" style="color:var(--danger)">${overdueCount}</div>
+<div style="color:#6c757d;font-weight:600">عدد الزبناء</div>
+<div class="summary-value" style="color:var(--dark)">${customers.length}</div>
 </div>
 </div>
 
-<div class="card" style="margin-top:20px">
-<h3 style="margin-bottom:15px">💰 تحصيل اليوم</h3>
-<div class="summary-value" style="color:var(--primary);font-size:40px">${todayCollected.toFixed(2)} درهم</div>
-</div>
+<div class="card">
+<h2 style="margin-bottom:20px;font-size:24px">👥 لائحة الزبناء</h2>
+<input class="search-input" id="searchInput" placeholder="🔍 ابحث بالاسم أو الهاتف..." onkeyup="filterCustomers()">
+<div id="customersCards">`;
 
-<div class="card" style="margin-top:20px">
-<h3 style="margin-bottom:15px">📊 نسبة التحصيل</h3>
-<div style="background:#e0e0e0;border-radius:20px;height:30px;overflow:hidden">
-<div style="background:linear-gradient(90deg,#06d6a0,#1dd1a1);height:100%;width:${customers.length>0?((paidCount/customers.length)*100):0}%;display:flex;align-items:center;justify-content:center;color:white;font-weight:800">
-${customers.length>0?((paidCount/customers.length)*100).toFixed(1):0}%
-</div>
-</div>
-</div>
+if(customers.length === 0){
+html += `<div class="empty-state"><div class="empty-state-icon">📭</div><p>لا يوجد زبناء بعد</p><button class="btn btn-primary" onclick="showPage('add')">➕ أضف أول زبون</button></div>`;
+}else{
+customers.forEach(c=>{
+const balance = (c.depot - c.paid) || 0;
+const firstLetter = c.name.charAt(0).toUpperCase();
+const stars = '★'.repeat(c.rating||0) + '☆'.repeat(5-(c.rating||0));
 
-<button class="btn btn-outline" onclick="showPage('list')">↩️ رجوع</button>
+html += `
+<div class="customer-card" style="border-right-color:${balance>0?'#ef476f':'#06d6a0'}">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+<div style="display:flex;align-items:center;gap:15px">
+<div style="width:55px;height:55px;border-radius:14px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:white">${firstLetter}</div>
+<div>
+<div style="font-weight:900;font-size:19px;margin-bottom:5px">${c.name}</div>
+<div style="color:#ffd700;font-size:18px">${stars}</div>
+</div>
+</div>
+<div style="text-align:left">
+<div style="font-size:26px;font-weight:900;color:${balance>0?'#ef476f':'#06d6a0'}">${balance.toFixed(0)} درهم</div>
+</div>
+</div>
+<div style="display:flex;gap:15px;color:#666;font-size:14px;margin-bottom:15px">
+<span>📅 ${c.paymentDate || 'بدون تاريخ'}</span>
+<span>📞 ${c.phone || 'بدون هاتف'}</span>
+</div>
+<div class="actions-3">
+<button class="btn btn-danger" style="padding:12px;font-size:14px" onclick="deleteCustomerConfirm('${c.id}','${c.name}')">🗑️ حذف</button>
+<button class="btn btn-success" style="padding:12px;font-size:14px" onclick="markFullyPaid('${c.id}',${balance})">✓ تحصيل</button>
+<button class="btn btn-primary" style="padding:12px;font-size:14px" onclick="showCustomerPage('${c.id}')">👤 التفاصيل</button>
+</div>
 </div>`;
 });
 }
+html += `</div></div>`;
+listDiv.innerHTML = html;
+});
+}
 
-// تشغيل التطبيق
-console.log('✅ التطبيق جاهز ويعمل 100%');
+function filterCustomers(){
+const val = document.getElementById('searchInput').value.toLowerCase();
+document.querySelectorAll('.customer-card').forEach(card=>{
+card.style.display = card.innerText.toLowerCase().includes(val)? '' : 'none';
+});
+} 
+
 </script>
 </body>
-</html> 
-  
+</html>
