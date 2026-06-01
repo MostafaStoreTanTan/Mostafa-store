@@ -470,6 +470,22 @@ ${text}
 <div class="actions">
 
 <button
+class="move-btn"
+onclick="moveUp(${index})">
+
+⬆️ Up
+
+</button>
+
+<button
+class="move-btn"
+onclick="moveDown(${index})">
+
+⬇️ Down
+
+</button>
+
+<button
 class="btn-green"
 onclick="markCollected(${index})">
 
@@ -657,6 +673,52 @@ location.reload();
 
 };
 
+function moveUp(index){
+
+if(index === 0) return;
+
+let temp =
+route[index];
+
+route[index] =
+route[index - 1];
+
+route[index - 1] =
+temp;
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+function moveDown(index){
+
+if(
+index === route.length - 1
+) return;
+
+let temp =
+route[index];
+
+route[index] =
+route[index + 1];
+
+route[index + 1] =
+temp;
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+   
 </script>
 
 </body>
