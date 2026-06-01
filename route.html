@@ -16,7 +16,7 @@
         .stat-num { font-size: 18px; font-weight: 900; color: #0f766e; }
         .stat-label { font-size: 11px; color: #64748b; font-weight: 700; margin-top: 3px; }
         
-        .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; transition: all 0.3s ease; }
+        .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; }
         .customer-card.status-pending { border-right-color: #cbd5e1; } 
         .customer-card.status-current { border-right-color: #2563eb; background: #f0f5ff; } 
         .customer-card.status-collected { border-right-color: #22c55e; opacity: 0.85; } 
@@ -27,7 +27,7 @@
         .card-body { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
         .step-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; background: #cbd5e1; }
         .status-pending .step-badge { background: #cbd5e1; }
-        .status-current .step-badge { background: #2563eb; animation: pulse 2s infinite; }
+        .status-current .step-badge { background: #2563eb; }
         .status-collected .step-badge { background: #22c55e; }
         .status-no-pay .step-badge { background: #ef4444; }
         .status-callback .step-badge { background: #f97316; }
@@ -53,9 +53,8 @@
         .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .m-btn { border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        .no-data { text-align: center; padding: 40px 20px; color: #94a3b8; font-weight: bold; background: white; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
+        .no-data { text-align: center; padding: 40px 20px; color: #94a3b8; font-weight: bold; background: white; border-radius: 15px; }
         .finish-btn { width: 100%; border: none; background: #16a34a; color: white; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
     </style>
 </head>
 <body>
@@ -63,25 +62,22 @@
     <div class="header"><i class="fas fa-map-marked-alt"></i> مسار التوزيع اليومي</div>
     <div style="text-align: center;"><div class="date-badge" id="currentDateBadge">تاريخ اليوم: --</div></div>
 
-    <!-- لوحة العدادات المباشرة -->
     <div class="stats-grid">
         <div class="stat-card"><div class="stat-num" id="countTotal">0</div><div class="stat-label">إجمالي زبائن اليوم</div></div>
         <div class="stat-card"><div class="stat-num" id="countDone" style="color:#22c55e;">0</div><div class="stat-label">تم التحصيل</div></div>
         <div class="stat-card"><div class="stat-num" id="countRem" style="color:#f97316;">0</div><div class="stat-label">المتبقي</div></div>
     </div>
 
-    <!-- القائمة الديناميكية المحمية -->
     <div id="routeCustomersList">
-        <div class="no-data">جاري البحث عن زبائن مسجلين بتاريخ اليوم...</div>
+        <div class="no-data">جاري جلب المسار ومزامنة التواريخ...</div>
     </div>
 
     <button class="finish-btn" onclick="window.finishRoute()"><i class="fas fa-check-double"></i> تصفير وإعادة تعيين المسار</button>
 
-    <!-- واجهة كتابة المذكرة للون الأحمر -->
     <div class="modal" id="noteModal">
         <div class="modal-box">
             <div class="modal-title">اكتب مذكرة سبب عدم الدفع اليوم:</div>
-            <input type="text" id="modalNoteInput" class="modal-input" placeholder="مثال: المحل مغلق، لم يتوفر المال اليوم...">
+            <input type="text" id="modalNoteInput" class="modal-input" placeholder="مثال: الحمل مغلق، لم يتوفر المال اليوم...">
             <div class="modal-btns">
                 <button class="m-btn" onclick="window.submitNoPayNote()" style="background:#ef4444; color:white;">حفظ المذكرة</button>
                 <button class="m-btn" onclick="window.closeModal()" style="background:#e2e8f0;">إلغاء</button>
@@ -97,14 +93,22 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // استخراج تاريخ اليوم الفعلي محلياً بصيغة YYYY-MM-DD المطابقة لقاعدة البيانات
-    const todayStr = new Date().toISOString().split('T')[0];
+    // دالة جلب التاريخ المحلي الصحيح 100% متوافقة مع إعدادات الهاتف والمغرب
+    function getLocalTodayString() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    const todayStr = getLocalTodayString();
     document.getElementById('currentDateBadge').textContent = `تاريخ اليوم: ${todayStr}`;
 
     let customersData = [];
     let activeNoPayIndex = null;
 
-    // الاتصال الفوري بقاعدة البيانات
+    // جلب ومراقبة البيانات من الفايربيس
     onValue(ref(db, 'customers'), (snapshot) => {
         if (snapshot.exists()) {
             const rawData = snapshot.val();
@@ -114,8 +118,10 @@
             Object.keys(rawData).forEach(key => {
                 const c = rawData[key];
                 
-                // التصفية والفلترة الذكية: نظهر فقط من يطابق تاريخ اليوم المكتوب عنده في الحساب
-                if (c.date === todayStr) {
+                // تنظيف ومقارنة التواريخ بدقة بدون مسافات زائدة
+                const clientDate = c.date ? c.date.trim() : "";
+                
+                if (clientDate === todayStr) {
                     customersData.push({
                         id: key,
                         name: c.name || "زبون مجهول",
@@ -127,7 +133,6 @@
                 }
             });
             
-            // تفعيل نظام الحركة واللون الأزرق التلقائي للزبون الأول المتبقي
             ensureCurrentActiveCustomer();
             renderRouteList();
         } else {
@@ -137,10 +142,8 @@
 
     function ensureCurrentActiveCustomer() {
         if (customersData.length === 0) return;
-        // إذا كان هناك زبون أزرق حالي، اتركه كما هو
         if (customersData.some(c => c.status === 'current')) return;
 
-        // تلوين أول شخص رمادي (pending) ليصبح أزرق بشكل أوتوماتيكي
         const firstPending = customersData.find(c => c.status === 'pending');
         if (firstPending) {
             firstPending.status = 'current';
@@ -196,7 +199,6 @@
         document.getElementById('countRem').textContent = "0";
     }
 
-    // تصدير الدوال لحماية الاتصال بالأزرار الخارجية
     window.changeStatus = function(index, newStatus, reason = "") {
         const currentCust = customersData[index];
         currentCust.status = newStatus;
@@ -204,7 +206,6 @@
 
         updateStatusInFirebase(currentCust.id, newStatus, reason);
 
-        // التنقل التلقائي للون الأزرق نحو العميل التالي عند الضغط على زر "أعطاني" الأخضر
         if (newStatus === 'collected') {
             const nextCust = customersData.find((c, i) => i > index && c.status === 'pending');
             if (nextCust) {
