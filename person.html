@@ -3,147 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>صفحة الزبون | My Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<title>إضافة زبون - Karni</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Tajawal',sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b);color:#e2e8f0;min-height:100vh;padding:20px}
-  .container{max-width:650px;margin:0 auto;background:#1e293b;border-radius:20px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,0.4);border:1px solid #334155}
-  h1{color:#38bdf8;margin-bottom:25px;font-size:28px;display:flex;align-items:center;gap:10px}
-  .badge{background:#0ea5e9;color:white;padding:4px 12px;border-radius:20px;font-size:14px}
-  .info{background:#334155;padding:18px;border-radius:12px;margin:20px 0;border-right:4px solid #38bdf8}
-  .info p{margin:10px 0;font-size:17px;display:flex;justify-content:space-between}
-  .info span{color:#38bdf8;font-weight:700}
-  .btn{background:linear-gradient(90deg,#3b82f6,#0ea5e9);color:white;border:none;padding:14px 20px;border-radius:10px;cursor:pointer;font-size:16px;width:100%;margin-top:15px;font-weight:700;transition:0.3s}
-  .btn:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(59,130,246,0.4)}
-  input,textarea{width:100%;padding:12px;margin:10px 0;background:#0f172a;border:2px solid #334155;border-radius:8px;color:#e2e8f0;font-size:16px;font-family:'Tajawal'}
-  input:focus,textarea:focus{border-color:#38bdf8;outline:none}
-  .op{background:#0f172a;padding:15px;border-radius:10px;margin:12px 0;border-right:4px solid #22c55e;display:flex;justify-content:space-between;align-items:center}
-  .op small{color:#94a3b8;font-size:13px}
-  .loading{text-align:center;padding:60px;font-size:20px;color:#94a3b8}
-  .error{text-align:center;padding:40px;color:#ef4444;font-size:18px}
-  .back-btn{background:#475569;margin-bottom:20px;width:auto;padding:10px 18px}
+body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:30px}
+h2{color:#22c55e}
+input,button{padding:12px;margin:8px;width:85%;max-width:400px;border-radius:8px;border:none;font-size:16px}
+input{background:#1e293b;color:white}
+button{background:#22c55e;color:white;cursor:pointer;font-weight:bold}
+button:hover{background:#16a34a}
+#msg{margin-top:15px;font-size:18px}
 </style>
 </head>
 <body>
+<h2>➕ إضافة زبون جديد</h2>
+<input id="name" placeholder="الاسم الكامل" required><br>
+<input id="phone" placeholder="رقم الهاتف" required><br>
+<input id="amount" placeholder="المبلغ بالدرهم" type="number" required><br>
+<button onclick="addCustomer()">حفظ الزبون</button>
+<div id="msg"></div>
 
-<div class="container">
-  <button class="btn back-btn" onclick="history.back()">← الرجوع للقائمة</button>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
+  authDomain: "karni-b9b34.firebaseapp.com",
+  databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "karni-b9b34",
+  storageBucket: "karni-b9b34.firebasestorage.app",
+  messagingSenderId: "489835094040",
+  appId: "1:489835094040:web:109e20fe7b65516903236d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+function addCustomer(){
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const amount = document.getElementById('amount').value.trim();
+  const msg = document.getElementById('msg');
   
-  <div id="loading" class="loading">⏳ كنجيبو بيانات الزبون...</div>
-  <div id="error" class="error" style="display:none"></div>
+  if(!name || !phone || !amount){
+    msg.innerHTML = '⚠️ عمر جميع الخانات';
+    msg.style.color = 'orange';
+    return;
+  }
   
-  <div id="content" style="display:none">
-    <h1><span id="customerName">اسم الزبون</span> <span class="badge">ID</span></h1>
-    
-    <div class="info">
-      <p>📱 الهاتف <span id="customerPhone">-</span></p>
-      <p>⭐ التقييم <span id="customerRating">0</span></p>
-      <p>📅 تاريخ التسجيل <span id="customerDate">-</span></p>
-      <p>📝 ملاحظات <span id="customerNotes">-</span></p>
-    </div>
-
-    <h3 style="margin-top:30px;color:#38bdf8">📋 سجل العمليات</h3>
-    <div id="operationsList" style="margin-top:15px">لا توجد عمليات بعد</div>
-
-    <h3 style="margin-top:35px;color:#38bdf8">➕ إضافة إيداع جديد</h3>
-    <input type="number" id="amount" placeholder="المبلغ بالدرهم" step="0.01">
-    <textarea id="desc" placeholder="وصف العملية..." rows="3"></textarea>
-    <button class="btn" onclick="addOperation()">إضافة الإيداع</button>
-  </div>
-</div>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, onValue, push, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-  // الكود ديالك لصقتو هنا
-  const firebaseConfig = {
-    apiKey: "AIzaSyD5KnoOye-Ns7RNQq9KqGNSmakYydIoLAw",
-    authDomain: "my-store-4f430.firebaseapp.com",
-    databaseURL: "https://my-store-4f430-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "my-store-4f430",
-    storageBucket: "my-store-4f430.firebasestorage.app",
-    messagingSenderId: "674007434765",
-    appId: "1:674007434765:web:c4005d096ab86167cc3744",
-    measurementId: "G-QZH7T1DYL1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  const params = new URLSearchParams(window.location.search);
-  const customerId = params.get('id');
-
-  if(!customerId){
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('error').style.display = 'block';
-    document.getElementById('error').innerHTML = "❌ خطأ: ما كاينش id فالرابط<br><br>مثال صحيح:<br>person.html?id=-OZtest123";
-  } else {
-    loadCustomer(customerId);
-  }
-
-  function loadCustomer(id){
-    const customerRef = ref(db, 'customers/' + id);
-    onValue(customerRef, (snapshot) => {
-      const data = snapshot.val();
-      if(data){
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-        
-        document.getElementById('customerName').innerText = data.name || 'بدون اسم';
-        document.getElementById('customerPhone').innerText = data.phone || '-';
-        document.getElementById('customerRating').innerText = data.rating || '0';
-        document.getElementById('customerNotes').innerText = data.notes || 'لا توجد';
-        document.getElementById('customerDate').innerText = data.createdAt || '-';
-        
-        const opsDiv = document.getElementById('operationsList');
-        if(data.operations && Object.keys(data.operations).length > 0){
-          opsDiv.innerHTML = '';
-          Object.values(data.operations).reverse().forEach(op => {
-            opsDiv.innerHTML += `
-              <div class="op">
-                <div>
-                  <div style="font-size:18px;font-weight:700;color:#22c55e">+ ${op.amount} درهم</div>
-                  <div style="margin-top:5px">${op.desc}</div>
-                </div>
-                <small>${op.date}</small>
-              </div>
-            `;
-          });
-        } else {
-          opsDiv.innerHTML = '<div style="text-align:center;padding:20px;color:#64748b">لا توجد عمليات بعد</div>';
-        }
-      } else {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('error').innerHTML = "❌ الزبون غير موجود<br>تأكد من الـ id: " + id;
-      }
-    });
-  }
-
-  window.addOperation = function(){
-    const amount = document.getElementById('amount').value;
-    const desc = document.getElementById('desc').value;
-    
-    if(!amount || !desc){
-      alert('⚠️ عمر المبلغ والوصف');
-      return;
-    }
-
-    const newOpRef = push(ref(db, 'customers/' + customerId + '/operations'));
-    update(newOpRef, {
-      amount: parseFloat(amount),
-      desc: desc,
-      date: new Date().toLocaleString('ar-MA')
-    }).then(() => {
-      document.getElementById('amount').value = '';
-      document.getElementById('desc').value = '';
-      alert('✅ تمت إضافة الإيداع بنجاح');
-    }).catch(err => {
-      alert('❌ خطأ: ' + err.message);
-    });
-  }
+  db.ref('customers').push({
+    name: name,
+    phone: phone,
+    amount: amount,
+    date: new Date().toLocaleDateString('ar-MA'),
+    time: new Date().toLocaleTimeString('ar-MA')
+  });
+  
+  msg.innerHTML = '✅ تم حفظ الزبون بنجاح!';
+  msg.style.color = '#22c55e';
+  document.getElementById('name').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('amount').value = '';
+  
+  setTimeout(()=>{msg.innerHTML=''}, 3000);
+}
 </script>
 </body>
 </html>
