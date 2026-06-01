@@ -777,7 +777,7 @@ const db = getDatabase(app);
                             </div>
                         </div>
                         <div class="customer-actions">
-                            <button class="btn btn-profile" onclick="event.stopPropagation(); viewCustomer('${key}')">
+                            <button class="btn btn-profile" onclick="event.stopPropagation(); openDetails('${key}')">
                                 <i class="fas fa-user"></i> التفاصيل
                             </button>
                             <button class="btn btn-collect" onclick="event.stopPropagation(); collectMoney('${key}')">
