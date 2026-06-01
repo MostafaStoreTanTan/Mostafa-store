@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karni Pro - مسار اليوم</title>
+    <title>Karni Pro - مسار اليوم التلقائي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #f8fafc; color: #0f172a; padding: 15px; padding-bottom: 40px; }
         .header { background: #0f766e; color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 15px; font-weight: 900; font-size: 20px; }
+        .date-badge { background: #14b8a6; color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .stat-card { background: white; padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .stat-num { font-size: 18px; font-weight: 900; color: #0f766e; }
         .stat-label { font-size: 11px; color: #64748b; font-weight: 700; margin-top: 3px; }
         
-        .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; transition: all 0.3s ease; position: relative; }
-        .customer-card.status-pending { border-right-color: #cbd5e1; } /* رمادي */
-        .customer-card.status-current { border-right-color: #2563eb; background: #f0f5ff; } /* أزرق */
-        .customer-card.status-collected { border-right-color: #22c55e; opacity: 0.85; } /* أخضر */
-        .customer-card.status-no-pay { border-right-color: #ef4444; } /* أحمر */
-        .customer-card.status-callback { border-right-color: #f97316; } /* برتقالي */
-        .customer-card.status-closed { border-right-color: #eab308; } /* أصفر */
+        .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; transition: all 0.3s ease; }
+        .customer-card.status-pending { border-right-color: #cbd5e1; } 
+        .customer-card.status-current { border-right-color: #2563eb; background: #f0f5ff; } 
+        .customer-card.status-collected { border-right-color: #22c55e; opacity: 0.85; } 
+        .customer-card.status-no-pay { border-right-color: #ef4444; } 
+        .customer-card.status-callback { border-right-color: #f97316; } 
+        .customer-card.status-closed { border-right-color: #eab308; }
 
         .card-body { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
         .step-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; background: #cbd5e1; }
@@ -52,6 +53,7 @@
         .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .m-btn { border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
+        .no-data { text-align: center; padding: 40px 20px; color: #94a3b8; font-weight: bold; background: white; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.01); }
         .finish-btn { width: 100%; border: none; background: #16a34a; color: white; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
     </style>
@@ -59,24 +61,30 @@
 <body>
 
     <div class="header"><i class="fas fa-map-marked-alt"></i> مسار التوزيع اليومي</div>
+    <div style="text-align: center;"><div class="date-badge" id="currentDateBadge">تاريخ اليوم: --</div></div>
 
+    <!-- لوحة العدادات المباشرة -->
     <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num" id="countTotal">0</div><div class="stat-label">إجمالي الزبائن</div></div>
+        <div class="stat-card"><div class="stat-num" id="countTotal">0</div><div class="stat-label">إجمالي زبائن اليوم</div></div>
         <div class="stat-card"><div class="stat-num" id="countDone" style="color:#22c55e;">0</div><div class="stat-label">تم التحصيل</div></div>
         <div class="stat-card"><div class="stat-num" id="countRem" style="color:#f97316;">0</div><div class="stat-label">المتبقي</div></div>
     </div>
 
-    <div id="routeCustomersList"></div>
+    <!-- القائمة الديناميكية المحمية -->
+    <div id="routeCustomersList">
+        <div class="no-data">جاري البحث عن زبائن مسجلين بتاريخ اليوم...</div>
+    </div>
 
-    <button class="finish-btn" onclick="finishRoute()"><i class="fas fa-check-double"></i> إنهاء مسار اليوم واغلاقه</button>
+    <button class="finish-btn" onclick="window.finishRoute()"><i class="fas fa-check-double"></i> تصفير وإعادة تعيين المسار</button>
 
+    <!-- واجهة كتابة المذكرة للون الأحمر -->
     <div class="modal" id="noteModal">
         <div class="modal-box">
             <div class="modal-title">اكتب مذكرة سبب عدم الدفع اليوم:</div>
-            <input type="text" id="modalNoteInput" class="modal-field modal-input" placeholder="مثال: المحل فارغ، ارجع غداً...">
+            <input type="text" id="modalNoteInput" class="modal-input" placeholder="مثال: المحل مغلق، لم يتوفر المال اليوم...">
             <div class="modal-btns">
-                <button class="m-btn" onclick="submitNoPayNote()" style="background:#ef4444; color:white;">حفظ المذكرة</button>
-                <button class="m-btn" onclick="closeModal()" style="background:#e2e8f0;">إلغاء</button>
+                <button class="m-btn" onclick="window.submitNoPayNote()" style="background:#ef4444; color:white;">حفظ المذكرة</button>
+                <button class="m-btn" onclick="window.closeModal()" style="background:#e2e8f0;">إلغاء</button>
             </div>
         </div>
     </div>
@@ -89,33 +97,50 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // استخراج تاريخ اليوم الفعلي محلياً بصيغة YYYY-MM-DD المطابقة لقاعدة البيانات
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('currentDateBadge').textContent = `تاريخ اليوم: ${todayStr}`;
+
     let customersData = [];
     let activeNoPayIndex = null;
 
-    // جلب الزبائن الفعليين من قاعدة البيانات مباشرة
+    // الاتصال الفوري بقاعدة البيانات
     onValue(ref(db, 'customers'), (snapshot) => {
         if (snapshot.exists()) {
             const rawData = snapshot.val();
-            customersData = Object.keys(rawData).map((key, index) => ({
-                id: key,
-                name: rawData[key].name || "زبون مجهول",
-                amount: parseFloat(rawData[key].amount) || 0,
-                status: rawData[key].routeStatus || 'pending', // افتراضي رمادي من السيرفر
-                reason: rawData[key].routeReason || '',
-                index: index + 1
-            }));
+            let filteredIndex = 1;
+            customersData = [];
+
+            Object.keys(rawData).forEach(key => {
+                const c = rawData[key];
+                
+                // التصفية والفلترة الذكية: نظهر فقط من يطابق تاريخ اليوم المكتوب عنده في الحساب
+                if (c.date === todayStr) {
+                    customersData.push({
+                        id: key,
+                        name: c.name || "زبون مجهول",
+                        amount: parseFloat(c.amount) || 0,
+                        status: c.routeStatus || 'pending', 
+                        reason: c.routeReason || '',
+                        index: filteredIndex++
+                    });
+                }
+            });
             
-            // تفعيل أول زبون رمادي تلقائياً ليصبح باللون الأزرق (أول واحد تذهب عنده)
+            // تفعيل نظام الحركة واللون الأزرق التلقائي للزبون الأول المتبقي
             ensureCurrentActiveCustomer();
             renderRouteList();
+        } else {
+            showEmptyMessage();
         }
     });
 
     function ensureCurrentActiveCustomer() {
-        // إذا كان هناك أي زبون مسجل حالياً بأنه أزرق (current)، لا نغير شيء
+        if (customersData.length === 0) return;
+        // إذا كان هناك زبون أزرق حالي، اتركه كما هو
         if (customersData.some(c => c.status === 'current')) return;
 
-        // ابحث عن أول زبون لا يزال حالته رمادية (pending) واجعله أزرق
+        // تلوين أول شخص رمادي (pending) ليصبح أزرق بشكل أوتوماتيكي
         const firstPending = customersData.find(c => c.status === 'pending');
         if (firstPending) {
             firstPending.status = 'current';
@@ -126,6 +151,11 @@
     function renderRouteList() {
         const container = document.getElementById('routeCustomersList');
         container.innerHTML = "";
+
+        if (customersData.length === 0) {
+            showEmptyMessage();
+            return;
+        }
 
         let done = 0, rem = 0;
 
@@ -141,14 +171,14 @@
                     <div class="info-area">
                         <div class="cust-name">${cust.name}</div>
                         <div class="cust-debt">${cust.amount.toFixed(2)} درهم</div>
-                        <div class="cust-note" id="note-text-${idx}"><i class="fas fa-exclamation-circle"></i> المذكرة: ${cust.reason}</div>
+                        <div class="cust-note"><i class="fas fa-exclamation-circle"></i> المذكرة: ${cust.reason}</div>
                     </div>
                 </div>
                 <div class="btn-panel">
-                    <button class="action-btn btn-green" onclick="changeStatus(${idx}, 'collected')"><i class="fas fa-check"></i> اعطاني</button>
-                    <button class="action-btn btn-red" onclick="triggerNoPayModal(${idx})"><i class="fas fa-times"></i> لم يعطِ</button>
-                    <button class="action-btn btn-orange" onclick="changeStatus(${idx}, 'callback')"><i class="fas fa-clock"></i> سأعود</button>
-                    <button class="action-btn btn-yellow" onclick="changeStatus(${idx}, 'closed')"><i class="fas fa-door-closed"></i> مغلق</button>
+                    <button class="action-btn btn-green" onclick="window.changeStatus(${idx}, 'collected')"><i class="fas fa-check"></i> اعطاني</button>
+                    <button class="action-btn btn-red" onclick="window.triggerNoPayModal(${idx})"><i class="fas fa-times"></i> لم يعطِ</button>
+                    <button class="action-btn btn-orange" onclick="window.changeStatus(${idx}, 'callback')"><i class="fas fa-clock"></i> سأعود</button>
+                    <button class="action-btn btn-yellow" onclick="window.changeStatus(${idx}, 'closed')"><i class="fas fa-door-closed"></i> مغلق</button>
                 </div>
             `;
             container.appendChild(card);
@@ -159,15 +189,22 @@
         document.getElementById('countRem').textContent = rem;
     }
 
+    function showEmptyMessage() {
+        document.getElementById('routeCustomersList').innerHTML = `<div class="no-data"><i class="fas fa-user-clock" style="font-size:24px;color:#14b8a6;margin-bottom:10px;display:block;"></i> لا يوجد زبناء مبرمجين لتاريخ اليوم (${todayStr})</div>`;
+        document.getElementById('countTotal').textContent = "0";
+        document.getElementById('countDone').textContent = "0";
+        document.getElementById('countRem').textContent = "0";
+    }
+
+    // تصدير الدوال لحماية الاتصال بالأزرار الخارجية
     window.changeStatus = function(index, newStatus, reason = "") {
         const currentCust = customersData[index];
         currentCust.status = newStatus;
         currentCust.reason = reason;
 
-        // حفظ الحالة الجديدة في الفايربيس للعميل الذي ضغطنا عليه
         updateStatusInFirebase(currentCust.id, newStatus, reason);
 
-        // إذا ضغطنا على الأخضر (اعطاني)، نفعّل الشخص الموالي ليكون أزرق (current) تلقائياً
+        // التنقل التلقائي للون الأزرق نحو العميل التالي عند الضغط على زر "أعطاني" الأخضر
         if (newStatus === 'collected') {
             const nextCust = customersData.find((c, i) => i > index && c.status === 'pending');
             if (nextCust) {
@@ -187,9 +224,9 @@
     window.submitNoPayNote = function() {
         const txt = document.getElementById('modalNoteInput').value.trim() || "بدون سبب مذكور";
         if (activeNoPayIndex !== null) {
-            changeStatus(activeNoPayIndex, 'no-pay', txt);
+            window.changeStatus(activeNoPayIndex, 'no-pay', txt);
         }
-        closeModal();
+        window.closeModal();
     };
 
     window.closeModal = function() {
@@ -205,11 +242,11 @@
     }
 
     window.finishRoute = function() {
-        if(confirm("هل أنت متأكد من تصفير المسار وبدء يوم جديد؟ (سيعود الجميع للون الرمادي)")) {
+        if(confirm("هل تريد تصفير حالات جميع الزبناء لليوم والبدء من جديد؟")) {
             customersData.forEach(c => {
                 updateStatusInFirebase(c.id, 'pending', '');
             });
-            alert("تم تصفير المسار بنجاح وبداية يوم جديد!");
+            alert("تم التصفير التام بنجاح!");
         }
     };
 </script>
