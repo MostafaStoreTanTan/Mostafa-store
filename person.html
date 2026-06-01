@@ -6,16 +6,18 @@
 <title>تفاصيل الزبون</title>
 <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Tahoma',sans-serif;background:#667eea;padding:20px}
-    .box{max-width:400px;margin:auto;background:white;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
-    h2{text-align:center;color:#333;margin-bottom:30px}
-    label{display:block;margin:15px 0 5px;font-weight:bold;color:#555}
+    body{font-family:'Tahoma',sans-serif;background:#667eea;min-height:100vh;padding:20px;display:flex;align-items:center;justify-content:center}
+    .box{width:100%;max-width:400px;background:white;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+    h2{text-align:center;color:#333;margin-bottom:30px;font-size:26px}
+    label{display:block;margin:15px 0 5px;font-weight:bold;color:#555;font-size:16px}
     input{width:100%;padding:15px;border:2px solid #ddd;border-radius:10px;font-size:18px}
     input:focus{border-color:#667eea;outline:none}
     button{width:100%;padding:15px;margin-top:20px;border:none;border-radius:10px;background:#667eea;color:white;font-size:18px;font-weight:bold;cursor:pointer}
     button:active{transform:scale(0.97)}
     .back{margin-top:10px;background:#ccc;color:#333}
     .info{margin:20px 0;padding:15px;background:#f3f4f6;border-radius:10px;text-align:center}
+    #name{font-size:24px;font-weight:bold;color:#333}
+    #phone{color:#666;margin-top:5px;font-size:16px}
 </style>
 </head>
 <body>
@@ -24,8 +26,8 @@
     <h2>تعديل الزبون</h2>
     
     <div class="info">
-        <div style="font-size:24px;font-weight:bold" id="name">...</div>
-        <div style="color:#666;margin-top:5px" id="phone">...</div>
+        <div id="name">جاري التحميل...</div>
+        <div id="phone">...</div>
     </div>
 
     <label>المبلغ بالدرهم</label>
@@ -34,22 +36,16 @@
     <label>تاريخ الأداء</label>
     <input type="date" id="date">
 
-    <button onclick="save()">💾 حفظ التغييرات</button>
-    <button class="back" onclick="goBack()">⬅️ رجوع</button>
+    <button id="saveBtn">💾 حفظ التغييرات</button>
+    <button class="back" id="backBtn">⬅️ رجوع</button>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script type="module">
+// Import the functions you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-<script>
-// ⚠️ بدل هاد الكود بالـ config ديالك من Firebase
-const firebaseConfig = {
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// Your web app's Firebase configuration - الكود ديالك
 const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
   authDomain: "karni-b9b34.firebaseapp.com",
@@ -62,55 +58,58 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-};
+const db = getDatabase(app);
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
+// جيب الـ id من الرابط
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
 
 if(!id){
-    alert('خطأ: ما كاينش id فالرابط');
-    goBack();
+    alert('خطأ: ما كاينش id فالرابط\nسير لـ index.html وضغط على التفاصيل');
+    document.getElementById('name').textContent = 'خطأ في الرابط';
 }
 
-const ref = db.ref('customers/' + id);
+// المرجع ديال الزبون
+const customerRef = ref(db, 'customers/' + id);
 
-// قرا البيانات
-ref.once('value').then(snap=>{
-    if(snap.exists()){
-        const data = snap.val();
+// قرا البيانات من Firebase
+get(customerRef).then((snapshot)=>{
+    if(snapshot.exists()){
+        const data = snapshot.val();
         document.getElementById('name').textContent = data.name || 'بدون اسم';
         document.getElementById('phone').textContent = data.phone || '';
         document.getElementById('amount').value = data.amount || 0;
         document.getElementById('date').value = data.paymentDate || '';
     }else{
         alert('الزبون غير موجود');
-        goBack();
+        document.getElementById('name').textContent = 'غير موجود';
     }
+}).catch((error)=>{
+    alert('خطأ في قراءة البيانات: ' + error.message);
+    console.error(error);
 });
 
-// حفظ التغييرات
-function save(){
+// زر الحفظ
+document.getElementById('saveBtn').addEventListener('click', ()=>{
     const amount = parseFloat(document.getElementById('amount').value) || 0;
     const date = document.getElementById('date').value;
     
-    ref.update({
+    update(customerRef, {
         amount: amount,
         paymentDate: date,
         updatedAt: new Date().toISOString()
     }).then(()=>{
         alert('✅ تم الحفظ بنجاح');
-        goBack();
-    }).catch(err=>{
-        alert('خطأ: ' + err.message);
+        window.location.href = 'index.html';
+    }).catch((error)=>{
+        alert('خطأ في الحفظ: ' + error.message);
     });
-}
+});
 
-function goBack(){
+// زر الرجوع
+document.getElementById('backBtn').addEventListener('click', ()=>{
     window.location.href = 'index.html';
-}
+});
 </script>
 </body>
 </html>
