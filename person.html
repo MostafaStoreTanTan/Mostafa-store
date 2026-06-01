@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karni Pro - الحساب المالي</title>
+    <title>Karni Pro - الرئيسية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -11,175 +11,111 @@
         body { background: #f8fafc; color: #0f172a; padding: 20px; }
         .container { max-width: 500px; margin: 0 auto; }
         .header { background: linear-gradient(135deg, #0f766e, #14b8a6); color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
-        .fin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .fin-card { background: white; padding: 15px 10px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #cbd5e1; }
-        .fin-card.debt { border-top-color: #22c55e; }
-        .fin-card.paid { border-top-color: #ef4444; }
-        .fin-card.balance { border-top-color: #2563eb; }
-        .fin-label { font-size: 11px; color: #64748b; font-weight: bold; }
-        .fin-val { font-size: 13px; font-weight: 900; margin-top: 5px; }
-        .form-box { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
-        .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; text-align: right; }
-        .input-group label { font-size: 13px; font-weight: bold; color: #64748b; }
-        .input-field { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; outline: none; font-size: 15px; text-align: right; }
+        
+        .add-box { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        .input-group { margin-bottom: 10px; text-align: right; }
+        .input-group label { font-size: 12px; font-weight: bold; color: #64748b; }
+        .input-field { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; outline: none; text-align: right; font-size: 14px; }
         .input-field:focus { border-color: #14b8a6; }
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { border: none; padding: 14px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
-        .btn.give { background: #16a34a; }
-        .btn.take { background: #dc2626; }
-        .log-item { background: white; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.01); border-right: 5px solid #cbd5e1; }
-        .log-item.debt { border-right-color: #22c55e; }
-        .log-item.pay { border-right-color: #ef4444; }
-        .log-details { text-align: right; }
-        .log-note { font-weight: bold; font-size: 14px; }
-        .log-date { font-size: 11px; color: #94a3b8; margin-top: 3px; }
-        .log-amount { font-weight: 900; font-size: 16px; }
-        .btn-del { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 16px; padding-right: 10px; }
-        .btn-del:hover { color: #ef4444; }
-        .no-data { text-align: center; color: #94a3b8; font-size: 14px; padding: 20px; }
+        .btn-add { width: 100%; background: #14b8a6; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; margin-top: 5px; }
+        
+        .customer-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #14b8a6; }
+        .cust-info { text-align: right; }
+        .cust-name { font-weight: bold; font-size: 16px; color: #0f172a; }
+        .cust-amount { font-weight: 900; font-size: 15px; color: #0f766e; margin-top: 3px; }
+        
+        .btn-details { background: #2563eb; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+        .no-data { text-align: center; color: #94a3b8; padding: 20px; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h2 id="customerName">جاري المزامنة مع السيرفر...</h2>
+        <h2>Karni Pro</h2>
+        <p style="font-size: 12px; margin-top: 5px;"><i class="fas fa-circle" style="color: #22c55e;"></i> متصل بـ Firebase</p>
     </div>
 
-    <div class="fin-grid">
-        <div class="fin-card debt"><div class="fin-label">له (Depot)</div><div class="fin-val" id="viewDebt">0.00 درهم</div></div>
-        <div class="fin-card paid"><div class="fin-label">منه (Paid)</div><div class="fin-val" id="viewPaid">0.00 درهم</div></div>
-        <div class="fin-card balance"><div class="fin-label">الباقي (Balance)</div><div class="fin-val" id="viewBalance">0.00 درهم</div></div>
-    </div>
-
-    <div class="form-box">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="input-group"><label>المبلغ (درهم) *</label><input type="number" step="0.01" id="amount" class="input-field" placeholder="0.00"></div>
-            <div class="input-group"><label>تحديد التاريخ *</label><input type="date" id="date" class="input-field"></div>
+    <div class="add-box">
+        <h4 style="text-align: right; margin-bottom: 10px; color: #0f766e;">إضافة زبون جديد للتجربة</h4>
+        <div class="input-group">
+            <label>اسم الزبون</label>
+            <input type="text" id="newName" class="input-field" placeholder="مثال: محمد السوسي">
         </div>
-        <div class="input-group"><label>المذكرة / بيان السلع</label><input type="text" id="note" class="input-field" placeholder="تحديد نوع السلعة أو سبب الدفع..."></div>
-        <div class="btn-group">
-            <button class="btn give" onclick="window.addTransaction('debt')"><i class="fas fa-plus"></i> أخذ سلع (دين)</button>
-            <button class="btn take" onclick="window.addTransaction('pay')"><i class="fas fa-hand-holding-usd"></i> تسديد مبلغ</button>
+        <div class="input-group">
+            <label>المبلغ الأولي (درهم)</label>
+            <input type="number" step="0.01" id="newAmount" class="input-field" placeholder="0.00">
         </div>
+        <button class="btn-add" onclick="window.addNewCustomer()"><i class="fas fa-plus"></i> إضافة وحفظ بالسيرفر</button>
     </div>
 
-    <h4 style="text-align: right; margin-bottom: 10px; color: #64748b;">سجل المعاملات اليومية</h4>
-    <div id="logsList"></div>
+    <h4 style="text-align: right; margin-bottom: 10px; color: #64748b;">قائمة الزبناء الحالية</h4>
+    <div id="customersList">
+        <div class="no-data">جاري جلب قائمة الزبناء...</div>
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getDatabase, ref, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+    import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
+    // إعدادات قاعدة البيانات الخاصة بك
     const firebaseConfig = { databaseURL: "https://karni-b9b34-default-rtdb.firebaseio.com" };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    let customerId = urlParams.get('id') || urlParams.get('key') || urlParams.get('customerId');
 
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+    // جلب وعرض البيانات تلقائياً وفورياً عند أي تعديل
+    onValue(ref(db, 'customers'), (snapshot) => {
+        const listContainer = document.getElementById('customersList');
+        listContainer.innerHTML = "";
 
-    function startListening(id) {
-        customerId = id;
-        onValue(ref(db, `customers/${customerId}`), (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                // تحديث الاسم فوراً بمجرد العثور على زبون
-                document.getElementById('customerName').textContent = data.name || "زبون مجهول";
-                calculateAndRender(data.transactions, data.amount || 0);
-            } else {
-                document.getElementById('customerName').textContent = "الحساب غير موجود بالسيرفر";
-            }
-        });
-    }
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            Object.keys(data).forEach(key => {
+                const customer = data[key];
+                const amount = parseFloat(customer.amount) || 0;
 
-    // التحقق من الرابط أو اختيار أول عميل تلقائياً كخطة بديلة لعدم تعليق الصفحة
-    if (!customerId) {
-        onValue(ref(db, 'customers'), (snapshot) => {
-            if (snapshot.exists()) {
-                const keys = Object.keys(snapshot.val());
-                if (keys.length > 0) startListening(keys[0]);
-            } else {
-                document.getElementById('customerName').textContent = "لا يوجد أي زبناء في قاعدة البيانات";
-            }
-        }, { onlyOnce: true });
-    } else {
-        startListening(customerId);
-    }
+                const card = document.createElement('div');
+                card.className = 'customer-card';
+                card.innerHTML = `
+                    <div class="cust-info">
+                        <div class="cust-name">${customer.name || 'زبون مجهول'}</div>
+                        <div class="cust-amount">${amount.toFixed(2)} درهم</div>
+                    </div>
+                    <button class="btn-details" onclick="window.location.href='person.html?id=${key}'">
+                        <i class="fas fa-user-edit"></i> التفاصيل
+                    </button>
+                `;
+                listContainer.appendChild(card);
+            });
+        } else {
+            listContainer.innerHTML = '<div class="no-data">لا يوجد أي زبناء مسجلين حالياً.</div>';
+        }
+    });
 
-    function calculateAndRender(transactions, currentAmount) {
-        const list = document.getElementById('logsList');
-        list.innerHTML = "";
-        let totalDebt = 0, totalPaid = 0;
+    // دالة الإضافة السريعة للتجربة والتحقق من المزامنة
+    window.addNewCustomer = function() {
+        const nameInput = document.getElementById('newName');
+        const amountInput = document.getElementById('newAmount');
 
-        // مصلح: تحديث المبالغ الأساسية حتى لو كانت قائمة العمليات فارغة
-        if (!transactions) {
-            document.getElementById('viewDebt').textContent = "0.00 درهم";
-            document.getElementById('viewPaid').textContent = "0.00 درهم";
-            document.getElementById('viewBalance').textContent = parseFloat(currentAmount).toFixed(2) + " درهم";
-            list.innerHTML = '<div class="no-data">لا توجد معاملات مسجلة حالياً لهذا الزبون.</div>';
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value) || 0;
+
+        if (!name) {
+            alert("الرجاء إدخال اسم الزبون!");
             return;
         }
 
-        Object.keys(transactions).forEach(key => {
-            const t = transactions[key];
-            const amt = parseFloat(t.amount) || 0;
-            if (t.type === 'debt') totalDebt += amt;
-            if (t.type === 'pay') totalPaid += amt;
-
-            const item = document.createElement('div');
-            item.className = `log-item ${t.type}`;
-            item.innerHTML = `
-                <div class="log-details">
-                    <div class="log-note">${t.note || (t.type === 'debt' ? 'أخذ سلع (دين)' : 'تسديد الدفع')}</div>
-                    <div class="log-date"><i class="far fa-calendar-alt"></i> ${t.date}</div>
-                </div>
-                <div style="display:flex; align-items:center; gap: 10px;">
-                    <span class="log-amount" style="color:${t.type === 'debt' ? '#16a34a' : '#dc2626'}">
-                        ${t.type === 'debt' ? '+' : '-'}${amt.toFixed(2)}
-                    </span>
-                    <button class="btn-del" onclick="window.deleteItem('${key}')"><i class="fas fa-trash-alt"></i></button>
-                </div>`;
-            list.appendChild(item);
+        push(ref(db, 'customers'), {
+            name: name,
+            amount: amount,
+            routeStatus: 'pending',
+            routeReason: ''
+        }).then(() => {
+            nameInput.value = "";
+            amountInput.value = "";
+            alert("تمت إضافة الزبون بنجاح وسيظهر في القائمة فوراً!");
         });
-
-        let finalBalance = totalDebt - totalPaid;
-        document.getElementById('viewDebt').textContent = totalDebt.toFixed(2) + " درهم";
-        document.getElementById('viewPaid').textContent = totalPaid.toFixed(2) + " درهم";
-        document.getElementById('viewBalance').textContent = finalBalance.toFixed(2) + " درهم";
-
-        // مزامنة الحساب الإجمالي تلقائياً
-        update(ref(db, `customers/${customerId}`), { amount: finalBalance });
-    }
-
-    window.addTransaction = function(type) {
-        const amtInput = document.getElementById('amount');
-        const dateInput = document.getElementById('date');
-        const noteInput = document.getElementById('note');
-
-        const amount = parseFloat(amtInput.value);
-        const date = dateInput.value;
-        const note = noteInput.value.trim();
-
-        if (isNaN(amount) || amount <= 0 || !date) {
-            alert("الرجاء إدخال مبلغ صحيح وتحديد التاريخ!");
-            return;
-        }
-
-        const transRef = ref(db, `customers/${customerId}/transactions`);
-        push(transRef, { amount, date, note, type }).then(() => {
-            amtInput.value = "";
-            noteInput.value = "";
-            alert("تمت إضافة العملية بنجاح!");
-        });
-    };
-
-    window.deleteItem = function(key) {
-        if (confirm("هل تريد حذف هذه العملية نهائياً؟")) {
-            remove(ref(db, `customers/${customerId}/transactions/${key}`));
-        }
     };
 </script>
 </body>
