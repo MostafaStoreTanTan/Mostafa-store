@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: #f8fafc; color: #0f172a; padding: 15px; padding-bottom: 40px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: #f8fafc; color: #0f172a; padding: 15px; }
         .header { background: #0f766e; color: white; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 15px; font-weight: 900; font-size: 20px; }
         .date-badge { background: #14b8a6; color: white; padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
@@ -17,44 +17,33 @@
         .stat-label { font-size: 11px; color: #64748b; font-weight: 700; margin-top: 3px; }
         
         .customer-card { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 3px 8px rgba(0,0,0,0.02); border-right: 6px solid #cbd5e1; }
-        .customer-card.status-pending { border-right-color: #cbd5e1; } 
-        .customer-card.status-current { border-right-color: #2563eb; background: #f0f5ff; } 
-        .customer-card.status-collected { border-right-color: #22c55e; opacity: 0.85; } 
+        .customer-card.status-collected { border-right-color: #22c55e; } 
         .customer-card.status-no-pay { border-right-color: #ef4444; } 
         .customer-card.status-callback { border-right-color: #f97316; } 
         .customer-card.status-closed { border-right-color: #eab308; }
 
-        .card-body { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
-        .step-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 15px; background: #cbd5e1; }
-        .status-pending .step-badge { background: #cbd5e1; }
-        .status-current .step-badge { background: #2563eb; }
-        .status-collected .step-badge { background: #22c55e; }
-        .status-no-pay .step-badge { background: #ef4444; }
-        .status-callback .step-badge { background: #f97316; }
-        .status-closed .step-badge { background: #eab308; }
-
-        .info-area { text-align: right; flex: 1; }
-        .cust-name { font-size: 16px; font-weight: 800; color: #0f172a; }
+        .card-body { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; text-align: right; }
+        .step-badge { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; background: #cbd5e1; }
+        
+        .info-area { flex: 1; }
+        .cust-name { font-size: 16px; font-weight: 800; }
         .cust-debt { font-size: 13px; font-weight: 700; color: #14b8a6; margin-top: 2px; }
-        .cust-note { font-size: 11px; color: #ef4444; font-weight: bold; margin-top: 3px; display: none; }
-        .status-no-pay .cust-note { display: block; }
+        .cust-note { font-size: 11px; color: #ef4444; margin-top: 3px; }
 
-        .btn-panel { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; }
-        .action-btn { border: none; padding: 8px 12px; border-radius: 8px; color: white; font-weight: bold; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .btn-panel { display: flex; flex-wrap: wrap; gap: 8px; }
+        .action-btn { border: none; padding: 8px 12px; border-radius: 8px; color: white; font-weight: bold; font-size: 12px; cursor: pointer; }
         .btn-green { background: #22c55e; }
         .btn-red { background: #ef4444; }
         .btn-orange { background: #f97316; }
         .btn-yellow { background: #eab308; }
 
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; padding: 20px; }
         .modal-box { background: white; width: 100%; max-width: 350px; padding: 20px; border-radius: 12px; text-align: right; }
-        .modal-title { font-weight: 800; font-size: 15px; margin-bottom: 10px; color: #0f172a; }
-        .modal-input { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; outline: none; margin-bottom: 15px; text-align: right; }
+        .modal-input { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; text-align: right; }
         .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .m-btn { border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
         .no-data { text-align: center; padding: 40px 20px; color: #94a3b8; font-weight: bold; background: white; border-radius: 15px; }
-        .finish-btn { width: 100%; border: none; background: #16a34a; color: white; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .finish-btn { width: 100%; border: none; background: #16a34a; color: white; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: 900; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -69,17 +58,17 @@
     </div>
 
     <div id="routeCustomersList">
-        <div class="no-data">جاري جلب المسار ومزامنة التواريخ...</div>
+        <div class="no-data">جاري مزامنة وجلب المسار...</div>
     </div>
 
     <button class="finish-btn" onclick="window.finishRoute()"><i class="fas fa-check-double"></i> تصفير وإعادة تعيين المسار</button>
 
     <div class="modal" id="noteModal">
         <div class="modal-box">
-            <div class="modal-title">اكتب مذكرة سبب عدم الدفع اليوم:</div>
-            <input type="text" id="modalNoteInput" class="modal-input" placeholder="مثال: الحمل مغلق، لم يتوفر المال اليوم...">
+            <div class="modal-title" style="margin-bottom: 10px; font-weight:bold;">سبب عدم الدفع اليوم:</div>
+            <input type="text" id="modalNoteInput" class="modal-input" placeholder="مثال: المحل مغلق، لم يتوفر المال...">
             <div class="modal-btns">
-                <button class="m-btn" onclick="window.submitNoPayNote()" style="background:#ef4444; color:white;">حفظ المذكرة</button>
+                <button class="m-btn" onclick="window.submitNoPayNote()" style="background:#ef4444; color:white;">حفظ</button>
                 <button class="m-btn" onclick="window.closeModal()" style="background:#e2e8f0;">إلغاء</button>
             </div>
         </div>
@@ -93,13 +82,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // دالة جلب التاريخ المحلي الصحيح 100% متوافقة مع إعدادات الهاتف والمغرب
     function getLocalTodayString() {
         const d = new Date();
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
     const todayStr = getLocalTodayString();
@@ -108,7 +93,6 @@
     let customersData = [];
     let activeNoPayIndex = null;
 
-    // جلب ومراقبة البيانات من الفايربيس
     onValue(ref(db, 'customers'), (snapshot) => {
         if (snapshot.exists()) {
             const rawData = snapshot.val();
@@ -117,11 +101,7 @@
 
             Object.keys(rawData).forEach(key => {
                 const c = rawData[key];
-                
-                // تنظيف ومقارنة التواريخ بدقة بدون مسافات زائدة
-                const clientDate = c.date ? c.date.trim() : "";
-                
-                if (clientDate === todayStr) {
+                if (c.date && c.date.trim() === todayStr) {
                     customersData.push({
                         id: key,
                         name: c.name || "زبون مجهول",
@@ -132,24 +112,11 @@
                     });
                 }
             });
-            
-            ensureCurrentActiveCustomer();
             renderRouteList();
         } else {
             showEmptyMessage();
         }
     });
-
-    function ensureCurrentActiveCustomer() {
-        if (customersData.length === 0) return;
-        if (customersData.some(c => c.status === 'current')) return;
-
-        const firstPending = customersData.find(c => c.status === 'pending');
-        if (firstPending) {
-            firstPending.status = 'current';
-            updateStatusInFirebase(firstPending.id, 'current', '');
-        }
-    }
 
     function renderRouteList() {
         const container = document.getElementById('routeCustomersList');
@@ -169,21 +136,20 @@
             const card = document.createElement('div');
             card.className = `customer-card status-${cust.status}`;
             card.innerHTML = `
-                <div class="card-body">
+                <div class="card-body" onclick="window.location.href='person.html?id=${cust.id}'" style="cursor:pointer;">
                     <div class="step-badge">${cust.index}</div>
                     <div class="info-area">
                         <div class="cust-name">${cust.name}</div>
                         <div class="cust-debt">${cust.amount.toFixed(2)} درهم</div>
-                        <div class="cust-note"><i class="fas fa-exclamation-circle"></i> المذكرة: ${cust.reason}</div>
+                        ${cust.reason ? `<div class="cust-note"><i class="fas fa-info-circle"></i> ${cust.reason}</div>` : ''}
                     </div>
                 </div>
                 <div class="btn-panel">
-                    <button class="action-btn btn-green" onclick="window.changeStatus(${idx}, 'collected')"><i class="fas fa-check"></i> اعطاني</button>
-                    <button class="action-btn btn-red" onclick="window.triggerNoPayModal(${idx})"><i class="fas fa-times"></i> لم يعطِ</button>
-                    <button class="action-btn btn-orange" onclick="window.changeStatus(${idx}, 'callback')"><i class="fas fa-clock"></i> سأعود</button>
-                    <button class="action-btn btn-yellow" onclick="window.changeStatus(${idx}, 'closed')"><i class="fas fa-door-closed"></i> مغلق</button>
-                </div>
-            `;
+                    <button class="action-btn btn-green" onclick="window.changeStatus(${idx}, 'collected')">اعطاني</button>
+                    <button class="action-btn btn-red" onclick="window.triggerNoPayModal(${idx})">لم يعطِ</button>
+                    <button class="action-btn btn-orange" onclick="window.changeStatus(${idx}, 'callback')">سأعود</button>
+                    <button class="action-btn btn-yellow" onclick="window.changeStatus(${idx}, 'closed')">مغلق</button>
+                </div>`;
             container.appendChild(card);
         });
 
@@ -193,7 +159,7 @@
     }
 
     function showEmptyMessage() {
-        document.getElementById('routeCustomersList').innerHTML = `<div class="no-data"><i class="fas fa-user-clock" style="font-size:24px;color:#14b8a6;margin-bottom:10px;display:block;"></i> لا يوجد زبناء مبرمجين لتاريخ اليوم (${todayStr})</div>`;
+        document.getElementById('routeCustomersList').innerHTML = `<div class="no-data">لا يوجد زبناء مسجلين بتاريخ اليوم (${todayStr})</div>`;
         document.getElementById('countTotal').textContent = "0";
         document.getElementById('countDone').textContent = "0";
         document.getElementById('countRem').textContent = "0";
@@ -201,19 +167,7 @@
 
     window.changeStatus = function(index, newStatus, reason = "") {
         const currentCust = customersData[index];
-        currentCust.status = newStatus;
-        currentCust.reason = reason;
-
-        updateStatusInFirebase(currentCust.id, newStatus, reason);
-
-        if (newStatus === 'collected') {
-            const nextCust = customersData.find((c, i) => i > index && c.status === 'pending');
-            if (nextCust) {
-                nextCust.status = 'current';
-                updateStatusInFirebase(nextCust.id, 'current', '');
-            }
-        }
-        renderRouteList();
+        update(ref(db, `customers/${currentCust.id}`), { routeStatus: newStatus, routeReason: reason });
     };
 
     window.triggerNoPayModal = function(index) {
@@ -223,10 +177,8 @@
     };
 
     window.submitNoPayNote = function() {
-        const txt = document.getElementById('modalNoteInput').value.trim() || "بدون سبب مذكور";
-        if (activeNoPayIndex !== null) {
-            window.changeStatus(activeNoPayIndex, 'no-pay', txt);
-        }
+        const txt = document.getElementById('modalNoteInput').value.trim() || "بدون سبب";
+        if (activeNoPayIndex !== null) window.changeStatus(activeNoPayIndex, 'no-pay', txt);
         window.closeModal();
     };
 
@@ -235,19 +187,11 @@
         activeNoPayIndex = null;
     };
 
-    function updateStatusInFirebase(id, status, reason) {
-        update(ref(db, `customers/${id}`), {
-            routeStatus: status,
-            routeReason: reason
-        });
-    }
-
     window.finishRoute = function() {
-        if(confirm("هل تريد تصفير حالات جميع الزبناء لليوم والبدء من جديد؟")) {
+        if(confirm("هل تريد تصفير حالات المسار؟")) {
             customersData.forEach(c => {
-                updateStatusInFirebase(c.id, 'pending', '');
+                update(ref(db, `customers/${c.id}`), { routeStatus: 'pending', routeReason: '' });
             });
-            alert("تم التصفير التام بنجاح!");
         }
     };
 </script>
