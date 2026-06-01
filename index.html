@@ -430,11 +430,20 @@ font-weight:bold;
 
 <script>
 
-let people = [];
+let people =
+JSON.parse(
+localStorage.getItem("people")
+) || [];
 
 let currentTab = "all";
 
-async function savePeople(){
+function savePeople(){
+
+localStorage.setItem(
+"people",
+JSON.stringify(people)
+);
+
 }
 
 function openModal(){
@@ -896,31 +905,5 @@ renderPeople();
 
 </script>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-getDocs,
-addDoc
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyD5KnoOye-Ns7RNQq9KqGNSmakYydIoLAw",
-authDomain: "my-store-4f430.firebaseapp.com",
-projectId: "my-store-4f430",
-storageBucket: "my-store-4f430.firebasestorage.app",
-messagingSenderId: "674007434765",
-appId: "1:674007434765:web:c4005d096ab86167cc3744"
-};
-
-const app = initializeApp(firebaseConfig);
-
-window.db = getFirestore(app);
-
-</script>
-
 </body>
-</html>  
+</html>
