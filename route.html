@@ -1,221 +1,726 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Route - Karni Pro</title>
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Route</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Tahoma',sans-serif}
-body{background:#f5f7fa;min-height:100vh;padding-bottom:80px}
-.header{background:white;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:10}
-.header h2{font-size:18px;color:#2d3436}
-.back-btn{background:none;border:none;font-size:24px;cursor:pointer;color:#2d3436}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:15px 20px;background:white;margin-bottom:15px}
-.stat-box{text-align:center}
-.stat-num{font-size:22px;font-weight:bold;color:#2d3436}
-.stat-label{font-size:12px;color:#636e72;margin-top:3px}
-.stat-visited{color:#00b894}
-.stat-current{color:#0984e3}
-.stat-pending{color:#636e72}
-.route-container{padding:20px;background:white;margin:0 15px;border-radius:20px;box-shadow:0 3px 15px rgba(0,0,0,0.08)}
-.depot{display:flex;align-items:center;gap:12px;padding:15px;background:#f0f0f0;border-radius:15px;margin-bottom:20px}
-.depot-icon{width:40px;height:40px;border-radius:50%;background:#00b894;color:white;display:flex;align-items:center;justify-content:center;font-size:20px}
-.depot-info.name{font-weight:bold;color:#2d3436}
-.depot-info.status{font-size:12px;color:#636e72}
-.customer-item{display:flex;align-items:center;gap:12px;margin-bottom:25px;position:relative}
-.customer-item::before{content:'';position:absolute;right:20px;top:50px;width:2px;height:40px;border-right:2px dashed #dfe6e9}
-.customer-item:last-child::before{display:none}
-.circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:white;font-size:16px;flex-shrink:0}
-.circle.visited{background:#00b894}
-.circle.current{background:#0984e3}
-.circle.pending{background:#b2bec3}
-.card-info{flex:1;padding:12px 15px;border-radius:12px;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-right:4px solid transparent}
-.card-info.visited{border-right-color:#00b894}
-.card-info.current{border-right-color:#0984e3}
-.card-info.pending{border-right-color:#b2bec3}
-.card-name{font-weight:bold;color:#2d3436;margin-bottom:3px}
-.card-status{font-size:12px}
-.status-visited{color:#00b894}
-.status-current{color:#0984e3}
-.status-pending{color:#636e72}
-.btn-done{background:#00b894;color:white;border:none;padding:6px 15px;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer;margin-top:5px}
-.btn-done:active{transform:scale(0.95)}
-.legend{display:flex;justify-content:space-around;padding:15px 20px;font-size:12px;color:#636e72}
-.legend span{display:flex;align-items:center;gap:5px}
-.finish-btn{position:fixed;bottom:0;right:0;left:0;padding:18px;background:linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);color:white;border:none;font-size:18px;font-weight:bold;cursor:pointer;box-shadow:0 -4px 15px rgba(9,132,227,0.3)}
-.finish-btn:active{transform:scale(0.98)}
-.reset-route{background:#ff7675;color:white;border:none;padding:8px 15px;border-radius:8px;font-size:13px;cursor:pointer}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+padding:15px;
+padding-bottom:100px;
+}
+
+.header{
+background:#0F766E;
+color:white;
+padding:25px;
+border-radius:20px;
+text-align:center;
+font-size:35px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-bottom:15px;
+}
+
+.stat-card{
+background:white;
+padding:15px;
+border-radius:18px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.stat-number{
+font-size:24px;
+font-weight:bold;
+color:#0F766E;
+}
+
+.stat-label{
+font-size:13px;
+color:#666;
+margin-top:5px;
+}
+
+.legend{
+display:flex;
+overflow:auto;
+gap:10px;
+padding:10px 0;
+margin-bottom:15px;
+}
+
+.legend-item{
+background:white;
+padding:10px 15px;
+border-radius:15px;
+display:flex;
+align-items:center;
+gap:8px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+white-space:nowrap;
+}
+
+.dot{
+width:14px;
+height:14px;
+border-radius:50%;
+}
+
+.green{
+background:#16a34a;
+}
+
+.blue{
+background:#2563eb;
+}
+
+.gray{
+background:#9ca3af;
+}
+
+.yellow{
+background:#facc15;
+}
+
+.orange{
+background:#f97316;
+}
+
+.route-list{
+margin-top:15px;
+}
+
+.route-card{
+background:white;
+padding:18px;
+border-radius:20px;
+margin-bottom:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.route-top{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.route-number{
+width:45px;
+height:45px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-weight:bold;
+font-size:18px;
+}
+
+.route-name{
+font-size:22px;
+font-weight:bold;
+}
+
+.route-balance{
+margin-top:5px;
+font-weight:bold;
+color:#0F766E;
+}
+
+.route-status{
+margin-top:8px;
+font-weight:bold;
+}
+
+.actions{
+display:flex;
+gap:8px;
+margin-top:15px;
+flex-wrap:wrap;
+}
+
+.actions button{
+border:none;
+padding:10px 12px;
+border-radius:12px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.btn-green{
+background:#16a34a;
+}
+
+.btn-yellow{
+background:#facc15;
+color:black;
+}
+
+.btn-orange{
+background:#f97316;
+}
+
+.finish-btn{
+width:100%;
+padding:18px;
+border:none;
+border-radius:18px;
+background:#16a34a;
+color:white;
+font-size:18px;
+font-weight:bold;
+margin-top:15px;
+}
+
 </style>
+
 </head>
+
 <body>
 
 <div class="header">
-    <button class="back-btn" onclick="window.location.href='index.html'">⬅️</button>
-    <h2>🗺️ Route</h2>
-    <button class="reset-route" id="resetRoute">إعادة تعيين</button>
+🗺️ Route Today
 </div>
 
 <div class="stats">
-    <div class="stat-box"><div class="stat-num" id="total">0</div><div class="stat-label">Total</div></div>
-    <div class="stat-box"><div class="stat-num stat-visited" id="visited">0</div><div class="stat-label">Visited</div></div>
-    <div class="stat-box"><div class="stat-num stat-current" id="current">0</div><div class="stat-label">Current</div></div>
-    <div class="stat-box"><div class="stat-num stat-pending" id="pending">0</div><div class="stat-label">Pending</div></div>
+
+<div class="stat-card">
+<div
+class="stat-number"
+id="totalCustomers">
+0
+</div>
+<div class="stat-label">
+Customers
+</div>
 </div>
 
-<div class="route-container">
-    <div class="depot">
-        <div class="depot-icon">🏠</div>
-        <div class="depot-info">
-            <div class="name">Depot</div>
-            <div class="status">Start</div>
-        </div>
-    </div>
-    <div id="routeList"></div>
+<div class="stat-card">
+<div
+class="stat-number"
+id="collectedCount">
+0
+</div>
+<div class="stat-label">
+Collected
+</div>
+</div>
+
+<div class="stat-card">
+<div
+class="stat-number"
+id="pendingCount">
+0
+</div>
+<div class="stat-label">
+Pending
+</div>
+</div>
+
 </div>
 
 <div class="legend">
-    <span>✅ Visited</span>
-    <span>🔵 Current</span>
-    <span>⚪ Pending</span>
+
+<div class="legend-item">
+<div class="dot green"></div>
+Collected
 </div>
 
-<button class="finish-btn" id="finishBtn">Finish Route</button>
+<div class="legend-item">
+<div class="dot blue"></div>
+Current
+</div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+<div class="legend-item">
+<div class="dot gray"></div>
+Pending
+</div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
-  authDomain: "karni-b9b34.firebaseapp.com",
-  databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "karni-b9b34",
-  storageBucket: "karni-b9b34.firebasestorage.app",
-  messagingSenderId: "489835094040",
-  appId: "1:489835094040:web:109e20fe7b65516903236d"
-};
+<div class="legend-item">
+<div class="dot yellow"></div>
+Closed
+</div>
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+<div class="legend-item">
+<div class="dot orange"></div>
+Come Back
+</div>
 
-let customers = [];
+</div>
 
-function getTodayDate(){
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}${month}${day}`; // 20260601 بدون شرطات باش المقارنة تكون صارمة
-}
+<div
+id="routeList"
+class="route-list">
+</div>
 
-const today = getTodayDate();
-console.log('تاريخ اليوم بدون شرطات:', today);
+<button
+id="finishRouteBtn"
+class="finish-btn">
 
-function normalizeDate(dateStr){
-    // مسح كلشي وخلي غير الأرقام
-    return (dateStr || '').toString().replace(/\D/g, '');
-}
+✅ Finish Route
 
-get(ref(db, 'customers')).then((snapshot)=>{
-    if(snapshot.exists()){
-        snapshot.forEach(child => {
-            const data = child.val();
-            const amount = parseFloat(data.amount) || 0;
-            const payDate = normalizeDate(data.paymentDate);
+</button>
 
-            console.log(`${data.name} - التاريخ فـ Firebase: ${data.paymentDate} - بعد التنظيف: ${payDate} - يطابق؟ ${payDate === today}`);
+<script>
 
-            if(payDate === today && amount > 0){
-                let status = data.routeStatus || 'pending';
-                customers.push({id: child.key,...data, status: status});
-            }
-        });
+let people =
+JSON.parse(
+localStorage.getItem("people")
+) || [];
 
-        customers.sort((a,b)=>{
-            const order = {visited: 1, current: 2, pending: 3};
-            return order[a.status] - order[b.status];
-        });
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
 
-        if(customers.length > 0 &&!customers.find(c => c.status === 'current')){
-            customers[0].status = 'current';
-            update(ref(db, 'customers/' + customers[0].id), {routeStatus: 'current'});
-        }
+let route =
+JSON.parse(
+localStorage.getItem("routeToday")
+);
 
-        if(customers.length === 0) {
-            document.getElementById('routeList').innerHTML = '<div style="text-align:center;padding:40px;color:#999">لا توجد زبناء اليوم</div>';
-        }
-        renderRoute();
-    }
+if(!route){
+
+route = [];
+
+people.forEach(person=>{
+
+if(
+person.dueDate === today
+){
+
+route.push({
+
+name:person.name,
+
+status:"pending"
+
 });
+
+}
+
+});
+
+if(route.length > 0){
+
+route[0].status =
+"current";
+
+}
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+}
+
+renderRoute();
 
 function renderRoute(){
-    const routeList = document.getElementById('routeList');
-    routeList.innerHTML = '';
 
-    let visited = 0, current = 0, pending = 0;
+let html = "";
 
-    customers.forEach((c, i)=>{
-        if(c.status === 'visited') visited++;
-        if(c.status === 'current') current++;
-        if(c.status === 'pending') pending++;
+let collected = 0;
+let pending = 0;
 
-        const div = document.createElement('div');
-        div.className = 'customer-item';
+document.getElementById(
+"totalCustomers"
+).innerText =
+route.length;
 
-        let circleClass = c.status;
-        let statusText = c.status === 'visited'? 'Visited' : c.status === 'current'? 'Current' : 'Pending';
-        let statusClass = 'status-' + c.status;
-        let btn = c.status === 'current'? `<button class="btn-done" onclick="markDone(${i})">✅ تم</button>` : (c.status === 'visited'? '✅' : '');
+route.forEach((item,index)=>{
 
-        div.innerHTML = `
-            <div class="circle ${circleClass}">${i+1}</div>
-            <div class="card-info ${circleClass}">
-                <div class="card-name">${c.name}</div>
-                <div class="card-status ${statusClass}">${statusText}</div>
-                ${btn}
-            </div>
-        `;
-        routeList.appendChild(div);
-    });
-
-    document.getElementById('total').textContent = customers.length;
-    document.getElementById('visited').textContent = visited;
-    document.getElementById('current').textContent = current;
-    document.getElementById('pending').textContent = pending;
+if(item.status==="collected"){
+collected++;
 }
 
-window.markDone = function(index){
-    const customerId = customers[index].id;
-    customers[index].status = 'visited';
-    update(ref(db, 'customers/' + customerId), {
-        routeStatus: 'visited',
-        routeDate: new Date().toISOString().split('T')[0]
-    });
-
-    if(index + 1 < customers.length){
-        customers[index + 1].status = 'current';
-        update(ref(db, 'customers/' + customers[index + 1].id), {
-            routeStatus: 'current'
-        });
-    }
-    renderRoute();
+if(
+item.status==="pending" ||
+item.status==="current"
+){
+pending++;
 }
 
-document.getElementById('resetRoute').addEventListener('click', ()=>{
-    if(confirm('واش بغيتي تصفر المسار؟')){
-        customers.forEach(c => {
-            update(ref(db, 'customers/' + c.id), {routeStatus: 'pending'});
-        });
-        setTimeout(()=>location.reload(), 500);
-    }
+let color = "#9ca3af";
+let text = "⚪ Pending";
+
+if(
+item.status==="current"
+){
+color="#2563eb";
+text="🔵 Current";
+}
+
+if(
+item.status==="collected"
+){
+color="#16a34a";
+text="🟢 Collected";
+}
+
+if(
+item.status==="closed"
+){
+color="#facc15";
+text="🟡 Closed";
+}
+
+if(
+item.status==="comeback"
+){
+color="#f97316";
+text="🟠 Come Back";
+}
+
+let person =
+people.find(
+p=>p.name===item.name
+);
+
+let balance = 0;
+
+if(
+person &&
+person.operations
+){
+
+let depot = 0;
+let paid = 0;
+
+person.operations.forEach(op=>{
+
+if(op.type==="Depot"){
+depot += Number(op.amount);
+}
+
+if(op.type==="Paid"){
+paid += Number(op.amount);
+}
+
 });
 
-document.getElementById('finishBtn').addEventListener('click', ()=>{
-    if(confirm('واش كملتي كل الزبناء؟')){
-        alert('تم إنهاء المسار بنجاح ✅');
-        window.location.href = 'index.html';
-    }
+balance = depot - paid;
+
+}
+
+html += `
+
+<div class="route-card">
+
+<div
+class="route-top"
+onclick="openCustomer('${item.name}')">
+
+<div
+class="route-number"
+style="background:${color};">
+
+${index+1}
+
+</div>
+
+<div>
+
+<div class="route-name">
+
+${item.name}
+
+</div>
+
+<div class="route-balance">
+
+💰 ${balance} MAD
+
+</div>
+
+<div class="route-status">
+
+${text}
+
+</div>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="move-btn"
+onclick="moveUp(${index})">
+
+⬆️ Up
+
+</button>
+
+<button
+class="move-btn"
+onclick="moveDown(${index})">
+
+⬇️ Down
+
+</button>
+
+<button
+class="btn-green"
+onclick="markCollected(${index})">
+
+🟢 Collected
+
+</button>
+
+<button
+class="btn-yellow"
+onclick="markClosed(${index})">
+
+🟡 Closed
+
+</button>
+
+<button
+class="btn-orange"
+onclick="markComeBack(${index})">
+
+🟠 Come Back
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
 });
+
+document.getElementById(
+"routeList"
+).innerHTML =
+html;
+
+document.getElementById(
+"collectedCount"
+).innerText =
+collected;
+
+document.getElementById(
+"pendingCount"
+).innerText =
+pending;
+
+} 
+
+function openCustomer(name){
+
+let realIndex =
+people.findIndex(
+p => p.name === name
+);
+
+localStorage.setItem(
+"selectedCustomer",
+realIndex
+);
+
+window.location.href =
+"person.html";
+
+}
+
+function setNextCurrent(){
+
+let currentFound = false;
+
+route.forEach(item=>{
+
+if(
+item.status === "current"
+){
+
+currentFound = true;
+
+item.status =
+"pending";
+
+}
+
+});
+
+for(
+let i = 0;
+i < route.length;
+i++
+){
+
+if(
+route[i].status === "pending"
+){
+
+route[i].status =
+"current";
+
+break;
+
+}
+
+}
+
+}
+
+function markCollected(index){
+
+route[index].status =
+"collected";
+
+setNextCurrent();
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+function markClosed(index){
+
+route[index].status =
+"closed";
+
+setNextCurrent();
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+function markComeBack(index){
+
+let customer =
+route[index];
+
+customer.status =
+"comeback";
+
+route.splice(
+index,
+1
+);
+
+route.push(customer);
+
+setNextCurrent();
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+document.getElementById(
+"finishRouteBtn"
+).onclick = function(){
+
+if(
+confirm(
+"Finish Route ?"
+)
+){
+
+localStorage.removeItem(
+"routeToday"
+);
+
+alert(
+"Route Finished"
+);
+
+location.reload();
+
+}
+
+};
+
+function moveUp(index){
+
+if(index === 0) return;
+
+let temp =
+route[index];
+
+route[index] =
+route[index - 1];
+
+route[index - 1] =
+temp;
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+
+function moveDown(index){
+
+if(
+index === route.length - 1
+) return;
+
+let temp =
+route[index];
+
+route[index] =
+route[index + 1];
+
+route[index + 1] =
+temp;
+
+localStorage.setItem(
+"routeToday",
+JSON.stringify(route)
+);
+
+renderRoute();
+
+}
+   
 </script>
+
 </body>
-</html>
+
+</html> 
