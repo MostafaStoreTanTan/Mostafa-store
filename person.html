@@ -44,13 +44,24 @@
 <script>
 // ⚠️ بدل هاد الكود بالـ config ديالك من Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyDUMMY-KEY-REPLACE-WITH-YOURS",
-    authDomain: "karni-pro.firebaseapp.com",
-    databaseURL: "https://karni-pro-default-rtdb.firebaseio.com",
-    projectId: "karni-pro",
-    storageBucket: "karni-pro.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef123456"
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
+  authDomain: "karni-b9b34.firebaseapp.com",
+  databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "karni-b9b34",
+  storageBucket: "karni-b9b34.firebasestorage.app",
+  messagingSenderId: "489835094040",
+  appId: "1:489835094040:web:109e20fe7b65516903236d"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 };
 
 firebase.initializeApp(firebaseConfig);
