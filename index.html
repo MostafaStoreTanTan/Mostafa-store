@@ -688,10 +688,23 @@ if(
 person.notes &&
 person.notes.length
 ){
-lastNote =
+
+let note =
 person.notes[
 person.notes.length - 1
 ];
+
+if(
+typeof note === "object"
+){
+lastNote =
+note.text || "";
+}
+else{
+lastNote =
+note;
+}
+
 }
 
 html += `
@@ -797,6 +810,8 @@ border-radius:10px;
 onclick="deleteCustomer(${index})">
 🗑 Delete
 </button>
+
+</div>
 
 </div>
 
