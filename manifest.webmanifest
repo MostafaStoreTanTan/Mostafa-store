@@ -2,16 +2,17 @@
   "name": "Karni Pro",
   "short_name": "Karni",
   "description": "نظام إدارة الكرني الذكي",
-  "start_url": "index.html",
-  "scope": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0F766E",
   "theme_color": "#0F766E",
   "icons": [
     {
-      "src": "IMG-20260602-WA0000.jpg",
+      "src": "https://mostafastoretantan.github.io/Mostafa-store/IMG-20260602-WA0000.jpg",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
   ]
 }
