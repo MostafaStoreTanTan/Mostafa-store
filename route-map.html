@@ -128,12 +128,24 @@ const db = getDatabase(app);
 let routeList = [];
 let draggedItem = null;
 
-loadTodayCustomers();
-  
+checkAndLoadTodayCustomers();
+
 onValue(ref(db, 'routeManual'), (snapshot)=>{
     routeList = snapshot.exists()? snapshot.val() : [];
     renderRoute();
 });
+
+async function checkAndLoadTodayCustomers(){
+
+    const routeSnapshot =
+    await get(ref(db,'routeManual'));
+
+    if(routeSnapshot.exists()){
+        return;
+    }
+
+    loadTodayCustomers();
+}
 
 async function loadTodayCustomers(){
 
