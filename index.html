@@ -928,23 +928,28 @@ window.openDetails = function(id) {
   window.location.href = 'person.html?id=' + id;
 }
 
-window.setPaymentDate = async function(id) {
+window.setPaymentDate = function(id) {
 
-    const currentDate = allCustomers[id]?.date || '';
+    const picker = document.createElement('input');
+    picker.type = 'date';
 
-    const newDate = prompt(
-        'حدد تاريخ الأداء YYYY-MM-DD',
-        currentDate
-    );
+    picker.value = allCustomers[id]?.date || '';
 
-    if (!newDate) return;
+    picker.onchange = async function() {
 
-    await updateCustomer(id, {
-        date: newDate,
-        updatedAt: new Date().toISOString()
-    });
+        await updateCustomer(id, {
+            date: this.value,
+            updatedAt: new Date().toISOString()
+        });
 
-    showToast('تم تحديث موعد الأداء');
+        showToast('تم تحديث موعد الأداء');
+    };
+
+    picker.showPicker?.();
+
+    if (!picker.showPicker) {
+        picker.click();
+    }
 }        
 </script>
 
