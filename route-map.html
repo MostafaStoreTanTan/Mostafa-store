@@ -298,11 +298,15 @@ function renderRoute(){
                     <div class="route-status ${item.status}">${statusText}</div>
                     ${item.note? `<div class="route-note">✏️ ${item.note}</div>` : ''}
                     <div class="actions">
-                        ${item.status!== 'visited'? `<button class="btn-done" onclick="markDone(${item.id})">✅ تم</button>` : ''}
-                        <button class="btn-closed" onclick="markClosed(${item.id})">مسدود</button>
-                        <button class="btn-note" onclick="addNote(${item.id})">✏️ رسالة</button>
-                        <button class="btn-postpone" onclick="postpone(${item.id})">أجل</button>
-                        <button class="btn-delete" onclick="deleteCustomer(${item.id})">🗑️</button>
+                        ${item.status!== 'visited'? `<button class="btn-done" onclick="markDone('${item.id}')">✅ تم</button>` : ''}
+
+<button class="btn-closed" onclick="markClosed('${item.id}')">مسدود</button>
+
+<button class="btn-note" onclick="addNote('${item.id}')">✏️ رسالة</button>
+
+<button class="btn-postpone" onclick="postpone('${item.id}')">أجل</button>
+
+<button class="btn-delete" onclick="deleteCustomer('${item.id}')">🗑️</button>
                     </div>
                 </div>
             </div>
