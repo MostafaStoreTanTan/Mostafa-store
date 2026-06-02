@@ -110,7 +110,7 @@ body{background:#f5f5f5;padding:15px;padding-bottom:120px}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getDatabase, ref, set, remove, onValue, get } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
@@ -128,11 +128,47 @@ const db = getDatabase(app);
 let routeList = [];
 let draggedItem = null;
 
+loadTodayCustomers();
+  
 onValue(ref(db, 'routeManual'), (snapshot)=>{
     routeList = snapshot.exists()? snapshot.val() : [];
     renderRoute();
 });
 
+async function loadTodayCustomers(){
+
+    const today =
+    new Date().toISOString().split('T')[0];
+
+    const snapshot =
+    await get(ref(db,'customers'));
+
+    if(!snapshot.exists()) return;
+
+    const customers = snapshot.val();
+
+    let todayCustomers = [];
+
+    Object.keys(customers).forEach(key=>{
+
+        const customer = customers[key];
+
+        if(customer.date === today){
+
+            todayCustomers.push({
+                id: customer.id || key,
+                name: customer.name,
+                status: 'pending',
+                note: ''
+            });
+
+        }
+
+    });
+
+    set(ref(db,'routeManual'), todayCustomers);
+}
+  
 function showToast(msg){
     let toast = document.createElement('div');
     toast.className = 'toast';
