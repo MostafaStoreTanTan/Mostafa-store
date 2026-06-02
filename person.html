@@ -79,7 +79,7 @@
                 </div>
                 <div>
                     <label class="label">📥 استلام - انت خديتي</label>
-                    <input type="number" id="received" class="input received-input" placeholder="0">
+                    <input type="number" id="paid" class="input paid-input" placeholder="">
                     <div class="date-label" id="receivedDate">تاريخ الاستلام: --</div>
                 </div>
             </div>
@@ -165,8 +165,8 @@ get(customerRef).then((snapshot)=>{
         document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
         document.getElementById('amount').value = data.amount || 0;
         document.getElementById('date').value = data.paymentDate || '';
-        document.getElementById('paid').value = data.paid || 0;
-        document.getElementById('received').value = data.received || 0;
+        document.getElementById('paid').value = data.paid || '';
+        document.getElementById('received').value = data.received || '';
 
         if(data.paidDate) document.getElementById('paidDate').textContent = 'تاريخ الدفع: ' + data.paidDate;
         if(data.receivedDate) document.getElementById('receivedDate').textContent = 'تاريخ الاستلام: ' + data.receivedDate;
@@ -200,6 +200,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
 
     const updateData = {
         amount: newTotal,
+        date: date,
         paymentDate: date,
         paid: paid,
         received: received,
