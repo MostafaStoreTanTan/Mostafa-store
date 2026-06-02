@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -919,8 +918,8 @@ const db = getDatabase(app);
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        window.openReports = function() {
-  showToast('التقارير قريبا');
+        window.openRoute = function() {
+    window.location.href = 'route-map.html';
 }
 
 window.openDetails = function(id) {
@@ -955,11 +954,12 @@ window.setPaymentDate = function(id) {
 
 <!-- كود PWA - جديد -->
 <script>
-  if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { scope: './' });
-  });
-}
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', {
+            scope: './'
+        });
+    });
 }
 </script>
 </body>
