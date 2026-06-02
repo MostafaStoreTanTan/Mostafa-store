@@ -11,7 +11,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./IMG-20260602-WA0000.jpg",
+      "src": "https://mostafastoretantan.github.io/Mostafa-store/IMG-20260602-WA0000.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
