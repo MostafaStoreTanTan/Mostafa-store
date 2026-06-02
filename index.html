@@ -353,6 +353,11 @@
             margin-top: 14px;
         }
 
+     .btn-calendar {
+            background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+            color: white;
+        }
+        
      .btn {
             padding: 12px 16px;
             border: none;
@@ -781,16 +786,23 @@ const db = getDatabase(app);
                             </div>
                         </div>
                         <div class="customer-actions">
-                            <button class="btn btn-profile" onclick="event.stopPropagation(); openDetails('${key}')">
-                                <i class="fas fa-user"></i> التفاصيل
-                            </button>
-                            <button class="btn btn-collect" onclick="event.stopPropagation(); collectMoney('${key}')">
-                                <i class="fas fa-check"></i>
-                            </button>
-                            <button class="btn btn-delete" onclick="event.stopPropagation(); confirmDelete('${key}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+    <button class="btn btn-profile" onclick="event.stopPropagation(); openDetails('${key}')">
+        <i class="fas fa-user"></i> التفاصيل
+    </button>
+
+    <button class="btn btn-calendar"
+    onclick="event.stopPropagation(); setPaymentDate('${key}')">
+        <i class="fas fa-calendar-alt"></i>
+    </button>
+
+    <button class="btn btn-collect" onclick="event.stopPropagation(); collectMoney('${key}')">
+        <i class="fas fa-check"></i>
+    </button>
+
+    <button class="btn btn-delete" onclick="event.stopPropagation(); confirmDelete('${key}')">
+        <i class="fas fa-trash"></i>
+    </button>
+</div>
                     </div>
                 `;
                 list.innerHTML += card;
@@ -915,6 +927,25 @@ window.openDetails = function(id) {
   alert('كنصيفط ID: ' + id);
   window.location.href = 'person.html?id=' + id;
 }
+
+window.setPaymentDate = async function(id) {
+
+    const currentDate = allCustomers[id]?.date || '';
+
+    const newDate = prompt(
+        'حدد تاريخ الأداء YYYY-MM-DD',
+        currentDate
+    );
+
+    if (!newDate) return;
+
+    await updateCustomer(id, {
+        date: newDate,
+        updatedAt: new Date().toISOString()
+    });
+
+    showToast('تم تحديث موعد الأداء');
+}        
 </script>
 
 <!-- كود PWA - جديد -->
