@@ -920,7 +920,7 @@ window.openDetails = function(id) {
 <!-- كود PWA - جديد -->
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js');
+  navigator.serviceWorker.register('./sw.js', { scope: './' });
 }
 </script>
 </body>
