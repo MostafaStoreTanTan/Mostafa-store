@@ -130,6 +130,8 @@ let draggedItem = null;
 
 checkAndLoadTodayCustomers();
 
+setInterval(checkAndLoadTodayCustomers, 10000);
+  
 onValue(ref(db, 'routeManual'), (snapshot)=>{
     routeList = snapshot.exists()? snapshot.val() : [];
     renderRoute();
@@ -137,14 +139,48 @@ onValue(ref(db, 'routeManual'), (snapshot)=>{
 
 async function checkAndLoadTodayCustomers(){
 
+    const today =
+    new Date().toISOString().split('T')[0];
+
+    const customersSnapshot =
+    await get(ref(db,'customers'));
+
     const routeSnapshot =
     await get(ref(db,'routeManual'));
 
-    if(routeSnapshot.exists()){
-        return;
-    }
+    let routeListData =
+    routeSnapshot.exists() ? routeSnapshot.val() : [];
 
-    loadTodayCustomers();
+    if(!customersSnapshot.exists()) return;
+
+    const customers = customersSnapshot.val();
+
+    Object.keys(customers).forEach(key=>{
+
+        const customer = customers[key];
+
+        if(customer.date === today){
+
+            const exists = routeListData.some(
+                item => item.id === (customer.id || key)
+            );
+
+            if(!exists){
+
+                routeListData.push({
+                    id: customer.id || key,
+                    name: customer.name,
+                    status: 'pending',
+                    note: ''
+                });
+
+            }
+
+        }
+
+    });
+
+    set(ref(db,'routeManual'), routeListData);
 }
 
 async function loadTodayCustomers(){
