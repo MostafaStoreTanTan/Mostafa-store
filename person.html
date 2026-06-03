@@ -87,7 +87,13 @@
             <button class="save-btn" id="saveBtn">💾 حفظ التغييرات</button>
 
             <div class="history-title">📋 سجل العمليات</div>
-            <div id="historyList"></div>
+            <div id="historyList"
+style="
+max-height:350px;
+overflow-y:auto;
+padding-left:5px;
+">
+</div>
         </div>
     </div>
 </div>
@@ -180,19 +186,33 @@ function showHistory(data){
             : 'history-received');
 
         div.innerHTML = `
-            <div>
-                <div class="history-amount">
-                    ${op.amount} درهم -
-                    ${op.type === 'paid'
-                        ? 'دفع'
-                        : 'استلام'}
-                </div>
+<div>
 
-                <div class="history-date">
-                    📅 ${op.date || '--'}
-                </div>
-            </div>
-        `;
+    <div class="history-amount">
+        ${op.amount} درهم -
+        ${op.type === 'paid'
+            ? 'دفع'
+            : 'استلام'}
+    </div>
+
+    <div class="history-date">
+        📅 ${op.date || '--'}
+    </div>
+
+</div>
+
+<div style="display:flex;gap:6px">
+
+<button onclick="editOperation(${customerOperations.length-1-index})">
+✏️
+</button>
+
+<button onclick="deleteOperation(${customerOperations.length-1-index})">
+🗑️
+</button>
+
+</div>
+`;
 
         historyList.appendChild(div);
 
