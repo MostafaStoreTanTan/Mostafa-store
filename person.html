@@ -267,8 +267,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     const date = document.getElementById('date').value;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
-    const newTotal = amount + paid - received; // القاعدة الجديدة
-
+    const newTotal = amount;
     const today = new Date().toISOString().split('T')[0];
 
    let operations = customerOperations || [];
@@ -293,15 +292,41 @@ if(paid > 0){
 
 }
 const updateData = {
+    amount: amount,
     date: date,
     paymentDate: date,
     operations: operations,
     paid: 0,
     received: 0,
     updatedAt: new Date().toISOString()
-};;
+};
 
-    customerOperations = operations;
+    customerOperations =
+data.operations || [];
+
+if(customerOperations.length === 0){
+
+    if(data.paid > 0){
+
+        customerOperations.push({
+            type:'paid',
+            amount:data.paid,
+            date:data.paidDate || '--'
+        });
+
+    }
+
+    if(data.received > 0){
+
+        customerOperations.push({
+            type:'received',
+            amount:data.received,
+            date:data.receivedDate || '--'
+        });
+
+    }
+
+}
 
 calculateTotal();
 
