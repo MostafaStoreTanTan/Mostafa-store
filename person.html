@@ -271,7 +271,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
 if(received > 0){
 
     operations.push({
-        type:'paid',
+        type:'received',
         amount: received,
         date: today
     });
@@ -281,13 +281,12 @@ if(received > 0){
 if(paid > 0){
 
     operations.push({
-        type:'received',
+        type:'paid',
         amount: paid,
         date: today
     });
 
 }
-
 const updateData = {
     date: date,
     paymentDate: date,
