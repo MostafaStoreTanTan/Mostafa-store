@@ -277,7 +277,11 @@ const updateData = {
     updatedAt: new Date().toISOString()
 };;
 
-    update(customerRef, updateData).then(()=>{
+    customerOperations = operations;
+
+calculateTotal();
+
+update(customerRef, updateData).then(()=>{
         btn.textContent = '✅ تم الحفظ';
         setTimeout(()=>{window.location.href = 'index.html'}, 800);
     }).catch((error)=>{
