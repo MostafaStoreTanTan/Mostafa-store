@@ -148,29 +148,56 @@ function calculateTotal(){
 }
 
 function showHistory(data){
-    const historyList = document.getElementById('historyList');
+
+    const historyList =
+    document.getElementById('historyList');
+
     historyList.innerHTML = '';
 
-    const history = [];
-    if(data.paid && data.paid > 0) history.push({type:'دفع', amount:data.paid, date:data.paidDate});
-    if(data.received && data.received > 0) history.push({type:'استلام', amount:data.received, date:data.receivedDate});
+    customerOperations =
+    data.operations || [];
 
-    if(history.length === 0){
-        historyList.innerHTML = '<div style="text-align:center;color:#999;padding:20px">لا توجد عمليات بعد</div>';
+    if(customerOperations.length === 0){
+
+        historyList.innerHTML =
+        '<div style="text-align:center;color:#999;padding:20px">لا توجد عمليات بعد</div>';
+
         return;
     }
 
-    history.forEach(op => {
-        const div = document.createElement('div');
-        div.className = 'history-item ' + (op.type === 'دفع'? 'history-paid' : 'history-received');
+    customerOperations
+    .slice()
+    .reverse()
+    .forEach((op,index)=>{
+
+        const div =
+        document.createElement('div');
+
+        div.className =
+        'history-item ' +
+        (op.type === 'paid'
+            ? 'history-paid'
+            : 'history-received');
+
         div.innerHTML = `
             <div>
-                <div class="history-amount">${op.amount} درهم - ${op.type}</div>
-                <div class="history-date">📅 ${op.date || '--'}</div>
+                <div class="history-amount">
+                    ${op.amount} درهم -
+                    ${op.type === 'paid'
+                        ? 'دفع'
+                        : 'استلام'}
+                </div>
+
+                <div class="history-date">
+                    📅 ${op.date || '--'}
+                </div>
             </div>
         `;
+
         historyList.appendChild(div);
+
     });
+
 }
 
 get(customerRef).then((snapshot)=>{
