@@ -246,17 +246,36 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
 
     const today = new Date().toISOString().split('T')[0];
 
-    const updateData = {
-        amount: newTotal,
-        date: date,
-        paymentDate: date,
-        paid: paid,
-        received: received,
-        updatedAt: new Date().toISOString()
-    };
+   let operations = customerOperations || [];
 
-    if(paid > 0) updateData.paidDate = today;
-    if(received > 0) updateData.receivedDate = today;
+if(received > 0){
+
+    operations.push({
+        type:'paid',
+        amount: received,
+        date: today
+    });
+
+}
+
+if(paid > 0){
+
+    operations.push({
+        type:'received',
+        amount: paid,
+        date: today
+    });
+
+}
+
+const updateData = {
+    date: date,
+    paymentDate: date,
+    operations: operations,
+    paid: 0,
+    received: 0,
+    updatedAt: new Date().toISOString()
+};;
 
     update(customerRef, updateData).then(()=>{
         btn.textContent = '✅ تم الحفظ';
