@@ -322,6 +322,64 @@ setTimeout(()=>{
     });
 });
 
+window.deleteOperation = function(index){
+
+    if(!confirm('حذف العملية؟')) return;
+
+    customerOperations.splice(index,1);
+
+    update(customerRef,{
+        operations: customerOperations
+    }).then(()=>{
+
+        calculateTotal();
+
+        showHistory({
+            operations: customerOperations
+        });
+
+    });
+
+}
+
+window.editOperation = function(index){
+
+    let amount =
+    prompt(
+        'المبلغ الجديد',
+        customerOperations[index].amount
+    );
+
+    if(amount === null) return;
+
+    let date =
+    prompt(
+        'التاريخ الجديد',
+        customerOperations[index].date
+    );
+
+    if(date === null) return;
+
+    customerOperations[index].amount =
+    Number(amount);
+
+    customerOperations[index].date =
+    date;
+
+    update(customerRef,{
+        operations: customerOperations
+    }).then(()=>{
+
+        calculateTotal();
+
+        showHistory({
+            operations: customerOperations
+        });
+
+    });
+
+}
+
 document.getElementById('backBtn').addEventListener('click', ()=>{
     window.location.href = 'index.html';
 });
