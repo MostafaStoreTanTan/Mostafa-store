@@ -1,8 +1,14 @@
-const CACHE_NAME = 'karni-pro-v2';
+const CACHE_NAME = 'karni-pro-v3';
+
 const urlsToCache = [
+  './',
   './index.html',
-  './IMG-20260602-WA0000.jpg',
-  './manifest.webmanifest'
+  './person.html',
+  './route.html',
+  './route-map.html',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // التثبيت + التخزين
