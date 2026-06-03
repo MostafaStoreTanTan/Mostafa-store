@@ -73,12 +73,12 @@
 
             <div class="row">
                 <div>
-                    <label class="label">📤 دفع - انت عطيتي</label>
+                    <label class="label">📤 استلام - انت خديتي</label>
                     <input type="number" id="received" class="input received-input" placeholder="">
                     <div class="date-label" id="paidDate">تاريخ الدفع: --</div>
                 </div>
                 <div>
-                    <label class="label">📥 استلام - انت خديتي</label>
+                    <label class="label">📥 دفع - انت عطيتي</label>
                     <input type="number" id="paid" class="input paid-input" placeholder="">
                     <div class="date-label" id="receivedDate">تاريخ الاستلام: --</div>
                 </div>
@@ -241,6 +241,11 @@ get(customerRef).then((snapshot)=>{
 
         calculateTotal();
         showHistory(data);
+
+customerOperations =
+data.operations || [];
+
+calculateTotal();
     }else{
         alert('الزبون غير موجود');
         window.location.href = 'index.html';
