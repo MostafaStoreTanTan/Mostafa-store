@@ -118,12 +118,33 @@ if(!id){alert('خطأ: ما كاينش id');window.location.href = 'index.html';
 const customerRef = ref(db, 'customers/' + id);
 
 // القاعدة الجديدة: الإجمالي = الأساسي + دفع - استلام
+let customerOperations = [];
+
 function calculateTotal(){
-    const amount = parseFloat(document.getElementById('amount').value) || 0;
-    const paid = parseFloat(document.getElementById('paid').value) || 0;
-    const received = parseFloat(document.getElementById('received').value) || 0;
-    const total = amount + paid - received;
-    document.getElementById('totalAmount').textContent = total.toFixed(2) + ' درهم';
+
+    const amount =
+    parseFloat(document.getElementById('amount').value) || 0;
+
+    let totalPaid = 0;
+    let totalReceived = 0;
+
+    customerOperations.forEach(op=>{
+
+        if(op.type === 'paid'){
+            totalPaid += Number(op.amount);
+        }
+
+        if(op.type === 'received'){
+            totalReceived += Number(op.amount);
+        }
+
+    });
+
+    const total =
+    amount + totalPaid - totalReceived;
+
+    document.getElementById('totalAmount').textContent =
+    total.toFixed(2) + ' درهم';
 }
 
 function showHistory(data){
