@@ -176,7 +176,7 @@ function renderMap(){
         let statusText = item.status === 'current'? 'Current' :
                         item.status === 'visited'? 'Visited' :
                         item.status === 'closed'? 'Closed' :
-                        item.status === 'closed-note'? 'Closed' :
+                        item.status === 'Note'? 'Note' :
                         item.status === 'postponed'? 'Postponed' : 'Pending';
 
         let isLeft = index % 2 === 0;
