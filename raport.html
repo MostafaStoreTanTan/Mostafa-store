@@ -147,6 +147,8 @@ color:white;
 
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </head>
 <body>
 
@@ -527,6 +529,44 @@ Karni Pro`;
         'https://wa.me/212613675970?text=' +
         encodeURIComponent(reportText),
         '_blank'
+    );
+
+});
+
+document.getElementById('pdfBtn')
+.addEventListener('click',()=>{
+
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+
+    const selectedDate =
+    reportDate.value;
+
+    let content =
+`Raport Pro
+
+Date: ${selectedDate}
+
+Received:
+${document.getElementById('receivedList').innerText}
+
+Paid:
+${document.getElementById('paidList').innerText}
+
+Net:
+${document.getElementById('netTotal').textContent}
+
+Customers:
+${document.getElementById('customersCount').textContent}
+`;
+
+    doc.text(content,10,10);
+
+    doc.save(
+        'Raport-' +
+        selectedDate +
+        '.pdf'
     );
 
 });
