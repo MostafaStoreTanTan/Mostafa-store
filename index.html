@@ -176,7 +176,7 @@
      .actions-row {
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
         }
 
@@ -584,16 +584,22 @@
     </div>
 
     <!-- الأزرار المطلوبة -->
-    <div class="actions-row">
-        <button class="action-btn primary" onclick="openCalendar()">
-            <i class="fas fa-calendar-alt"></i>
-            Calendar - المواعيد
-        </button>
-        <button class="action-btn" onclick="openRoute()">
-            <i class="fas fa-route"></i>
-            Route - المسار
-        </button>
-    </div>
+  <div class="actions-row">
+    <button class="action-btn primary" onclick="openCalendar()">
+        <i class="fas fa-calendar-alt"></i>
+        Calendar - المواعيد
+    </button>
+
+    <button class="action-btn" onclick="openRoute()">
+        <i class="fas fa-route"></i>
+        Route - المسار
+    </button>
+
+    <button class="action-btn" onclick="openReportsPage()">
+        <i class="fas fa-file-alt"></i>
+        Raport - التقارير
+    </button>
+</div>
 
     <div class="search-box">
         <i class="fas fa-search"></i>
@@ -918,10 +924,24 @@ const db = getDatabase(app);
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        window.openRoute = function() {
+       window.openRoute = function() {
     window.location.href = 'route.html';
 }
 
+window.openReportsPage = function() {
+
+    const password = prompt('أدخل كلمة مرور المسؤول');
+
+    if(password === '1234@1234'){
+
+        window.location.href = 'Raport.html';
+
+    } else {
+
+        alert('كلمة المرور غير صحيحة');
+
+    }
+}
 window.openDetails = function(id) {
   window.location.href = 'person.html?id=' + id;
 }
