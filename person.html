@@ -203,6 +203,10 @@ function showHistory(data){
 
 <div style="display:flex;gap:6px">
 
+<button onclick="sendWhatsapp(${customerOperations.length-1-index})">
+📱
+</button>
+
 <button onclick="editOperation(${customerOperations.length-1-index})">
 ✏️
 </button>
@@ -381,6 +385,38 @@ window.editOperation = function(index){
         });
 
     });
+
+}
+
+window.sendWhatsapp = function(index){
+
+    const op = customerOperations[index];
+
+    const customerName =
+    document.getElementById('name').textContent;
+
+    const operationType =
+    op.type === 'paid'
+        ? 'دفع - انت عطيتي'
+        : 'استلام - انت خديتي';
+
+    const message =
+
+`👤 الزبون: ${customerName}
+
+💰 العملية: ${operationType}
+
+💵 المبلغ: ${op.amount} درهم
+
+📅 التاريخ: ${op.date}
+
+Karni Pro`;
+
+    window.open(
+        'https://wa.me/212613675970?text=' +
+        encodeURIComponent(message),
+        '_blank'
+    );
 
 }
 
