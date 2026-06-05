@@ -825,11 +825,6 @@ onclick="event.stopPropagation(); editCustomerAmount('${key}')">
     <i class="fas fa-money-bill-wave"></i>
 </button>
 
-<button class="btn btn-edit-amount"
-onclick="event.stopPropagation(); editCustomerAmount('${key}')">
-<i class="fas fa-money-bill-wave"></i>
-</button>
-
 <button class="btn btn-calendar"
 onclick="event.stopPropagation(); setPaymentDate('${key}')">
 <i class="fas fa-calendar-alt"></i>
@@ -1038,6 +1033,24 @@ window.editCustomerAmount = async function(id){
     });
 
     showToast('تم تعديل المبلغ');
+}
+
+window.editCustomerPhone = async function(id){
+
+    const currentPhone =
+    allCustomers[id]?.phone || '';
+
+    const newPhone =
+    prompt('رقم الهاتف', currentPhone);
+
+    if(!newPhone) return;
+
+    await updateCustomer(id,{
+        phone:newPhone,
+        updatedAt:new Date().toISOString()
+    });
+
+    showToast('تم حفظ رقم الهاتف');
 }        
 </script>
 
