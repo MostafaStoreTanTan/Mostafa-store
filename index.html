@@ -346,12 +346,11 @@
         }
 
      .customer-actions {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 8px;
-            margin-top: 14px;
-        }
-
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+}
      .btn-calendar {
             background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
             color: white;
@@ -387,9 +386,19 @@
         }
 
      .btn-delete {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-            color: white;
-        }
+    background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+    color: white;
+}
+
+.btn-edit-name{
+    background:linear-gradient(135deg,#f59e0b 0%,#ea580c 100%);
+    color:white;
+}
+
+.btn-edit-amount{
+    background:linear-gradient(135deg,#22c55e 0%,#15803d 100%);
+    color:white;
+}
 
         /* ========== FAB ========== */
      .fab {
@@ -558,8 +567,10 @@
 
     <h1><span>📓</span> Karni Pro</h1>
 
-    <button class="icon-btn" title="التقارير" style="background:red !important;">
-    TEST
+    <button class="icon-btn"
+onclick="openReportsPage()"
+title="التقارير">
+    <i class="fas fa-chart-bar"></i>
 </button>
 
 </div>
@@ -792,22 +803,38 @@ const db = getDatabase(app);
                             </div>
                         </div>
                         <div class="customer-actions">
-    <button class="btn btn-profile" onclick="event.stopPropagation(); openDetails('${key}')">
-        <i class="fas fa-user"></i> التفاصيل
-    </button>
+   <div class="customer-actions">
 
-    <button class="btn btn-calendar"
-    onclick="event.stopPropagation(); setPaymentDate('${key}')">
-        <i class="fas fa-calendar-alt"></i>
-    </button>
+<button class="btn btn-profile"
+onclick="event.stopPropagation(); openDetails('${key}')">
+<i class="fas fa-user"></i> التفاصيل
+</button>
 
-    <button class="btn btn-collect" onclick="event.stopPropagation(); collectMoney('${key}')">
-        <i class="fas fa-check"></i>
-    </button>
+<button class="btn btn-edit-name"
+onclick="event.stopPropagation(); editCustomerName('${key}')">
+<i class="fas fa-pen"></i>
+</button>
 
-    <button class="btn btn-delete" onclick="event.stopPropagation(); confirmDelete('${key}')">
-        <i class="fas fa-trash"></i>
-    </button>
+<button class="btn btn-edit-amount"
+onclick="event.stopPropagation(); editCustomerAmount('${key}')">
+<i class="fas fa-money-bill-wave"></i>
+</button>
+
+<button class="btn btn-calendar"
+onclick="event.stopPropagation(); setPaymentDate('${key}')">
+<i class="fas fa-calendar-alt"></i>
+</button>
+
+<button class="btn btn-collect"
+onclick="event.stopPropagation(); collectMoney('${key}')">
+<i class="fas fa-check"></i>
+</button>
+
+<button class="btn btn-delete"
+onclick="event.stopPropagation(); confirmDelete('${key}')">
+<i class="fas fa-trash"></i>
+</button>
+
 </div>
                     </div>
                 `;
@@ -970,6 +997,42 @@ window.setPaymentDate = function(id) {
     if (!picker.showPicker) {
         picker.click();
     }
+}
+
+window.editCustomerName = async function(id){
+
+    const currentName =
+    allCustomers[id]?.name || '';
+
+    const newName =
+    prompt('الاسم الجديد', currentName);
+
+    if(!newName) return;
+
+    await updateCustomer(id,{
+        name:newName,
+        updatedAt:new Date().toISOString()
+    });
+
+    showToast('تم تعديل الاسم');
+}
+
+window.editCustomerAmount = async function(id){
+
+    const currentAmount =
+    allCustomers[id]?.amount || 0;
+
+    const newAmount =
+    prompt('المبلغ الجديد', currentAmount);
+
+    if(!newAmount) return;
+
+    await updateCustomer(id,{
+        amount:parseFloat(newAmount),
+        updatedAt:new Date().toISOString()
+    });
+
+    showToast('تم تعديل المبلغ');
 }        
 </script>
 
