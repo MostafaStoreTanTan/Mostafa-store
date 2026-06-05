@@ -42,6 +42,24 @@
  .history-paid.history-amount{color:#ff7675}
  .history-received.history-amount{color:#00b894}
  .history-date{font-size:13px;color:#636e72}
+
+.whatsapp-btn{
+background:#25D366;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.confirm-btn{
+background:#2563eb;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:8px;
+cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -203,8 +221,14 @@ function showHistory(data){
 
 <div style="display:flex;gap:6px">
 
-<button onclick="sendWhatsapp(${customerOperations.length-1-index})">
+<button class="whatsapp-btn"
+onclick="sendReminderWhatsapp(${customerOperations.length-1-index})">
 📱
+</button>
+
+<button class="confirm-btn"
+onclick="sendConfirmWhatsapp(${customerOperations.length-1-index})">
+✅
 </button>
 
 <button onclick="editOperation(${customerOperations.length-1-index})">
