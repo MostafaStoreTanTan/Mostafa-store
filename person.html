@@ -168,7 +168,7 @@ function calculateTotal(){
     amount + totalPaid - totalReceived;
 
     document.getElementById('totalAmount').textContent =
-    total.toFixed(2) + ' درهم';
+    Math.round(total) + ' درهم';
 }
 
 function showHistory(data){
