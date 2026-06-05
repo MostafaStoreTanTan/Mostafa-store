@@ -412,32 +412,103 @@ window.editOperation = function(index){
 
 }
 
-window.sendWhatsapp = function(index){
+window.sendReminderWhatsapp = function(index){
 
-    const op = customerOperations[index];
+    const phone =
+    document.getElementById('phone').textContent.trim();
 
     const customerName =
     document.getElementById('name').textContent;
 
-    const operationType =
-    op.type === 'paid'
-        ? 'دفع '
-        : 'استلام ';
+    const total =
+    document.getElementById('totalAmount')
+    .textContent;
+
+    if(
+        !phone ||
+        phone === 'لا يوجد هاتف'
+    ){
+        alert(
+            'أضف رقم هاتف ' +
+            customerName +
+            ' أولاً'
+        );
+        return;
+    }
+
+    const cleanPhone =
+    phone.replace(/\D/g,'');
 
     const message =
 
-`👤 الزبون: ${customerName}
+`السلام عليكم ${customerName}
 
-💰 العملية: ${operationType}
+نذكركم أن موعد تسديد المبلغ المستحق عليكم هو اليوم.
 
-💵 المبلغ: ${op.amount} درهم
+المبلغ المستحق: ${total}
 
-📅 التاريخ: ${op.date}
+نحيطكم علماً أن موعد الأداء سيكون بعد الساعة السادسة مساءً.
 
-Karni Pro`;
+نرجو منكم تسوية المبلغ في أقرب وقت ممكن، مع الشكر والتقدير لحسن تعاونكم.
+
+مع أطيب التحيات.`;
 
     window.open(
-        'https://wa.me/212708457258?text=' +
+        'https://wa.me/212' +
+        cleanPhone.replace(/^0/,'') +
+        '?text=' +
+        encodeURIComponent(message),
+        '_blank'
+    );
+
+}
+
+window.sendConfirmWhatsapp = function(index){
+
+    const phone =
+    document.getElementById('phone').textContent.trim();
+
+    const customerName =
+    document.getElementById('name').textContent;
+
+    if(
+        !phone ||
+        phone === 'لا يوجد هاتف'
+    ){
+        alert(
+            'أضف رقم هاتف ' +
+            customerName +
+            ' أولاً'
+        );
+        return;
+    }
+
+    const op =
+    customerOperations[index];
+
+    const total =
+    document.getElementById('totalAmount')
+    .textContent;
+
+    const cleanPhone =
+    phone.replace(/\D/g,'');
+
+    const message =
+
+`السلام عليكم ${customerName}
+
+تم تسجيل استلام مبلغ ${op.amount} درهم بنجاح.
+
+المبلغ المتبقي من الدين: ${total}
+
+شكراً لكم على حسن تعاونكم.
+
+مع أطيب التحيات.`;
+
+    window.open(
+        'https://wa.me/212' +
+        cleanPhone.replace(/^0/,'') +
+        '?text=' +
         encodeURIComponent(message),
         '_blank'
     );
