@@ -174,11 +174,13 @@ password
 window.location.href =
 'index.html';
 
-}catch(error){
+catch(error){
+
+console.log(error);
 
 document.getElementById('error')
 .textContent =
-'البريد أو كلمة المرور غير صحيحة';
+error.code;
 
 }
 
