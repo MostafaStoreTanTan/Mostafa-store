@@ -10,7 +10,12 @@
 
 body{
 font-family:Cairo,sans-serif;
-background:#f0fdfd;
+background:
+linear-gradient(
+135deg,
+#ccfbf1,
+#f0fdfd
+);
 display:flex;
 justify-content:center;
 align-items:center;
@@ -64,17 +69,54 @@ margin-top:10px;
 
 <div class="box">
 
-<h1>🔒 Karni Pro</h1>
+<div style="text-align:center;margin-bottom:20px">
 
+<div style="
+font-size:65px;
+margin-bottom:10px;">
+🧾
+</div>
+
+<h1 style="margin:0">
+🔒 Karni Pro
+</h1>
+
+<p style="
+color:#6b7280;
+margin-top:10px;
+font-size:14px;">
+👋 مرحباً بك في Karni Pro
+<br>
+نظام إدارة الزبناء والديون
+</p>
+
+</div>
 <input
 type="email"
 id="email"
 placeholder="البريد الإلكتروني">
 
+<div style="position:relative">
+
 <input
 type="password"
 id="password"
-placeholder="كلمة المرور">
+placeholder="🔑 كلمة المرور"
+style="padding-left:50px;">
+
+<span
+onclick="togglePassword()"
+style="
+position:absolute;
+left:15px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:22px;">
+👁️
+</span>
+
+</div>
 
 <button onclick="login()">
 تسجيل الدخول
@@ -138,6 +180,18 @@ document.getElementById('error')
 .textContent =
 'البريد أو كلمة المرور غير صحيحة';
 
+}
+
+}
+window.togglePassword = function(){
+
+const pass =
+document.getElementById('password');
+
+if(pass.type==="password"){
+pass.type="text";
+}else{
+pass.type="password";
 }
 
 }
