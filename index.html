@@ -703,9 +703,17 @@ const auth = getAuth(app);
 
 onAuthStateChanged(auth, (user) => {
 
+    console.log("USER =", user);
+
     if (!user) {
 
+        alert("USER NULL");
+
         window.location.href = "login.html";
+
+    } else {
+
+        alert("LOGIN OK");
 
     }
 
