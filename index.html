@@ -1055,8 +1055,15 @@ window.editCustomerPhone = async function(id){
 </script>
 
 <script>
+const appVersion = "2";
+
+if(localStorage.getItem("appVersion") !== appVersion){
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
 if(!localStorage.getItem("loggedIn")){
-    window.location.href="login.html";
+    window.location.href = "login.html";
 }
 </script>
 
