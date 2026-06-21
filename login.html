@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Karni Pro Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#dffaf5,#f4fffd);
+padding:20px;
+}
+
+.card{
+width:100%;
+max-width:400px;
+background:#fff;
+border-radius:30px;
+padding:35px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.logo{
+text-align:center;
+margin-bottom:20px;
+}
+
+.logo img{
+width:90px;
+height:90px;
+border-radius:22px;
+box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.title{
+text-align:center;
+font-size:34px;
+font-weight:800;
+color:#0f766e;
+margin-top:15px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-top:10px;
+margin-bottom:25px;
+font-size:14px;
+}
+
+.input-box{
+position:relative;
+margin-bottom:18px;
+}
+
+.input-box input{
+width:100%;
+padding:15px;
+border:none;
+outline:none;
+background:#f3f8f7;
+border-radius:14px;
+font-size:15px;
+}
+
+.password-toggle{
+position:absolute;
+left:15px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+font-size:20px;
+}
+
+.forgot{
+text-align:left;
+margin-bottom:20px;
+}
+
+.forgot a{
+text-decoration:none;
+color:#0f766e;
+font-weight:700;
+font-size:14px;
+}
+
+.login-btn{
+width:100%;
+border:none;
+padding:15px;
+border-radius:15px;
+font-size:16px;
+font-weight:800;
+color:white;
+cursor:pointer;
+background:linear-gradient(135deg,#10b981,#0f766e);
+transition:.3s;
+}
+
+.login-btn:hover{
+transform:translateY(-2px);
+}
+
+.version{
+text-align:center;
+margin-top:20px;
+font-size:12px;
+color:#9ca3af;
+}
+
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<div class="logo">
+<img src="logo.png" alt="Karni Logo">
+</div>
+
+<div class="title">
+Karni Pro
+</div>
+
+<div class="subtitle">
+مرحباً بك في نظام إدارة الزبناء والديون
+</div>
+
+<div class="input-box">
+<input type="email" placeholder="📧 البريد الإلكتروني">
+</div>
+
+<div class="input-box">
+<input type="password" id="password" placeholder="🔑 كلمة المرور">
+<span class="password-toggle" onclick="togglePassword()">👁️</span>
+</div>
+
+<div class="forgot">
+<a href="#">نسيت كلمة المرور؟</a>
+</div>
+
+<button class="login-btn">
+تسجيل الدخول
+</button>
+
+<div class="version">
+Karni Pro v1.0
+</div>
+
+</div>
+
+<script>
+
+function togglePassword(){
+const pass=document.getElementById("password");
+
+if(pass.type==="password"){
+pass.type="text";
+}else{
+pass.type="password";
+}
+}
+
+</script>
+
+</body>
+  </html>
