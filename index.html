@@ -1054,6 +1054,12 @@ window.editCustomerPhone = async function(id){
 }        
 </script>
 
+<script>
+if(!localStorage.getItem("loggedIn")){
+    window.location.href="login.html";
+}
+</script>
+
 <!-- كود PWA - جديد -->
 <script>
 if ('serviceWorker' in navigator) {
