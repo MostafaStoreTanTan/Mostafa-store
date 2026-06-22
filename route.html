@@ -157,8 +157,8 @@ document.getElementById('finishContainer');
     const path = document.getElementById('routePath');
 
     container.innerHTML = '';
-    finishContainer.innerHTML = '';
-
+    startContainer.innerHTML = '';
+finishContainer.innerHTML = '';
     let pending = 0, current = 0, visited = 0;
 
     if(routeList.length === 0){
@@ -183,7 +183,21 @@ document.getElementById('finishContainer');
     });
 
     // رسم المسار كامل حتى الراية
-    if(points.length > 1){
+    if(points.length > 0){
+
+    let firstPoint = points[0];
+
+    startContainer.innerHTML = `
+    <div class="start-house"
+    style="
+    top:${firstPoint.y - 170}px;
+    left:${firstPoint.x}px
+    ">
+        <div class="house">🏠 Départ</div>
+        <div class="house-pole"></div>
+    </div>
+    `;
+}
         let d = `M ${points[0].x} ${points[0].y}`;
         for(let i = 1; i < points.length; i++){
             let cpX = (points[i-1].x + points[i].x) / 2;
