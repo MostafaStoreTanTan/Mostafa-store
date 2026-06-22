@@ -146,7 +146,11 @@ onValue(ref(db, 'routeManual'), (snapshot)=>{
 
 function renderMap(){
     const container = document.getElementById('pointsContainer');
-    const finishContainer = document.getElementById('finishContainer');
+    const startContainer =
+document.getElementById('startContainer');
+
+const finishContainer =
+document.getElementById('finishContainer');
     const mapContent = document.getElementById('mapContent');
     const routePathDiv = document.getElementById('routePathDiv');
     const routeSvg = document.getElementById('routeSvg');
