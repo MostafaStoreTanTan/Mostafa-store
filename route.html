@@ -93,15 +93,6 @@ background:#0F766E;
 border-radius:2px;
 }
 
-.street-light{
-position:absolute;
-width:8px;
-height:45px;
-background:#64748b;
-border-radius:4px;
-z-index:5;
-}
-
 .street-light:before{
 content:'';
 position:absolute;
@@ -115,6 +106,13 @@ box-shadow:
 0 0 10px #fde68a,
 0 0 20px #fde68a,
 0 0 35px rgba(253,230,138,.8);
+}
+
+.tree{
+position:absolute;
+font-size:28px;
+z-index:2;
+filter:drop-shadow(0 0 8px rgba(34,197,94,.4));
 }
 
 </style>
@@ -158,6 +156,8 @@ box-shadow:
 
 <div id="startContainer"></div>
 
+<div id="treesContainer"></div>
+
 <div id="lightsContainer"></div>
 
 <div id="finishContainer"></div>
@@ -193,6 +193,9 @@ function renderMap(){
     const startContainer =
 document.getElementById('startContainer');
 
+const treesContainer =
+document.getElementById('treesContainer');
+
 const lightsContainer =
 document.getElementById('lightsContainer');
 
@@ -204,7 +207,8 @@ document.getElementById('finishContainer');
     const path = document.getElementById('routePath');
 
     container.innerHTML = '';
-    startContainer.innerHTML = '';
+startContainer.innerHTML = '';
+treesContainer.innerHTML = '';
 lightsContainer.innerHTML = '';
 finishContainer.innerHTML = '';
     let pending = 0, current = 0, visited = 0;
