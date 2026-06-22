@@ -297,16 +297,21 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     const received = parseFloat(document.getElementById('received').value) || 0;
     const newTotal = amount + paid - received; // القاعدة الجديدة
 
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
 
-   let operations = customerOperations || [];
+const today =
+now.toISOString().split('T')[0];
+
+const currentTime =
+now.toTimeString().slice(0,5);
 
 if(received > 0){
 
     operations.push({
         type:'received',
         amount: received,
-        date: today
+        date: today,
+        time: currentTime
     });
 
 }
@@ -316,7 +321,8 @@ if(paid > 0){
     operations.push({
         type:'paid',
         amount: paid,
-        date: today
+        date: today,
+        time: currentTime
     });
 
 }
