@@ -238,6 +238,29 @@ for(let i = 0; i < points.length; i++){
 
     const p = points[i];
 
+    treesContainer.innerHTML += `
+    <div class="tree"
+    style="
+    top:${p.y - 40}px;
+    left:${p.x - 190}px;
+    ">
+    🌳
+    </div>
+
+    <div class="tree"
+    style="
+    top:${p.y + 40}px;
+    left:${p.x + 190}px;
+    ">
+    🌲
+    </div>
+    `;
+}
+
+for(let i = 0; i < points.length; i++){
+
+    const p = points[i];
+
     lightsContainer.innerHTML += `
     <div class="street-light"
     style="
