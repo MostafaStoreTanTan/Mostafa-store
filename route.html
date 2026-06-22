@@ -93,6 +93,30 @@ background:#0F766E;
 border-radius:2px;
 }
 
+.street-light{
+position:absolute;
+width:8px;
+height:45px;
+background:#64748b;
+border-radius:4px;
+z-index:5;
+}
+
+.street-light:before{
+content:'';
+position:absolute;
+top:-12px;
+left:-8px;
+width:24px;
+height:24px;
+background:#fde68a;
+border-radius:50%;
+box-shadow:
+0 0 10px #fde68a,
+0 0 20px #fde68a,
+0 0 35px rgba(253,230,138,.8);
+}
+
 </style>
 </head>
 <body>
@@ -132,7 +156,9 @@ border-radius:2px;
 </div>
 <div id="pointsContainer"></div>
 
-<div id="startContainer"></div>
+<<div id="startContainer"></div>
+
+<div id="lightsContainer"></div>
 
 <div id="finishContainer"></div>
 </div>
@@ -167,6 +193,9 @@ function renderMap(){
     const startContainer =
 document.getElementById('startContainer');
 
+const lightsContainer =
+document.getElementById('lightsContainer');
+
 const finishContainer =
 document.getElementById('finishContainer');
     const mapContent = document.getElementById('mapContent');
@@ -176,6 +205,7 @@ document.getElementById('finishContainer');
 
     container.innerHTML = '';
     startContainer.innerHTML = '';
+lightsContainer.innerHTML = '';
 finishContainer.innerHTML = '';
     let pending = 0, current = 0, visited = 0;
 
