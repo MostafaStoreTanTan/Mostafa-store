@@ -305,6 +305,8 @@ now.toISOString().split('T')[0];
 const currentTime =
 now.toTimeString().slice(0,5);
 
+let operations = [...customerOperations];
+
 if(received > 0){
 
     operations.push({
