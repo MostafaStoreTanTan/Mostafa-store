@@ -224,7 +224,26 @@ finishContainer.innerHTML = '';
 
     let width = document.getElementById('mapContainer').offsetWidth;
 
-    routeList.forEach((item, index)=>{
+    for(let i = 0; i < points.length; i++){
+
+    const p = points[i];
+
+    lightsContainer.innerHTML += `
+    <div class="street-light"
+    style="
+    top:${p.y}px;
+    left:${p.x - 90}px;
+    "></div>
+
+    <div class="street-light"
+    style="
+    top:${p.y}px;
+    left:${p.x + 90}px;
+    "></div>
+    `;
+}
+
+routeList.forEach((item, index)=>{
         let y = 100 + (index * itemHeight);
         let x = width/2 + Math.sin(index * 0.9) * (width * 0.28);
         points.push({x, y});
