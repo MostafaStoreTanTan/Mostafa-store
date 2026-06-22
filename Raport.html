@@ -184,15 +184,24 @@ color:white;
 
     <div class="tools-box">
 
-        <input
-        type="date"
-        id="reportDate">
+      <input
+type="date"
+id="reportDate">
 
-        <input
-        type="text"
-        id="searchInput"
-        placeholder="🔍 ابحث عن زبون">
+<input
+type="time"
+id="fromTime"
+value="00:00">
 
+<input
+type="time"
+id="toTime"
+value="23:59">
+
+<input
+type="text"
+id="searchInput"
+placeholder="🔍 ابحث عن زبون">
     </div>
 
     <div class="report-section">
@@ -310,10 +319,22 @@ function generateReport(selectedDate){
 
         operations.forEach(op=>{
 
-            if(op.date !== selectedDate){
-                return;
-            }
+           if(op.date !== selectedDate){
+    return;
+}
 
+const fromTime =
+document.getElementById('fromTime').value;
+
+const toTime =
+document.getElementById('toTime').value;
+
+const opTime =
+op.time || "00:00";
+
+if(opTime < fromTime || opTime > toTime){
+    return;
+}
             operationsCount++;
 
             if(op.type === 'received'){
@@ -418,6 +439,23 @@ reportDate.addEventListener('change',()=>{
 
 });
 
+document.getElementById('fromTime')
+.addEventListener('change',()=>{
+
+    generateReport(
+        reportDate.value
+    );
+
+});
+
+document.getElementById('toTime')
+.addEventListener('change',()=>{
+
+    generateReport(
+        reportDate.value
+    );
+
+});
 document.getElementById('searchInput')
 .addEventListener('input',()=>{
 
