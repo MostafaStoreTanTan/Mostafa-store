@@ -211,7 +211,15 @@ function renderMap(){
     // سكرول للتحت
     setTimeout(()=>{
         let mapContainer = document.getElementById('mapContainer');
-        mapContainer.scrollTop = mapContainer.scrollHeight;
+        const currentPoint =
+document.querySelector('.point-dot.current');
+
+if(currentPoint){
+    currentPoint.scrollIntoView({
+        behavior:'smooth',
+        block:'center'
+    });
+}
     }, 300);
 }
 
