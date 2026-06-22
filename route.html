@@ -183,7 +183,7 @@ finishContainer.innerHTML = '';
     });
 
     // رسم المسار كامل حتى الراية
-    if(points.length > 0){
+    if(points.length > 1){
 
     let firstPoint = points[0];
 
@@ -197,17 +197,19 @@ finishContainer.innerHTML = '';
         <div class="house-pole"></div>
     </div>
     `;
-}
-        let d = `M ${points[0].x} ${points[0].y}`;
-        for(let i = 1; i < points.length; i++){
-            let cpX = (points[i-1].x + points[i].x) / 2;
-            d += ` Q ${cpX} ${points[i-1].y + 55}, ${points[i].x} ${points[i].y}`;
-        }
-        // كمل للراية
-        let lastPoint = points[points.length-1];
-        d += ` L ${lastPoint.x} ${lastPoint.y + 150}`;
-        path.setAttribute('d', d);
+
+    let d = `M ${points[0].x} ${points[0].y}`;
+
+    for(let i = 1; i < points.length; i++){
+        let cpX = (points[i-1].x + points[i].x) / 2;
+        d += ` Q ${cpX} ${points[i-1].y + 55}, ${points[i].x} ${points[i].y}`;
     }
+
+    let lastPoint = points[points.length-1];
+    d += ` L ${lastPoint.x} ${lastPoint.y + 150}`;
+
+    path.setAttribute('d', d);
+}
 
     // رسم النقط
     routeList.forEach((item, index)=>{
