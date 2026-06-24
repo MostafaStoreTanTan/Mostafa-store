@@ -620,7 +620,9 @@ title="التقارير">
 
     <div class="search-box">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="ابحث عن زبون..." id="searchInput" onkeyup="searchCustomer()">
+        <input type="text"
+placeholder="ابحث عن زبون..."
+id="searchInput">
     </div>
 
     <div class="filter-tabs">
@@ -694,14 +696,26 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
         const customersRef = ref(db, 'customers');
         let allCustomers = {};
-        let currentFilter = 'all';
+let currentFilter = 'all';
+let searchTimer;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadTheme();
-            setTodayDate();
-            initFirebase();
-        });
+    loadTheme();
+    setTodayDate();
+    initFirebase();
+
+    document.getElementById('searchInput')
+    .addEventListener('input', function(){
+
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(() => {
+            searchCustomer();
+        }, 300);
+
+    });
+});
 
         function initFirebase() {
             onValue(customersRef, (snapshot) => {
