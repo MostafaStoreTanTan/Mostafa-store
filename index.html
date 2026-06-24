@@ -777,10 +777,12 @@ const db = getDatabase(app);
 
         // ========== Render Functions ==========
         function renderCustomers(customers) {
-            const list = document.getElementById('customersList');
-            list.innerHTML = '';
+    const list = document.getElementById('customersList');
+    list.innerHTML = '';
 
-            if(!customers || Object.keys(customers).length === 0) {
+    let html = '';
+
+    if(!customers || Object.keys(customers).length === 0) {
                 list.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">👥</div>
@@ -798,7 +800,7 @@ const db = getDatabase(app);
             let overdueCount = 0;
             const today = new Date().toISOString().split('T')[0];
 
-            Object.keys(customers).forEach((key, index) => {
+            Object.keys(allCustomers).forEach((key) => {
                 const customer = customers[key];
                 customersCount++;
                 totalAmount += parseInt(customer.amount) || 0;
