@@ -697,13 +697,25 @@ const db = getDatabase(app);
         const customersRef = ref(db, 'customers');
         let allCustomers = {};
         let currentFilter = 'all';
+        let searchTimer;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadTheme();
-            setTodayDate();
-            initFirebase();
-        });
+    loadTheme();
+    setTodayDate();
+    initFirebase();
+
+    document.getElementById('searchInput')
+    .addEventListener('input', () => {
+
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(() => {
+            searchCustomer();
+        }, 300);
+
+    });
+});
 
         function initFirebase() {
             onValue(customersRef, (snapshot) => {
@@ -797,7 +809,7 @@ const db = getDatabase(app);
                 const overdueClass = customer.date < today? 'overdue' : '';
 
                 const card = `
-                    <div class="customer-card ${overdueClass}" onclick="openDetails('${key}')" style="animation-delay: ${index * 0.05}s">
+                    <div class="customer-card ${overdueClass}" onclick="openDetails('${key}')">
                         <div class="customer-header">
                             <div class="customer-avatar">${customer.name.charAt(0)}</div>
                             <div class="customer-info">
@@ -906,7 +918,9 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
             const weekStart = new Date();
             weekStart.setDate(weekStart.getDate() - 7);
 
-            Object.keys(allCustomers).forEach(key => {
+            let html = '';
+
+Object.keys(customers).forEach((key, index) => {
                 const customer = allCustomers[key];
                 if(filter === 'all') filtered[key] = customer;
                 else if(filter === 'today' && customer.date === today) filtered[key] = customer;
