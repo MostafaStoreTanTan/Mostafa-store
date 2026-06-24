@@ -242,6 +242,7 @@ appId: "1:489835094040:web:109e20fe7b65516903236d"
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 const productsRef = ref(db,'products');
 
