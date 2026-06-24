@@ -252,21 +252,59 @@ document.getElementById('productModal').classList.add('active');
 
 window.saveProduct = async function(){
 
+const imageFiles =
+document.getElementById('productImages').files;
+
+let images = [];
+
+for(const file of imageFiles){
+
+const fileRef = storageRef(
+storage,
+'products/' + Date.now() + '_' + file.name
+);
+
+await uploadBytes(fileRef,file);
+
+const url =
+await getDownloadURL(fileRef);
+
+images.push(url);
+
+}
+
 const newRef = push(productsRef);
 
 await set(newRef,{
+
 name:document.getElementById('productName').value,
+
 category:document.getElementById('productCategory').value,
-sellPrice:Number(document.getElementById('productPrice').value),
-stock:Number(document.getElementById('productStock').value),
-cartonQty:Number(document.getElementById('productCarton').value),
+
+sellPrice:Number(
+document.getElementById('productPrice').value
+),
+
+stock:Number(
+document.getElementById('productStock').value
+),
+
+cartonQty:Number(
+document.getElementById('productCarton').value
+),
+
+images:images,
+
 hidden:false,
+
 createdAt:new Date().toISOString()
+
 });
 
 alert('تم حفظ المنتج');
 
 location.reload();
+
 }
 
 onValue(productsRef,(snapshot)=>{
