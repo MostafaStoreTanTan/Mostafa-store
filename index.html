@@ -852,10 +852,17 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
 </div>
                     </div>
                 `;
-                list.innerHTML += card;
+                html += card;
             });
 
-            updateStats({totalAmount, customersCount, todayCount, overdueCount});
+list.innerHTML = html;
+
+updateStats({
+    totalAmount,
+    customersCount,
+    todayCount,
+    overdueCount
+});
         }
 
         function updateStats(stats) {
