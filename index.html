@@ -620,9 +620,7 @@ title="التقارير">
 
     <div class="search-box">
         <i class="fas fa-search"></i>
-        <input type="text"
-placeholder="ابحث عن زبون..."
-id="searchInput">
+        <input type="text" placeholder="ابحث عن زبون..." id="searchInput" onkeyup="searchCustomer()">
     </div>
 
     <div class="filter-tabs">
@@ -697,25 +695,13 @@ const db = getDatabase(app);
         const customersRef = ref(db, 'customers');
         let allCustomers = {};
         let currentFilter = 'all';
-        let searchTimer;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-    loadTheme();
-    setTodayDate();
-    initFirebase();
-
-    document.getElementById('searchInput')
-    .addEventListener('input', () => {
-
-        clearTimeout(searchTimer);
-
-        searchTimer = setTimeout(() => {
-            searchCustomer();
-        }, 300);
-
-    });
-});
+            loadTheme();
+            setTodayDate();
+            initFirebase();
+        });
 
         function initFirebase() {
             onValue(customersRef, (snapshot) => {
@@ -777,12 +763,10 @@ const db = getDatabase(app);
 
         // ========== Render Functions ==========
         function renderCustomers(customers) {
-    const list = document.getElementById('customersList');
-    list.innerHTML = '';
+            const list = document.getElementById('customersList');
+            list.innerHTML = '';
 
-    let html = '';
-
-    if(!customers || Object.keys(customers).length === 0) {
+            if(!customers || Object.keys(customers).length === 0) {
                 list.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">👥</div>
@@ -800,7 +784,7 @@ const db = getDatabase(app);
             let overdueCount = 0;
             const today = new Date().toISOString().split('T')[0];
 
-            Object.keys(allCustomers).forEach((key) => {
+            Object.keys(customers).forEach((key, index) => {
                 const customer = customers[key];
                 customersCount++;
                 totalAmount += parseInt(customer.amount) || 0;
@@ -811,7 +795,7 @@ const db = getDatabase(app);
                 const overdueClass = customer.date < today? 'overdue' : '';
 
                 const card = `
-                    <div class="customer-card ${overdueClass}" onclick="openDetails('${key}')">
+                    <div class="customer-card ${overdueClass}" onclick="openDetails('${key}')" style="animation-delay: ${index * 0.05}s">
                         <div class="customer-header">
                             <div class="customer-avatar">${customer.name.charAt(0)}</div>
                             <div class="customer-info">
@@ -854,17 +838,10 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
 </div>
                     </div>
                 `;
-                html += card;
+                list.innerHTML += card;
             });
 
-list.innerHTML = html;
-
-updateStats({
-    totalAmount,
-    customersCount,
-    todayCount,
-    overdueCount
-});
+            updateStats({totalAmount, customersCount, todayCount, overdueCount});
         }
 
         function updateStats(stats) {
@@ -927,9 +904,7 @@ updateStats({
             const weekStart = new Date();
             weekStart.setDate(weekStart.getDate() - 7);
 
-            let html = '';
-
-Object.keys(customers).forEach((key, index) => {
+            Object.keys(allCustomers).forEach(key => {
                 const customer = allCustomers[key];
                 if(filter === 'all') filtered[key] = customer;
                 else if(filter === 'today' && customer.date === today) filtered[key] = customer;
@@ -988,7 +963,7 @@ window.openReportsPage = function() {
     if(password === '1234@1234'){
 
         alert('كلمة المرور صحيحة');
-window.location.href = 'products.html';
+window.location.href = 'Raport.html';
         
     } else {
 
