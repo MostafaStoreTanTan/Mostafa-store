@@ -348,8 +348,17 @@ if(opTime < fromTime || opTime > toTime){
 
                 }
 
-                receivedMap[customer.name] +=
-                Number(op.amount);
+                receivedMap[customer.name] += Number(op.amount);
+
+if(!receivedMap[customer.name + "_remaining"]){
+
+receivedMap[customer.name + "_remaining"] =
+Number(customer.amount);
+
+}
+
+receivedMap[customer.name + "_remaining"] -=
+Number(op.amount);
 
             }
 
@@ -395,12 +404,29 @@ if(opTime < fromTime || opTime > toTime){
 
     Object.keys(paidMap).forEach(name=>{
 
-        paidList.innerHTML += `
-            <div class="report-row">
-                <span>${name}</span>
-                <span>${paidMap[name]} درهم</span>
-            </div>
-        `;
+        const remaining =
+receivedMap[name + "_remaining"];
+
+receivedList.innerHTML += `
+<div class="report-row" style="display:block">
+
+<div style="display:flex;justify-content:space-between">
+<span>${name}</span>
+<span>${receivedMap[name]} درهم</span>
+</div>
+
+<div style="margin-top:6px;
+font-weight:bold;
+color:${remaining>0?'red':'green'}">
+
+${remaining>0
+?`🔴 باقي : ${remaining} درهم`
+:`🟢 خالص 0 درهم`}
+
+</div>
+
+</div>
+`;
 
     });
 
