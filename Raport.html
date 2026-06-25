@@ -393,17 +393,6 @@ Number(op.amount);
 
     Object.keys(receivedMap).forEach(name=>{
 
-        receivedList.innerHTML += `
-            <div class="report-row">
-                <span>${name}</span>
-                <span>${receivedMap[name]} درهم</span>
-            </div>
-        `;
-
-    });
-
-    Object.keys(paidMap).forEach(name=>{
-
         const remaining =
 receivedMap[name + "_remaining"];
 
@@ -427,6 +416,17 @@ ${remaining>0
 
 </div>
 `;
+
+    });
+
+    Object.keys(paidMap).forEach(name=>{
+
+        paidList.innerHTML += `
+            <div class="report-row">
+                <span>${name}</span>
+                <span>${paidMap[name]} درهم</span>
+            </div>
+        `;
 
     });
 
@@ -640,4 +640,4 @@ ${document.getElementById('customersCount').textContent}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
-</html>
+    </html>
