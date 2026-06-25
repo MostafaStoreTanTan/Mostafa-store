@@ -303,6 +303,7 @@ loadCustomers();
 function generateReport(selectedDate){
 
     const receivedMap = {};
+const remainingMap = {};
 const paidMap = {};
 
     let totalReceived = 0;
@@ -348,11 +349,11 @@ if(opTime < fromTime || opTime > toTime){
 
                 }
 
-                receivedMap[customer.name] += Number(op.amount);
+                receivedMap[customer.name] +=
+Number(op.amount);
 
-receivedMap[customer.name + "_remaining"] =
+remainingMap[customer.name] =
 Number(customer.amount || 0);
-
             }
 
             if(op.type === 'paid'){
@@ -386,8 +387,8 @@ Number(customer.amount || 0);
 
     Object.keys(receivedMap).forEach(name=>{
 
-const remaining =
-Number(receivedMap[name + "_remaining"] || 0);
+        const remaining =
+remainingMap[name] || 0;
 
 receivedList.innerHTML += `
 <div class="report-row" style="display:block">
@@ -397,7 +398,8 @@ receivedList.innerHTML += `
 <span>${receivedMap[name]} درهم</span>
 </div>
 
-<div style="margin-top:6px;font-weight:bold;
+<div style="margin-top:6px;
+font-weight:bold;
 color:${remaining>0?'red':'green'}">
 
 ${remaining>0
@@ -438,10 +440,10 @@ ${remaining>0
     netTotal;
 
     const uniqueCustomers =
-new Set([
-...Object.keys(receivedMap).filter(key => !key.endsWith("_remaining")),
-...Object.keys(paidMap)
-]);
+    new Set([
+        ...Object.keys(receivedMap),
+        ...Object.keys(paidMap)
+    ]);
 
     document.getElementById('customersCount')
     .textContent =
@@ -632,4 +634,4 @@ ${document.getElementById('customersCount').textContent}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 </body>
-    </html>
+</html>
