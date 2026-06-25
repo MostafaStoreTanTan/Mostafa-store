@@ -351,15 +351,8 @@ if(opTime < fromTime || opTime > toTime){
 
                 receivedMap[customer.name] += Number(op.amount);
 
-if(remainingMap[customer.name] == null){
-
-remainingMap[customer.name] =
-Number(customer.amount);
-
-}
-
-remainingMap[customer.name] -=
-Number(op.amount);
+receivedMap[customer.name + "_remaining"] =
+Number(customer.amount || 0);
 
             }
 
@@ -395,7 +388,8 @@ Number(op.amount);
     Object.keys(receivedMap).forEach(name=>{
 
 const remaining =
-remainingMap[name] || 0;
+Number(receivedMap[name + "_remaining"] || 0);
+
 receivedList.innerHTML += `
 <div class="report-row" style="display:block">
 
@@ -404,8 +398,7 @@ receivedList.innerHTML += `
 <span>${receivedMap[name]} درهم</span>
 </div>
 
-<div style="margin-top:6px;
-font-weight:bold;
+<div style="margin-top:6px;font-weight:bold;
 color:${remaining>0?'red':'green'}">
 
 ${remaining>0
