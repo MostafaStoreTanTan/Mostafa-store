@@ -354,15 +354,15 @@ onclick="window.location.href='person.html?id=${item.id}'">
                     <div class="route-status ${item.status}">${statusText}</div>
                     ${item.note? `<div class="route-note">✏️ ${item.note}</div>` : ''}
                     <div class="actions">
-                        ${item.status!== 'visited'? `<button class="btn-done" onclick="markDone('${item.id}')">✅ تم</button>` : ''}
+                        ${item.status!== 'visited'? `<button class="btn-done" onclick="event.stopPropagation();markDone('${item.id}')">✅ تم</button>` : ''}
 
-<button class="btn-closed" onclick="markClosed('${item.id}')">مسدود</button>
+<button class="btn-closed" onclick="event.stopPropagation();markClosed('${item.id}')">مسدود</button>
 
-<button class="btn-note" onclick="addNote('${item.id}')">✏️ رسالة</button>
+<button class="btn-note" onclick="event.stopPropagation();addNote('${item.id}')">✏️ رسالة</button>
 
-<button class="btn-postpone" onclick="postpone('${item.id}')">أجل</button>
+<button class="btn-postpone" onclick="event.stopPropagation();postpone('${item.id}')">أجل</button>
 
-<button class="btn-delete" onclick="deleteCustomer('${item.id}')">🗑️</button>
+<button class="btn-delete" onclick="event.stopPropagation();deleteCustomer('${item.id}')">🗑️</button>
                     </div>
                 </div>
             </div>
