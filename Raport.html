@@ -303,7 +303,6 @@ loadCustomers();
 function generateReport(selectedDate){
 
     const receivedMap = {};
-const remainingMap = {};
 const paidMap = {};
 
     let totalReceived = 0;
@@ -440,7 +439,7 @@ ${remaining>0
 
     const uniqueCustomers =
 new Set([
-...Object.keys(remainingMap),
+...Object.keys(receivedMap).filter(key => !key.endsWith("_remaining")),
 ...Object.keys(paidMap)
 ]);
 
