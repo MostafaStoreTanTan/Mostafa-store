@@ -352,8 +352,27 @@ if(opTime < fromTime || opTime > toTime){
                 receivedMap[customer.name] +=
 Number(op.amount);
 
+let totalPaidAll = 0;
+let totalReceivedAll = 0;
+
+operations.forEach(operation=>{
+
+    if(operation.type === "paid"){
+        totalPaidAll += Number(operation.amount || 0);
+    }
+
+    if(operation.type === "received"){
+        totalReceivedAll += Number(operation.amount || 0);
+    }
+
+});
+
 remainingMap[customer.name] =
-Number(customer.amount || 0);
+Number(customer.amount || 0)
++
+totalPaidAll
+-
+totalReceivedAll;
             }
 
             if(op.type === 'paid'){
@@ -388,8 +407,7 @@ Number(customer.amount || 0);
     Object.keys(receivedMap).forEach(name=>{
 
         const remaining =
-remainingMap[name] || 0;
-
+Math.round(Number(remainingMap[name] || 0));
 receivedList.innerHTML += `
 <div class="report-row" style="display:block">
 
