@@ -303,7 +303,8 @@ loadCustomers();
 function generateReport(selectedDate){
 
     const receivedMap = {};
-    const paidMap = {};
+const remainingMap = {};
+const paidMap = {};
 
     let totalReceived = 0;
     let totalPaid = 0;
@@ -350,14 +351,14 @@ if(opTime < fromTime || opTime > toTime){
 
                 receivedMap[customer.name] += Number(op.amount);
 
-if(!receivedMap[customer.name + "_remaining"]){
+if(remainingMap[customer.name] == null){
 
-receivedMap[customer.name + "_remaining"] =
+remainingMap[customer.name] =
 Number(customer.amount);
 
 }
 
-receivedMap[customer.name + "_remaining"] -=
+remainingMap[customer.name] -=
 Number(op.amount);
 
             }
@@ -393,9 +394,8 @@ Number(op.amount);
 
     Object.keys(receivedMap).forEach(name=>{
 
-        const remaining =
-receivedMap[name + "_remaining"];
-
+const remaining =
+remainingMap[name] || 0;
 receivedList.innerHTML += `
 <div class="report-row" style="display:block">
 
@@ -446,10 +446,10 @@ ${remaining>0
     netTotal;
 
     const uniqueCustomers =
-    new Set([
-        ...Object.keys(receivedMap),
-        ...Object.keys(paidMap)
-    ]);
+new Set([
+...Object.keys(remainingMap),
+...Object.keys(paidMap)
+]);
 
     document.getElementById('customersCount')
     .textContent =
