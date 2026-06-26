@@ -636,7 +636,7 @@ const productData = {
   price: parseFloat(document.getElementById('productPrice').value),
   stock: parseInt(document.getElementById('productStock').value),
   lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value),
-  image: imageUrl
+  image: imageUrl || (editingProductId ? products.find(p => p.id === editingProductId).image : "")
 };
 
     if (editingProductId) {
