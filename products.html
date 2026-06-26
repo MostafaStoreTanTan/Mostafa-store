@@ -738,8 +738,10 @@
   }
 
   document.getElementById('menuBtn').addEventListener('click', () => {
-    showToast('القائمة الجانبية - جاهزة للتطوير', 'info');
-  });
+  showToast('القائمة الجانبية - جاهزة للتطوير', 'info');
+});
+</script>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
@@ -768,6 +770,6 @@ const storage = getStorage(app);
 </script>
 
 <script>
-<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
 </body>
 </html>
