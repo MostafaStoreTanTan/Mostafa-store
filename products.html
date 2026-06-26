@@ -171,8 +171,25 @@ grid-template-columns:1fr;
 gap:15px;
 }
 
-</style>
+.fade{
+animation:fade .35s;
+}
 
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(15px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+</style>
 </head>
 
 <body>
@@ -275,6 +292,8 @@ list.forEach(product=>{
 
 container.innerHTML +=`
 
+<div class="fade">
+
 <div class="product-card"
 onclick="window.location.href='product.html?id=${product.id}'">
 
@@ -289,6 +308,8 @@ onerror="this.src='https://placehold.co/400x400?text=No+Image'">
 <h3>${product.name}</h3>
 
 <p>${product.category || ""}</p>
+
+</div>
 
 </div>
 
