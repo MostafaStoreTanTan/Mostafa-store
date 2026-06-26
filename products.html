@@ -616,14 +616,28 @@
   async function handleFormSubmit(e) {
     e.preventDefault();
     
-    const productData = {
-      name: document.getElementById('productName').value.trim(),
-      category: document.getElementById('productCategory').value,
-      price: parseFloat(document.getElementById('productPrice').value),
-      stock: parseInt(document.getElementById('productStock').value),
-      lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value),
-      image: document.getElementById('productImage').value.trim()
-    };
+    const file = document.getElementById("productImage").files[0];
+
+let imageUrl = "";
+
+if (file) {
+
+    const imageRef = ref(storage, "products/" + Date.now() + "_" + file.name);
+
+    await uploadBytes(imageRef, file);
+
+    imageUrl = await getDownloadURL(imageRef);
+
+}
+
+const productData = {
+  name: document.getElementById('productName').value.trim(),
+  category: document.getElementById('productCategory').value,
+  price: parseFloat(document.getElementById('productPrice').value),
+  stock: parseInt(document.getElementById('productStock').value),
+  lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value),
+  image: imageUrl
+};
 
     if (editingProductId) {
       const index = products.findIndex(p => p.id === editingProductId);
