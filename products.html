@@ -72,6 +72,15 @@ margin-bottom:10px;
 display:none;
 }
 
+.grid-view{
+gap:20px;
+padding-top:10px;
+}
+
+.grid-view .product-card{
+box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
 .grid-view .product-card{
 border-radius:20px;
 overflow:hidden;
@@ -348,19 +357,14 @@ let grid = false;
 
 document
 .getElementById("toggleView")
-.onclick=()=>{
+.onclick = () => {
 
-grid=!grid;
+grid = !grid;
 
-if(grid){
+container.classList.toggle("grid-view", grid);
 
-container.classList.add("grid-view");
-
-}else{
-
-container.classList.remove("grid-view");
-
-}
+document.getElementById("toggleView").innerHTML =
+grid ? "📋" : "🖼️";
 
 };
     
