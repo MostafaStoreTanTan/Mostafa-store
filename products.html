@@ -279,4 +279,47 @@ class="product-image">
 
 }
 
+// البحث
+
+document.getElementById("searchInput")
+.addEventListener("input",e=>{
+
+const value =
+e.target.value.toLowerCase();
+
+const filtered =
+products.filter(product=>
+
+(product.name||"")
+.toLowerCase()
+.includes(value)
+
+);
+
+renderProducts(filtered);
+
+});
+
+// تغيير شكل العرض
+
+let grid = false;
+
+document
+.getElementById("toggleView")
+.onclick=()=>{
+
+grid=!grid;
+
+if(grid){
+
+container.classList.add("grid-view");
+
+}else{
+
+container.classList.remove("grid-view");
+
+}
+
+};
+    
 </script>
