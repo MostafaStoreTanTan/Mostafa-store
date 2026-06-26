@@ -1,9 +1,12 @@
-const CACHE_NAME = 'karni-pro-v6';
+const CACHE_NAME = 'karni-pro-v7';
 
 const urlsToCache = [
   './',
   './index.html',
   './person.html',
+  './products.html',
+  './products.js',
+  './firebase.js',
   './route.html',
   './route-map.html',
   './manifest.webmanifest',
