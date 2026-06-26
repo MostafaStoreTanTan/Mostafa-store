@@ -462,7 +462,7 @@
   });
 
   function loadProducts() {
-    const stored = localStorage.getItem('products');
+    const stored = Firebase Realtime Database.getItem('products');
     if (stored) {
       products = JSON.parse(stored);
     } else {
@@ -472,7 +472,7 @@
   }
 
   function saveProducts() {
-    localStorage.setItem('products', JSON.stringify(products));
+    Firebase Realtime Database.setItem('products', JSON.stringify(products));
   }
 
   function setupEventListeners() {
