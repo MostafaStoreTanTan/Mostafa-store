@@ -5,8 +5,6 @@ const urlsToCache = [
   './index.html',
   './person.html',
   './products.html',
-  './products.js',
-  './firebase.js',
   './route.html',
   './route-map.html',
   './manifest.webmanifest',
