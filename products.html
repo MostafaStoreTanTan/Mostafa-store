@@ -2,581 +2,156 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تحضير الطلبيات الذكي</title>
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>محول البون السريع</title>
     <style>
-        :root {
-            --primary: #0d7377; --primary-dark: #0a5a5e; --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
-            --bg: #f1f5f9; --card: #ffffff; --text: #1e293b; --text-light: #64748b; --border: #e2e8f0; --hover: #f8fafc;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: var(--text); }
-        
-        /* الهيدر */
-       .header { background: var(--primary); color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-       .header h1 { font-size: 1.3rem; font-weight: 700; }
-       .header.menu-icon { font-size: 1.5rem; cursor: pointer; }
-        
-        /* الحاوي */
-       .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1rem; }
-       .card { background: var(--card); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        
-        /* الأزرار */
-       .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
-       .btn-primary { background: var(--primary); color: white; }
-       .btn-primary:hover { background: var(--primary-dark); }
-       .btn-success { background: var(--success); color: white; }
-       .btn-danger { background: var(--danger); color: white; }
-       .btn-warning { background: var(--warning); color: white; }
-       .btn-outline { background: white; border: 2px solid var(--border); color: var(--text); }
-       .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        /* شاشات */
-        #loader, #debugCard { display: none; text-align: center; padding: 3rem 2rem; }
-       .spinner { border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 1.5rem; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* النوافذ المنبثقة */
-       .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: center; justify-content: center; }
-       .modal-content { background: white; border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-       .modal-content h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.3rem; }
-       .modal-content p { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; }
-       .input-group { display: flex; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 1rem; }
-        input[type="number"], input[type="text"], select, textarea { padding: 0.8rem; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; width: 100%; }
-        input[type="number"] { width: 100px; text-align: center; }
-        select { width: 120px; }
-        input[type="file"] { display: none; }
-        textarea { min-height: 200px; font-family: monospace; text-align: left; direction: ltr; }
-        
-        /* جدول البون */
-       .bon-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-       .bon-stats { display: flex; align-items: center; gap: 1.5rem; }
-       .progress-circle { position: relative; width: 80px; height: 80px; }
-       .progress-circle svg { transform: rotate(-90deg); }
-       .progress-circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2rem; font-weight: 700; }
-       .bon-info { text-align: left; }
-       .bon-info.number { font-size: 1.1rem; font-weight: 700; }
-       .bon-info.date { font-size: 0.9rem; color: var(--text-light); }
-       .search-bar { position: relative; margin-bottom: 1rem; }
-       .search-bar input { width: 100%; padding: 0.8rem 2.5rem 0.8rem 1rem; border: 2px solid var(--border); border-radius: 10px; font-size: 0.95rem; }
-       .search-bar.icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-light); }
-        
-        /* الجدول */
-       .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        thead { background: var(--primary); color: white; }
-        th { padding: 1rem 0.75rem; text-align: right; font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
-        td { padding: 1rem 0.75rem; text-align: right; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        tbody tr:hover { background: var(--hover); }
-        tbody tr.done { background: #dcfce7; }
-        tbody tr.done td { color: #166534; }
-       .product-cell { display: flex; align-items: center; gap: 0.75rem; }
-       .product-img { width: 40px; height: 40px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-       .product-name { font-weight: 600; }
-       .product-detail { font-size: 0.8rem; color: var(--text-light); }
-       .conversion { color: var(--success); font-weight: 700; }
-       .checkbox { width: 22px; height: 22px; cursor: pointer; accent-color: var(--success); }
-       .badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-       .badge-success { background: #dcfce7; color: #166534; }
-        
-        /* الملخص */
-       .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-       .summary-item { background: var(--hover); padding: 1rem; border-radius: 12px; text-align: center; }
-       .summary-item.value { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem; }
-       .summary-item.label { font-size: 0.9rem; color: var(--text-light); }
-       .progress-bar { width: 100%; height: 10px; background: var(--border); border-radius: 10px; overflow: hidden; margin: 1rem 0; }
-       .progress-fill { height: 100%; background: var(--success); transition: width 0.4s ease; }
-        
-        /* الأزرار السفلية */
-       .action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-top: 1.5rem; }
-        
-        /* متجاوب */
-        @media (max-width: 768px) {
-           .bon-header { flex-direction: column; align-items: stretch; }
-           .bon-stats { justify-content: space-between; }
-            th, td { padding: 0.75rem 0.5rem; font-size: 0.85rem; }
-           .product-cell { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
-           .header h1 { font-size: 1.1rem; }
-        }
+        body { font-family: 'Cairo', Arial; background: #f0f4f8; padding: 20px; }
+       .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #0d7377; text-align: center; margin-bottom: 10px; }
+        p { text-align: center; color: #666; margin-bottom: 20px; }
+        textarea { width: 100%; height: 250px; padding: 15px; border: 2px solid #0d7377; border-radius: 10px; font-size: 16px; margin-bottom: 15px; }
+        button { background: #0d7377; color: white; padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-size: 18px; width: 100%; font-weight: bold; }
+        button:hover { background: #0a5a5e; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { border: 1px solid #ddd; padding: 15px; text-align: right; }
+        th { background: #0d7377; color: white; font-size: 16px; }
+       .result { background: #e8f5e9; padding: 20px; border-radius: 10px; margin-top: 20px; display: none; }
+       .result h3 { color: #2e7d32; margin: 0 0 15px 0; }
+       .question-box { background: #fff3cd; padding: 25px; border-radius: 10px; margin: 20px 0; text-align: center; border: 2px solid #ffc107; }
+       .question-box h2 { color: #856404; margin: 0 0 15px 0; }
+       .question-box input { padding: 12px; font-size: 20px; width: 150px; text-align: center; border: 2px solid #0d7377; border-radius: 8px; margin: 0 10px; }
+       .question-box button { width: auto; padding: 12px 40px; margin-top: 15px; }
+       .progress { text-align: center; color: #666; margin: 10px 0; font-size: 14px; }
+       .highlight { color: #0d7377; font-weight: bold; font-size: 22px; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <span class="menu-icon">☰</span>
-        <h1>تحضير البون</h1>
-        <span class="menu-icon">⋮</span>
-    </div>
-
     <div class="container">
-        <!-- 1. رفع البون -->
-        <div class="card" id="uploadCard">
-            <h2 style="margin-bottom:1rem; text-align:center;">مرحباً بك</h2>
-            <p style="color:var(--text-light); margin-bottom:2rem; text-align:center;">اختر طريقة إضافة البون الجديد</p>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <input type="file" id="imageInput" accept="image/*" onchange="handleImage(event)">
-                <button class="btn btn-primary" onclick="document.getElementById('imageInput').click()" style="flex-direction:column; padding:1.5rem;">
-                    <span style="font-size:2rem;">📷</span>
-                    <span>اختيار صورة</span>
-                    <span style="font-size:0.8rem; opacity:0.8;">من المعرض</span>
-                </button>
-                <button class="btn btn-warning" onclick="showManualEntry()" style="flex-direction:column; padding:1.5rem;">
-                    <span style="font-size:2rem;">✍️</span>
-                    <span>إدخال يدوي</span>
-                    <span style="font-size:0.8rem; opacity:0.8;">إذا فشلت القراءة</span>
-                </button>
-            </div>
+        <h1>🚚 محول البون السريع</h1>
+        <p>حط اللائحة ديالك هنا - كل سطر: الكمية + اسم المنتج</p>
+        
+        <div id="inputSection">
+            <textarea id="productsInput" placeholder="مثال:&#10;12 zayna&#10;10 dalaa vp 5&#10;15 dalaa new born&#10;120 dalaa 550"></textarea>
+            <button onclick="startProcess()">بدا التحويل</button>
         </div>
 
-        <!-- 2. شاشة التحميل -->
-        <div class="card" id="loader">
-            <div class="spinner"></div>
-            <h3>جاري قراءة البون...</h3>
-            <p id="ocr-progress" style="color:var(--primary); margin-top:0.5rem;"></p>
-        </div>
-
-        <!-- 3. شاشة Debug -->
-        <div class="card" id="debugCard">
-            <h3 style="color:var(--danger);">فشلت قراءة البون تلقائياً</h3>
-            <p style="margin:1rem 0;">هذا هو النص اللي تقرا من الصورة. عدّلو أو انسخ المنتجات:</p>
-            <textarea id="ocrText" placeholder="الصيغة: الكمية الاسم رقم_المنتج&#10;مثال:&#10;12 zayna 251211015392&#10;16 dalaa vp 2 251211354124"></textarea>
-            <button class="btn btn-success" onclick="parseManualText()" style="width:100%; margin-top:1rem;">تحليل النص</button>
-        </div>
-
-        <!-- 4. البون النهائي -->
-        <div class="card" id="resultCard" style="display:none;">
-            <div class="bon-header">
-                <div class="bon-stats">
-                    <div class="progress-circle">
-                        <svg width="80" height="80">
-                            <circle cx="40" cy="40" r="35" stroke="#e2e8f0" stroke-width="8" fill="none"/>
-                            <circle id="progressCircle" cx="40" cy="40" r="35" stroke="#10b981" stroke-width="8" fill="none" stroke-dasharray="219.9" stroke-dashoffset="219.9"/>
-                        </svg>
-                        <div class="progress-circle-text" id="progressPercent">0%</div>
-                    </div>
-                    <div>
-                        <div style="font-size:1.8rem; font-weight:700;" id="progressText">0 / 0</div>
-                        <div style="color:var(--text-light); font-size:0.9rem;">تم تجهيز</div>
-                    </div>
-                </div>
-                <div class="bon-info">
-                    <div class="number" id="bonNumber">#20260628-01</div>
-                    <div class="date" id="bonDate">28/06/2026 - 01:18 AM</div>
-                </div>
-            </div>
-
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="بحث عن منتج..." onkeyup="filterTable()">
-                <span class="icon">🔍</span>
-            </div>
-
-            <div class="table-wrapper">
-                <table id="productsTable">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>المنتج</th>
-                            <th>الكمية في البون</th>
-                            <th>التحويل</th>
-                            <th>المكان</th>
-                            <th>الحالة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsBody"></tbody>
-                </table>
-            </div>
-
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <div class="value" id="totalItems">0</div>
-                    <div class="label">إجمالي المنتجات</div>
-                </div>
-                <div class="summary-item">
-                    <div class="value" id="doneItems" style="color:var(--success);">0</div>
-                    <div class="label">المنتجات المجهزة</div>
-                </div>
-                <div class="summary-item">
-                    <div class="value" id="remainItems" style="color:var(--danger);">0</div>
-                    <div class="label">المتبقي</div>
-                </div>
-                <div class="summary-item">
-                    <div class="value" id="progressPercentText" style="color:var(--primary);">0%</div>
-                    <div class="label">نسبة الإنجاز</div>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-success" onclick="markAllDone()">✓ تم الكل</button>
-                <button class="btn btn-outline" onclick="exportExcel()">📊 تصدير Excel</button>
-                <button class="btn btn-outline" onclick="exportPDF()">📄 تصدير PDF</button>
-                <button class="btn btn-primary" onclick="saveBon()">💾 حفظ البون</button>
-            </div>
-        </div>
+        <div id="questionSection" style="display:none;"></div>
+        <div id="resultSection" style="display:none;"></div>
     </div>
 
-    <!-- نافذة الأسئلة -->
-    <div class="modal-overlay" id="questionModal">
-        <div class="modal-content">
-            <h3>إكمال بيانات المنتج</h3>
-            <p id="questionText"></p>
-            <div class="input-group">
-                <input type="number" id="piecesInput" placeholder="العدد" min="1">
-                <select id="typeSelect">
-                    <option value="علبة">علبة</option>
-                    <option value="باكية">باكية</option>
-                    <option value="كرتونة">كرتونة</option>
-                    <option value="قطعة">قطعة</option>
-                </select>
-            </div>
-            <input type="text" id="locationInput" placeholder="مكان التخزين (مثال: B-01)" style="width:100%; margin-bottom:1rem; text-align:right;">
-            <button class="btn btn-success" onclick="submitAnswer()" style="width:100%;">تأكيد وحفظ</button>
-            <p style="margin-top:1rem; color:var(--text-light); font-size:0.9rem;" id="questionProgress"></p>
-        </div>
-    </div>
+    <script>
+        let productsList = [];
+        let currentIndex = 0;
+        let productsData = {};
 
-    <!-- نافذة الإدخال اليدوي -->
-    <div class="modal-overlay" id="manualModal">
-        <div class="modal-content">
-            <h3>إدخال البون يدوياً</h3>
-            <p style="font-size:0.9rem; color:var(--text-light);">اكتب كل منتج في سطر: الكمية + الاسم + رقم المنتج</p>
-            <textarea id="manualInput" placeholder="12 zayna 251211015392&#10;16 dalaa vp 2 251211354124&#10;15 dalaa new born 251213064797"></textarea>
-            <button class="btn btn-success" onclick="parseManualInput()" style="width:100%; margin-top:1rem;">تحليل وإنشاء البون</button>
-            <button class="btn btn-outline" onclick="closeModal('manualModal')" style="width:100%; margin-top:0.5rem;">إلغاء</button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-        import { getFirestore, collection, doc, setDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
-            authDomain: "karni-b9b34.firebaseapp.com",
-            databaseURL: "https://karni-b9b34-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "karni-b9b34",
-            storageBucket: "karni-b9b34.firebasestorage.app",
-            messagingSenderId: "489835094040",
-            appId: "1:489835094040:web:109e20fe7b65516903236d"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        let productsDB = {};
-        let extractedProducts = [];
-        let productsToAsk = [];
-        let currentQuestionIndex = 0;
-        let finalBon = [];
-
-        // 1. تحميل قاعدة البيانات
-        async function loadProductsDB() {
-            try {
-                const querySnapshot = await getDocs(collection(db, 'products'));
-                querySnapshot.forEach((doc) => {
-                    productsDB[doc.id] = doc.data();
-                });
-                console.log('✅ تم تحميل قاعدة البيانات:', Object.keys(productsDB).length, 'منتج');
-            } catch (e) {
-                console.error('❌ خطأ في تحميل قاعدة البيانات:', e);
+        function startProcess() {
+            const text = document.getElementById('productsInput').value.trim();
+            if (!text) {
+                alert('دخل اللائحة عافاك');
+                return;
             }
-        }
-        loadProductsDB();
 
-        // 2. معالجة الصورة
-        window.handleImage = async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById('uploadCard').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-
-            try {
-                const { data: { text } } = await Tesseract.recognize(file, 'ara+eng', {
-                    logger: m => {
-                        if (m.status === 'recognizing text') {
-                            document.getElementById('ocr-progress').textContent = `التقدم: ${Math.round(m.progress * 100)}%`;
-                        }
-                    }
-                });
-
-                console.log('📄 النص المستخرج من OCR:\n', text);
-                parseBonText(text);
-            } catch (error) {
-                console.error('❌ خطأ في OCR:', error);
-                showDebugScreen('');
-            }
-        }
-
-        // 3. تحليل النص - النسخة الذكية
-        function parseBonText(text) {
+            // نحولو النص للائحة
+            productsList = [];
             const lines = text.split('\n');
-            extractedProducts = [];
-
-            lines.forEach((line, idx) => {
+            lines.forEach(line => {
                 line = line.trim();
-                if (!line || line.length < 5) return;
-
-                // نحيدو العناوين
-                if (/الكمية|الإجمالي|الاسم|رقم المنتج/i.test(line)) return;
-
-                // الطريقة 1: الكمية + رقم عشري + اسم + كود
-                let match = line.match(/^(\d+)\s+[\d.]+\s+([^\d]+?)\s+(\d{10,})$/);
-                
-                // الطريقة 2: الكمية + اسم + كود
-                if (!match) match = line.match(/^(\d+)\s+([^\d]+?)\s+(\d{10,})$/);
-                
-                // الطريقة 3: كود + اسم + كمية
-                if (!match) match = line.match(/^(\d{10,})\s+([^\d]+?)\s+(\d+)$/);
-                
-                // الطريقة 4: اسم + كمية + كود
-                if (!match) {
-                    match = line.match(/^([^\d]+?)\s+(\d+)\s+(\d{10,})$/);
-                    if (match) match = [null, match[2], match[1], match[3]]; // نقلب الترتيب
-                }
-
+                if (!line) return;
+                const match = line.match(/^(\d+)\s+(.+)$/);
                 if (match) {
-                    const qty = parseInt(match[1]);
-                    let name = match[2].trim().toLowerCase().replace(/\s+/g, ' ');
-                    const code = match[3];
-                    
-                    // تنظيف الاسم
-                    name = name.replace(/الإجمالي|الكمية|الاسم|رقم المنتج/gi, '').trim();
-                    
-                    if (qty > 0 && name.length > 2 && code.length >= 10) {
-                        extractedProducts.push({ name, qty, code });
-                        console.log(`✅ منتج ${extractedProducts.length}: ${name} | ${qty} | ${code}`);
-                    }
-                } else {
-                    console.log(`⚠️ سطر ${idx+1} لم يتطابق:`, line);
+                    productsList.push({
+                        qty: parseInt(match[1]),
+                        name: match[2].trim().toLowerCase()
+                    });
                 }
             });
 
-            if (extractedProducts.length === 0) {
-                console.error('❌ لم يتم العثور على منتجات');
-                showDebugScreen(text);
+            if (productsList.length === 0) {
+                alert('الصيغة غالطة. خاص كل سطر يكون: رقم + اسم المنتج\nمثال: 12 zayna');
                 return;
             }
 
-            console.log('✅ تم استخراج', extractedProducts.length, 'منتج');
-            document.getElementById('loader').style.display = 'none';
-            startQuestioning();
+            // نخبعو الإدخال ونبداو الأسئلة
+            document.getElementById('inputSection').style.display = 'none';
+            currentIndex = 0;
+            productsData = {};
+            askNextQuestion();
         }
 
-        // 4. عرض شاشة Debug
-        function showDebugScreen(text) {
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('debugCard').style.display = 'block';
-            document.getElementById('ocrText').value = text;
-        }
-
-        // 5. تحليل النص اليدوي
-        window.parseManualText = function() {
-            const text = document.getElementById('ocrText').value;
-            parseBonText(text);
-            document.getElementById('debugCard').style.display = 'none';
-        }
-
-        // 6. الإدخال اليدوي
-        window.showManualEntry = function() {
-            document.getElementById('manualModal').style.display = 'flex';
-        }
-
-        window.parseManualInput = function() {
-            const text = document.getElementById('manualInput').value;
-            closeModal('manualModal');
-            document.getElementById('uploadCard').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-            setTimeout(() => parseBonText(text), 500);
-        }
-
-        window.closeModal = function(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        // 7. الأسئلة التفاعلية
-        function startQuestioning() {
-            productsToAsk = extractedProducts.filter(p =>!productsDB[p.name]);
-            
-            if (productsToAsk.length === 0) {
-                buildFinalBon();
+        function askNextQuestion() {
+            if (currentIndex >= productsList.length) {
+                showFinalResult();
                 return;
             }
 
-            currentQuestionIndex = 0;
-            showNextQuestion();
-        }
-
-        function showNextQuestion() {
-            if (currentQuestionIndex >= productsToAsk.length) {
-                document.getElementById('questionModal').style.display = 'none';
-                buildFinalBon();
-                return;
-            }
-
-            const product = productsToAsk[currentQuestionIndex];
-            document.getElementById('questionText').innerHTML = `
-                المنتج: <span class="badge badge-success">${product.name}</span><br>
-                الكمية المطلوبة: <strong>${product.qty}</strong><br>
-                رقم المنتج: <span style="font-size:0.9rem; color:var(--text-light);">${product.code}</span>
+            const product = productsList[currentIndex];
+            const html = `
+                <div class="question-box">
+                    <h2>المنتج: <span class="highlight">${product.name}</span></h2>
+                    <p>الكمية المطلوبة في البون: <strong>${product.qty}</strong></p>
+                    <p style="font-size:18px; margin:20px 0;">كم تحتوي العلبة الواحدة من قطعة؟</p>
+                    <input type="number" id="piecesAnswer" placeholder="العدد" min="1" autofocus>
+                    <br>
+                    <button onclick="saveAnswer()">التالي ➜</button>
+                    <div class="progress">سؤال ${currentIndex + 1} من ${productsList.length}</div>
+                </div>
             `;
-            document.getElementById('questionProgress').textContent = `سؤال ${currentQuestionIndex + 1} من ${productsToAsk.length}`;
-            document.getElementById('piecesInput').value = '';
-            document.getElementById('locationInput').value = '';
-            document.getElementById('questionModal').style.display = 'flex';
-            document.getElementById('piecesInput').focus();
+            document.getElementById('questionSection').innerHTML = html;
+            document.getElementById('questionSection').style.display = 'block';
+            document.getElementById('piecesAnswer').focus();
+            
+            // Enter key
+            document.getElementById('piecesAnswer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') saveAnswer();
+            });
         }
 
-        window.submitAnswer = async function() {
-            const pieces = parseInt(document.getElementById('piecesInput').value);
-            const type = document.getElementById('typeSelect').value;
-            const location = document.getElementById('locationInput').value.trim() || '-';
-            
+        function saveAnswer() {
+            const pieces = parseInt(document.getElementById('piecesAnswer').value);
             if (!pieces || pieces < 1) {
-                alert('يرجى إدخال عدد القطع في العبوة');
+                alert('دخل عدد صحيح عافاك');
                 return;
             }
 
-            const product = productsToAsk[currentQuestionIndex];
-            const productData = { pieces, type, location, code: product.code };
-
-            try {
-                await setDoc(doc(db, 'products', product.name), productData);
-                productsDB[product.name] = productData;
-                console.log('✅ تم حفظ:', product.name, productData);
-            } catch (e) {
-                console.error('❌ خطأ في الحفظ:', e);
-                alert('خطأ في حفظ البيانات في Firebase');
-            }
-
-            currentQuestionIndex++;
-            showNextQuestion();
+            const product = productsList[currentIndex];
+            productsData[product.name] = pieces;
+            currentIndex++;
+            askNextQuestion();
         }
 
-        // 8. بناء البون النهائي
-        function buildFinalBon() {
-            finalBon = extractedProducts.map(item => {
-                const prod = productsDB[item.name];
-                const pieces = prod? prod.pieces : 1;
-                const type = prod? prod.type : 'قطعة';
-                const location = prod? prod.location : '-';
-
-                let converted = '';
-                if (pieces > 1) {
-                    const full = Math.floor(item.qty / pieces);
-                    const remainder = item.qty % pieces;
-                    converted = full > 0? `${full} ${type}` : '';
-                    if (remainder > 0) converted += (converted? ' + ' : '') + `${remainder} قطعة`;
-                    if (!converted) converted = `${item.qty} قطعة`;
-                } else {
-                    converted = `${item.qty} قطعة`;
+        function showFinalResult() {
+            document.getElementById('questionSection').style.display = 'none';
+            
+            let html = '<div class="result" style="display:block;"><h3>✅ النتيجة النهائية - آش خاصك تشارجي</h3>';
+            html += '<table><tr><th>#</th><th>المنتج</th><th>الكمية المطلوبة</th><th>شحال فالعلبة</th><th>النتيجة</th></tr>';
+            
+            productsList.forEach((product, i) => {
+                const pieces = productsData[product.name];
+                const boxes = Math.floor(product.qty / pieces);
+                const remainder = product.qty % pieces;
+                
+                let resultText = '';
+                if (boxes > 0) resultText += `<strong style="color:#0d7377">${boxes} علبة</strong>`;
+                if (remainder > 0) {
+                    if (resultText) resultText += ' + ';
+                    resultText += `<strong style="color:#f59e0b">${remainder} قطع</strong>`;
                 }
-
-                return {...item, pieces, type, location, converted, done: false };
+                if (!resultText) resultText = `<strong style="color:#f59e0b">${product.qty} قطع</strong>`;
+                
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td><strong>${product.name}</strong></td>
+                    <td>${product.qty}</td>
+                    <td>${pieces} قطع</td>
+                    <td>${resultText}</td>
+                </tr>`;
             });
-
-            const now = new Date();
-            document.getElementById('bonDate').textContent = now.toLocaleString('ar-MA', { 
-                year: 'numeric', month: '2-digit', day: '2-digit', 
-                hour: '2-digit', minute: '2-digit' 
-            });
-            document.getElementById('bonNumber').textContent = '#' + now.getFullYear() + 
-                String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-01';
             
-            document.getElementById('resultCard').style.display = 'block';
-            renderBon();
-        }
-
-        window.toggleDone = function(index) {
-            finalBon[index].done =!finalBon[index].done;
-            renderBon();
-        }
-
-        window.markAllDone = function() {
-            finalBon.forEach(item => item.done = true);
-            renderBon();
-        }
-
-        function renderBon() {
-            const tbody = document.getElementById('productsBody');
-            tbody.innerHTML = finalBon.map((item, i) => `
-                <tr class="${item.done? 'done' : ''}" data-name="${item.name}">
-                    <td>${i+1}</td>
-                    <td>
-                        <div class="product-cell">
-                            <div class="product-img">📦</div>
-                            <div>
-                                <div class="product-name">${item.name}</div>
-                                <div class="product-detail">${item.pieces} قطع / ${item.type}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${item.qty}</td>
-                    <td class="conversion">${item.converted}</td>
-                    <td>${item.location}</td>
-                    <td><input type="checkbox" class="checkbox" ${item.done? 'checked' : ''} onchange="toggleDone(${i})"></td>
-                </tr>
-            `).join('');
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const done = finalBon.filter(i => i.done).length;
-            const total = finalBon.length;
-            const percent = total > 0? Math.round((done / total) * 100) : 0;
+            html += '</table>';
+            html += '<button onclick="location.reload()" style="margin-top:20px;">🔄 بون جديد</button></div>';
             
-            document.getElementById('progressText').textContent = `${done} / ${total}`;
-            document.getElementById('progressPercent').textContent = `${percent}%`;
-            document.getElementById('progressPercentText').textContent = `${percent}%`;
-            
-            const circle = document.getElementById('progressCircle');
-            const offset = 219.9 - (219.9 * percent / 100);
-            circle.style.strokeDashoffset = offset;
-            
-            document.getElementById('totalItems').textContent = total;
-            document.getElementById('doneItems').textContent = done;
-            document.getElementById('remainItems').textContent = total - done;
+            document.getElementById('resultSection').innerHTML = html;
+            document.getElementById('resultSection').style.display = 'block';
         }
-
-        window.filterTable = function() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.querySelectorAll('#productsBody tr');
-            rows.forEach(row => {
-                const name = row.dataset.name;
-                row.style.display = name.includes(search)? '' : 'none';
-            });
-        }
-
-        window.saveBon = async function() {
-            const bonData = {
-                number: document.getElementById('bonNumber').textContent,
-                date: new Date().toISOString(),
-                items: finalBon,
-                completed: finalBon.filter(i => i.done).length,
-                total: finalBon.length
-            };
-            try {
-                await setDoc(doc(db, 'bons', bonData.number.replace('#','')), bonData);
-                alert('✅ تم حفظ البون بنجاح في السحابة!');
-            } catch (e) {
-                console.error('❌ خطأ في الحفظ:', e);
-                alert('❌ فشل حفظ البون');
-            }
-        }
-
-        window.exportExcel = function() {
-            alert('ميزة تصدير Excel قيد التطوير - ستكون جاهزة قريباً');
-        }
-
-        window.exportPDF = function() {
-            alert('ميزة تصدير PDF قيد التطوير - ستكون جاهزة قريباً');
-        }
-
-        // Enter للأسئلة
-        document.getElementById('piecesInput')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') submitAnswer();
-        });
     </script>
 </body>
-</html>
+    </html>
