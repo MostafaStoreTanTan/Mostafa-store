@@ -516,12 +516,12 @@
     }, 100);
   }
 
-  // Send WhatsApp
-  function sendWhatsApp(customerId) {
-    const customer = customers.find(c => c.id === customerId);
-    if (!customer) return;
+ // Send WhatsApp
+function sendWhatsApp(customerId) {
+  const customer = customers.find(c => c.id === customerId);
+  if (!customer) return;
 
-    const message = `مرحباً ${customer.name}
+  const message = `مرحباً ${customer.name}
 
 تم إنشاء حسابك بنجاح.
 
@@ -532,9 +532,9 @@ Password: ${customer.password}
 
 يمكنك الضغط على الرابط مباشرة للدخول بدون كتابة أي شيء.`;
 
-    const url = `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  }
+  const url = `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
 
   // Render Customers
   function renderCustomers() {
