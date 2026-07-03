@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة العملاء - Mostafa Clean Shop</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+
+    * {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  body {
+    background: #f8fafc;
+  }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+.soft-shadow {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+
+.soft-shadow-lg {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+.customer-card {
+    transition: all 0.3s ease;
+  }
+
+.customer-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+  }
+
+.animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+.animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+  }
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition:.3s;
+    border-radius: 26px;
+  }
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition:.3s;
+    border-radius: 50%;
+  }
+
+  input:checked +.slider {
+    background-color: #10b981;
+  }
+
+  input:checked +.slider:before {
+    transform: translateX(24px);
+  }
+
+.tab-btn.active {
+    background: #10b981;
+    color: white;
+  }
+</style>
+</head>
+<body class="pb-24">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-40 soft-shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-users text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900">إدارة العملاء</h1>
+            <p class="text-xs text-gray-500">نظام إدارة العملاء المتكامل</p>
+          </div>
+        </div>
+        <button onclick="openAddModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 md:px-6 py-2.5 rounded-xl font-semibold transition shadow-md flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i>
+          <span class="hidden sm:inline">إضافة عميل</span>
+        </button>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="flex gap-2">
+        <div class="flex-1 relative">
+          <input type="text" id="searchInput" placeholder="البحث عن عميل..." class="w-full pr-10 pl-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+          <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 pt-6 pb-6">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+      <div class="bg-white rounded-xl soft-shadow p-4 md:p-5 border border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-gray-500 text-xs md:text-sm mb-1">إجمالي العملاء</p>
+            <p class="text-2xl md:text-3xl font-bold text-gray-900" id="totalCustomers">0</p>
+          </div>
+          <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-users text-blue-600 text-lg md:text-xl"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl soft-shadow p-4 md:p-5 border border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-gray-500 text-xs md:text-sm mb-1">العملاء النشطين</p>
+            <p class="text-2xl md:text-3xl font-bold text-emerald-600" id="activeCustomers">0</p>
+          </div>
+          <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-user-check text-emerald-600 text-lg md:text-xl"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl soft-shadow p-4 md:p-5 border border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-gray-500 text-xs md:text-sm mb-1">الموقوفين</p>
+            <p class="text-2xl md:text-3xl font-bold text-red-600" id="suspendedCustomers">0</p>
+          </div>
+          <div class="w-10 h-10 md:w-12 md:h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-user-slash text-red-600 text-lg md:text-xl"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl soft-shadow p-4 md:p-5 border border-gray-100">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-gray-500 text-xs md:text-sm mb-1">إجمالي الطلبات</p>
+            <p class="text-2xl md:text-3xl font-bold text-violet-600" id="totalOrders">0</p>
+          </div>
+          <div class="w-10 h-10 md:w-12 md:h-12 bg-violet-100 rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-shopping-bag text-violet-600 text-lg md:text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Pills -->
+    <div class="mb-6 overflow-x-auto scrollbar-hide">
+      <div class="flex gap-2 pb-2">
+        <button class="filter-pill active px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition bg-emerald-600 text-white shadow-md" data-filter="all">الكل</button>
+        <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition bg-white text-gray-700 border border-gray-200 hover:border-emerald-500" data-filter="active">نشط</button>
+        <button class="filter-pill px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition bg-white text-gray-700 border border-gray-200 hover:border-emerald-500" data-filter="suspended">موقوف</button>
+      </div>
+    </div>
+
+    <!-- Customers Grid -->
+    <div id="customersContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-16">
+      <div class="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+        <i class="fa-solid fa-users text-4xl text-gray-400"></i>
+      </div>
+      <h3 class="text-xl font-semibold text-gray-900 mb-2">لا يوجد عملاء</h3>
+      <p class="text-gray-500 mb-6">ابدأ بإضافة أول عميل</p>
+      <button onclick="openAddModal()" class="bg-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-emerald-700 transition">
+        <i class="fa-solid fa-plus ml-2"></i>إضافة عميل
+      </button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-5 h-16">
+        <button onclick="window.location.href='Menu.html'" class="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-emerald-600 transition">
+          <i class="fa-solid fa-house text-xl"></i>
+          <span class="text-xs font-medium">الرئيسية</span>
+        </button>
+        <button class="flex flex-col items-center justify-center gap-1 text-emerald-600 relative">
+          <div class="absolute -top-1 w-12 h-1 bg-emerald-600 rounded-full"></div>
+          <i class="fa-solid fa-users text-xl"></i>
+          <span class="text-xs font-semibold">العملاء</span>
+        </button>
+        <button onclick="window.location.href='products.html'" class="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-emerald-600 transition">
+          <i class="fa-solid fa-box text-xl"></i>
+          <span class="text-xs font-medium">المنتجات</span>
+        </button>
+        <button onclick="window.location.href='sales.html'" class="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-emerald-600 transition">
+          <i class="fa-solid fa-cart-shopping text-xl"></i>
+          <span class="text-xs font-medium">المبيعات</span>
+        </button>
+        <button onclick="window.location.href='reports.html'" class="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-emerald-600 transition">
+          <i class="fa-solid fa-chart-simple text-xl"></i>
+          <span class="text-xs font-medium">التقارير</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Add/Edit Customer Modal -->
+  <div id="customerModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeCustomerModal()"></div>
+    <div class="relative bg-white rounded-2xl soft-shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto animate-slide-up">
+      <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+        <h2 id="modalTitle" class="text-xl font-bold text-gray-900">إضافة عميل جديد</h2>
+        <button onclick="closeCustomerModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+          <i class="fa-solid fa-xmark text-gray-500"></i>
+        </button>
+      </div>
+      <form id="customerForm" class="p-6 space-y-4">
+        <input type="hidden" id="customerId">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">اسم العميل *</label>
+          <input type="text" id="customerName" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">اسم المحل *</label>
+          <input type="text" id="storeName" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">رقم الهاتف *</label>
+          <input type="tel" id="customerPhone" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition" placeholder="06XXXXXXXX">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">المدينة *</label>
+          <input type="text" id="customerCity" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">كلمة المرور *</label>
+          <input type="password" id="customerPassword" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">تأكيد كلمة المرور *</label>
+          <input type="password" id="customerPasswordConfirm" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">صورة العميل (اختياري)</label>
+          <input type="file" id="customerImage" accept="image/*" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition">
+        </div>
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
+            <i class="fa-solid fa-check ml-2"></i>حفظ
+          </button>
+          <button type="button" onclick="closeCustomerModal()" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">إلغاء</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Manage Customer Modal -->
+  <div id="manageModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="closeManageModal()"></div>
+    <div class="relative bg-white rounded-2xl soft-shadow-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto animate-slide-up">
+      <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+        <h2 class="text-xl font-bold text-gray-900">إدارة العميل</h2>
+        <button onclick="closeManageModal()" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+          <i class="fa-solid fa-xmark text-gray-500"></i>
+        </button>
+      </div>
+      <div id="manageContent" class="p-6"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
+    <div class="bg-gray-900 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3">
+      <i id="toastIcon" class="fa-solid fa-check-circle text-emerald-400"></i>
+      <span id="toastMessage"></span>
+    </div>
+  </div>
+
+<script>
+  // Global State
+  let customers = [];
+  let products = [];
+  let currentFilter = 'all';
+  let searchQuery = '';
+  let editingCustomerId = null;
+  let managingCustomerId = null;
+
+  // Initialize
+  function init() {
+    loadData();
+    setupEventListeners();
+    renderCustomers();
+  }
+
+  // Load Data
+  function loadData() {
+    customers = JSON.parse(localStorage.getItem('customers') || '[]');
+    products = JSON.parse(localStorage.getItem('products') || '[]');
+    updateStats();
+  }
+
+  // Update Stats
+  function updateStats() {
+    document.getElementById('totalCustomers').textContent = customers.length;
+    document.getElementById('activeCustomers').textContent = customers.filter(c => c.status === 'active').length;
+    document.getElementById('suspendedCustomers').textContent = customers.filter(c => c.status === 'suspended').length;
+    document.getElementById('totalOrders').textContent = customers.reduce((sum, c) => sum + (c.orders || 0), 0);
+  }
+
+  // Generate Customer ID
+  function generateCustomerId() {
+    const lastId = customers.length > 0? Math.max(...customers.map(c => parseInt(c.id))) : 1000;
+    return (lastId + 1).toString();
+  }
+
+  // Open Add Modal
+  function openAddModal() {
+    editingCustomerId = null;
+    document.getElementById('modalTitle').textContent = 'إضافة عميل جديد';
+    document.getElementById('customerForm').reset();
+    document.getElementById('customerId').value = '';
+    document.getElementById('customerModal').classList.remove('hidden');
+  }
+
+  // Close Customer Modal
+  function closeCustomerModal() {
+    document.getElementById('customerModal').classList.add('hidden');
+  }
+
+  // Save Customer
+  document.getElementById('customerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('customerName').value.trim();
+    const store = document.getElementById('storeName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const city = document.getElementById('customerCity').value.trim();
+    const password = document.getElementById('customerPassword').value;
+    const passwordConfirm = document.getElementById('customerPasswordConfirm').value;
+
+    if (password!== passwordConfirm) {
+      showToast('كلمة المرور غير متطابقة', 'error');
+      return;
+    }
+
+    const imageFile = document.getElementById('customerImage').files[0];
+    let imageUrl = '';
+    if (imageFile) {
+      imageUrl = await fileToBase64(imageFile);
+    }
+
+    if (editingCustomerId) {
+      // Update existing
+      const index = customers.findIndex(c => c.id === editingCustomerId);
+      if (index!== -1) {
+        customers[index] = {
+        ...customers[index],
+          name,
+          store,
+          phone,
+          city,
+          password,
+          image: imageUrl || customers[index].image
+        };
+        showToast('تم تحديث العميل بنجاح');
+      }
+    } else {
+      // Add new
+      const id = generateCustomerId();
+      const loginUrl = `${window.location.origin}/login.html?id=${id}`;
+
+      const newCustomer = {
+        id,
+        name,
+        store,
+        phone,
+        city,
+        password,
+        image: imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=10b981&color=fff`,
+        status: 'active',
+        orders: 0,
+        totalPurchases: 0,
+        lastLogin: null,
+        lastOrder: null,
+        lastProduct: null,
+        loginCount: 0,
+        device: null,
+        os: null,
+        ip: null,
+        loginUrl,
+        createdAt: new Date().toISOString(),
+        permissions: {
+          showPrices: true,
+          showStock: true,
+          showDiscounts: true,
+          showNewProducts: true,
+          showHiddenProducts: false,
+          allowOrder: true,
+          allowFavorite: true,
+          allowOffers: true,
+          allowProductDetails: true,
+          allowUnavailable: false,
+          allowSuggested: true
+        },
+        productPrices: {},
+        productVisibility: {}
+      };
+
+      customers.push(newCustomer);
+      showToast('تم إضافة العميل بنجاح');
+
+      setTimeout(() => {
+        showLoginInfo(newCustomer);
+      }, 500);
+    }
+
+    saveCustomers();
+    closeCustomerModal();
+    renderCustomers();
+  });
+
+  // File to Base64
+  function fileToBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Show Login Info
+  function showLoginInfo(customer) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4';
+    modal.innerHTML = `
+      <div class="modal-backdrop absolute inset-0 bg-black/50" onclick="this.parentElement.remove()"></div>
+      <div class="relative bg-white rounded-2xl soft-shadow-lg w-full max-w-md animate-slide-up p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">بيانات الدخول</h3>
+        <div class="space-y-3 mb-6">
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">ID</p>
+            <p class="font-bold text-gray-900 text-lg">${customer.id}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">Password</p>
+            <p class="font-bold text-gray-900 text-lg">${customer.password}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-2">QR Code</p>
+            <div id="qrcode" class="flex justify-center"></div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="sendWhatsApp('${customer.id}')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-semibold transition">
+            <i class="fa-brands fa-whatsapp ml-2"></i>إرسال عبر WhatsApp
+          </button>
+          <button onclick="this.closest('.fixed').remove()" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">إغلاق</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    setTimeout(() => {
+      new QRCode(document.getElementById('qrcode'), {
+        text: customer.loginUrl,
+        width: 200,
+        height: 200
+      });
+    }, 100);
+  }
+
+  // Send WhatsApp
+  function sendWhatsApp(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    const message = `مرحباً ${customer.name}
+
+تم إنشاء حسابك بنجاح.
+
+بيانات الدخول:
+ID: ${customer.id}
+Password: ${customer.password}
+رابط الدخول المباشر: ${customer.loginUrl}
+
+يمكنك الضغط على الرابط مباشرة للدخول بدون كتابة أي شيء.`;
+
+    const url = `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
+  // Render Customers
+  function renderCustomers() {
+    const container = document.getElementById('customersContainer');
+    const emptyState = document.getElementById('emptyState');
+
+    let filtered = customers.filter(c => {
+      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           c.store.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           c.phone.includes(searchQuery) ||
+                           c.id.includes(searchQuery);
+      const matchesFilter = currentFilter === 'all' || c.status === currentFilter;
+      return matchesSearch && matchesFilter;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = '';
+      emptyState.classList.remove('hidden');
+    } else {
+      emptyState.classList.add('hidden');
+      container.innerHTML = filtered.map(c => createCustomerCard(c)).join('');
+    }
+  }
+
+  // Create Customer Card
+  function createCustomerCard(customer) {
+    const statusClass = customer.status === 'active'? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+    const statusText = customer.status === 'active'? 'نشط' : 'موقوف';
+
+    return `
+      <div class="customer-card bg-white rounded-2xl soft-shadow border border-gray-100 overflow-hidden">
+        <div class="p-5">
+          <div class="flex items-start gap-4 mb-4">
+            <img src="${customer.image}" alt="${customer.name}" class="w-16 h-16 rounded-xl object-cover">
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-900 text-lg mb-1">${customer.name}</h3>
+              <p class="text-sm text-gray-600 mb-2">${customer.store}</p>
+              <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${statusClass}">${statusText}</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 mb-4 text-sm">
+            <div class="flex items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-location-dot w-4 text-gray-400"></i>
+              <span>${customer.city}</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-phone w-4 text-gray-400"></i>
+              <span>${customer.phone}</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-id-card w-4 text-gray-400"></i>
+              <span>ID: ${customer.id}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mb-4 pt-4 border-t border-gray-100">
+            <div class="bg-gray-50 rounded-lg p-2 text-center">
+              <p class="text-xs text-gray-500">الطلبات</p>
+              <p class="font-bold text-gray-900">${customer.orders || 0}</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-2 text-center">
+              <p class="text-xs text-gray-500">المشتريات</p>
+              <p class="font-bold text-gray-900">${(customer.totalPurchases || 0).toFixed(0)} د</p>
+            </div>
+          </div>
+
+          <button onclick="openManageModal('${customer.id}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold transition">
+            <i class="fa-solid fa-gear ml-2"></i>إدارة العميل
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Open Manage Modal
+  function openManageModal(customerId) {
+    managingCustomerId = customerId;
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    const content = document.getElementById('manageContent');
+    content.innerHTML = `
+      <div class="space-y-6">
+        <!-- Tabs -->
+        <div class="flex gap-2 overflow-x-auto scrollbar-hide border-b border-gray-200">
+          <button class="tab-btn active px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="info">معلومات الحساب</button>
+          <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="products">التحكم في المنتجات</button>
+          <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="permissions">الصلاحيات</button>
+          <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="activity">سجل النشاط</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tabContent"></div>
+      </div>
+    `;
+
+    // Setup tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderManageTab(btn.dataset.tab, customer);
+      });
+    });
+
+    // Render first tab
+    renderManageTab('info', customer);
+
+    document.getElementById('manageModal').classList.remove('hidden');
+
+    // Generate QR Code
+    setTimeout(() => {
+      const qrContainer = document.getElementById('manageQRCode');
+      if (qrContainer) {
+        qrContainer.innerHTML = '';
+        new QRCode(qrContainer, {
+          text: customer.loginUrl,
+          width: 150,
+          height: 150
+        });
+      }
+    }, 100);
+  }
+
+  // Render Manage Tab
+  function renderManageTab(tab, customer) {
+    const content = document.getElementById('tabContent');
+
+    if (tab === 'info') {
+      content.innerHTML = `
+        <div class="space-y-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">الاسم</p>
+              <p class="font-semibold text-gray-900">${customer.name}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">المحل</p>
+              <p class="font-semibold text-gray-900">${customer.store}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">الهاتف</p>
+              <p class="font-semibold text-gray-900">${customer.phone}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">المدينة</p>
+              <p class="font-semibold text-gray-900">${customer.city}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">ID</p>
+              <p class="font-semibold text-gray-900">${customer.id}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">Password</p>
+              <p class="font-semibold text-gray-900">${customer.password}</p>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-2">QR Code</p>
+            <div id="manageQRCode" class="flex justify-center"></div>
+                </div>
+        <div class="flex gap-2">
+          <button onclick="sendWhatsApp('${customer.id}')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-semibold transition">
+            <i class="fa-brands fa-whatsapp ml-2"></i>إرسال عبر WhatsApp
+          </button>
+          <button onclick="this.closest('.fixed').remove()" class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold transition">إغلاق</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    setTimeout(() => {
+      new QRCode(document.getElementById('qrcode'), {
+        text: customer.loginUrl,
+        width: 200,
+        height: 200
+      });
+    }, 100);
+  }
+
+  // Send WhatsApp
+  function sendWhatsApp(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    const message = `مرحباً ${customer.name}
+
+تم إنشاء حسابك بنجاح.
+
+بيانات الدخول:
+ID: ${customer.id}
+Password: ${customer.password}
+رابط الدخول المباشر: ${customer.loginUrl}
+
+يمكنك الضغط على الرابط مباشرة للدخول بدون كتابة أي شيء.`;
+
+    const url = `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  }
+
+  // Render Customers
+  function renderCustomers() {
+    const container = document.getElementById('customersContainer');
+    const emptyState = document.getElementById('emptyState');
+
+    let filtered = customers.filter(c => {
+      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           c.store.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           c.phone.includes(searchQuery) ||
+                           c.id.includes(searchQuery);
+      const matchesFilter = currentFilter === 'all' || c.status === currentFilter;
+      return matchesSearch && matchesFilter;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = '';
+      emptyState.classList.remove('hidden');
+    } else {
+      emptyState.classList.add('hidden');
+      container.innerHTML = filtered.map(c => createCustomerCard(c)).join('');
+    }
+  }
+
+  // Create Customer Card
+  function createCustomerCard(customer) {
+    const statusClass = customer.status === 'active'? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+    const statusText = customer.status === 'active'? 'نشط' : 'موقوف';
+
+    return `
+      <div class="customer-card bg-white rounded-2xl soft-shadow border border-gray-100 overflow-hidden">
+        <div class="p-5">
+          <div class="flex items-start gap-4 mb-4">
+            <img src="${customer.image}" alt="${customer.name}" class="w-16 h-16 rounded-xl object-cover">
+            <div class="flex-1">
+              <h3 class="font-bold text-gray-900 text-lg mb-1">${customer.name}</h3>
+              <p class="text-sm text-gray-600 mb-2">${customer.store}</p>
+              <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${statusClass}">${statusText}</span>
+            </div>
+          </div>
+
+          <div class="space-y-2 mb-4 text-sm">
+            <div class="flex items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-location-dot w-4 text-gray-400"></i>
+              <span>${customer.city}</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-phone w-4 text-gray-400"></i>
+              <span>${customer.phone}</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+              <i class="fa-solid fa-id-card w-4 text-gray-400"></i>
+              <span>ID: ${customer.id}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mb-4 pt-4 border-t border-gray-100">
+            <div class="bg-gray-50 rounded-lg p-2 text-center">
+              <p class="text-xs text-gray-500">الطلبات</p>
+              <p class="font-bold text-gray-900">${customer.orders || 0}</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-2 text-center">
+              <p class="text-xs text-gray-500">المشتريات</p>
+              <p class="font-bold text-gray-900">${(customer.totalPurchases || 0).toFixed(0)} د</p>
+            </div>
+          </div>
+
+          <button onclick="openManageModal('${customer.id}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold transition">
+            <i class="fa-solid fa-gear ml-2"></i>إدارة العميل
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Open Manage Modal
+  function openManageModal(customerId) {
+    managingCustomerId = customerId;
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    const content = document.getElementById('manageContent');
+    content.innerHTML = `
+      <div class="space-y-6">
+        <!-- Tabs -->
+        <div class="flex gap-2 overflow-x-auto scrollbar-hide border-b border-gray-200">
+          <button class="tab-btn active px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="info">معلومات الحساب</button>
+          <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="products">التحكم في المنتجات</button>
+          <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="permissions">الصلاحيات</button>
+          <button class="tab-btn px-4 py-2 rounded-t-lg font-semibold transition whitespace-nowrap" data-tab="activity">سجل النشاط</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tabContent"></div>
+      </div>
+    `;
+
+    // Setup tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderManageTab(btn.dataset.tab, customer);
+      });
+    });
+
+    // Render first tab
+    renderManageTab('info', customer);
+
+    document.getElementById('manageModal').classList.remove('hidden');
+
+    // Generate QR Code
+    setTimeout(() => {
+      const qrContainer = document.getElementById('manageQRCode');
+      if (qrContainer) {
+        qrContainer.innerHTML = '';
+        new QRCode(qrContainer, {
+          text: customer.loginUrl,
+          width: 150,
+          height: 150
+        });
+      }
+    }, 100);
+  }
+
+  // Render Manage Tab
+  function renderManageTab(tab, customer) {
+    const content = document.getElementById('tabContent');
+
+    if (tab === 'info') {
+      content.innerHTML = `
+        <div class="space-y-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">الاسم</p>
+              <p class="font-semibold text-gray-900">${customer.name}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">المحل</p>
+              <p class="font-semibold text-gray-900">${customer.store}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">الهاتف</p>
+              
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">المدينة</p>
+              <p class="font-semibold text-gray-900">${customer.city}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">ID</p>
+              <p class="font-semibold text-gray-900">${customer.id}</p>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p class="text-xs text-gray-500 mb-1">Password</p>
+              <p class="font-semibold text-gray-900">${customer.password}</p>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-2">QR Code</p>
+            <div id="manageQRCode" class="flex justify-center"></div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-2">رابط الدخول</p>
+            <div class="flex gap-2">
+              <input type="text" value="${customer.loginUrl}" readonly class="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm">
+              <button onclick="copyText('${customer.loginUrl}')" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">
+                <i class="fa-solid fa-copy"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <button onclick="sendWhatsApp('${customer.id}')" class="bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-semibold transition">
+              <i class="fa-brands fa-whatsapp ml-2"></i>إرسال بيانات الدخول
+            </button>
+            <button onclick="downloadQR('${customer.id}')" class="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition">
+              <i class="fa-solid fa-download ml-2"></i>تحميل QR Code
+            </button>
+            <button onclick="toggleCustomerStatus('${customer.id}')" class="bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-semibold transition">
+              <i class="fa-solid fa-power-off ml-2"></i>${customer.status === 'active'? 'إيقاف الحساب' : 'تفعيل الحساب'}
+            </button>
+            <button onclick="resetPassword('${customer.id}')" class="bg-violet-500 hover:bg-violet-600 text-white py-3 rounded-xl font-semibold transition">
+              <i class="fa-solid fa-key ml-2"></i>إعادة تعيين كلمة المرور
+            </button>
+          </div>
+
+          <button onclick="deleteCustomer('${customer.id}')" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
+            <i class="fa-solid fa-trash ml-2"></i>حذف العميل
+          </button>
+        </div>
+      `;
+    } else if (tab === 'products') {
+      content.innerHTML = `
+        <div class="space-y-2 max-h-96 overflow-y-auto">
+          ${products.map(p => `
+            <div class="bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-3">
+              <img src="${p.image || 'https://via.placeholder.com/50'}" class="w-12 h-12 rounded-lg object-cover">
+              <div class="flex-1">
+                <p class="font-semibold text-sm text-gray-900">${p.name}</p>
+                <p class="text-xs text-gray-500">السعر الأصلي: ${(p.price || 0).toFixed(2)} درهم</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="number" placeholder="سعر خاص" value="${customer.productPrices?.[p.id] || ''}" 
+                       onchange="updateCustomerPrice('${customer.id}', ${p.id}, this.value)"
+                       class="w-20 px-2 py-1 text-sm border border-gray-200 rounded-lg focus:border-emerald-500 outline-none">
+                <label class="switch">
+                  <input type="checkbox" ${customer.productVisibility?.[p.id]!== false? 'checked' : ''} 
+                         onchange="toggleProductVisibility('${customer.id}', ${p.id}, this.checked)">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else if (tab === 'permissions') {
+      const perms = customer.permissions || {};
+      content.innerHTML = `
+        <div class="space-y-3">
+          ${[
+            { key: 'showPrices', label: 'إظهار الأسعار' },
+            { key: 'showStock', label: 'إظهار المخزون' },
+            { key: 'showDiscounts', label: 'إظهار الخصومات' },
+            { key: 'showNewProducts', label: 'إظهار المنتجات الجديدة' },
+            { key: 'showHiddenProducts', label: 'إظهار المنتجات المخفية' },
+            { key: 'allowOrder', label: 'السماح بالطلب' },
+            { key: 'allowFavorite', label: 'السماح بالمفضلة' },
+            { key: 'allowOffers', label: 'السماح برؤية العروض' },
+            { key: 'allowProductDetails', label: 'السماح بمشاهدة تفاصيل المنتج' },
+            { key: 'allowUnavailable', label: 'السماح برؤية المنتجات غير المتوفرة' },
+            { key: 'allowSuggested', label: 'السماح برؤية المنتجات المقترحة' }
+          ].map(perm => `
+            <div class="flex items-center justify-between bg-gray-50 rounded-xl p-4">
+              <span class="font-medium text-gray-700">${perm.label}</span>
+              <label class="switch">
+                <input type="checkbox" ${perms[perm.key]!== false? 'checked' : ''} 
+                       onchange="updatePermission('${customer.id}', '${perm.key}', this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else if (tab === 'activity') {
+      content.innerHTML = `
+        <div class="space-y-3">
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">آخر تسجيل دخول</p>
+            <p class="font-semibold text-gray-900">${customer.lastLogin? new Date(customer.lastLogin).toLocaleString('ar-MA') : 'لم يسجل دخول بعد'}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">آخر طلب</p>
+            <p class="font-semibold text-gray-900">${customer.lastOrder? new Date(customer.lastOrder).toLocaleString('ar-MA') : 'لا يوجد'}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">آخر منتج شاهده</p>
+            <p class="font-semibold text-gray-900">${customer.lastProduct || 'لا يوجد'}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">عدد مرات الدخول</p>
+            <p class="font-semibold text-gray-900">${customer.loginCount || 0}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">الجهاز المستعمل</p>
+            <p class="font-semibold text-gray-900">${customer.device || 'غير معروف'}</p>
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="text-xs text-gray-500 mb-1">نظام التشغيل</p>
+            <p class="font-semibold text-gray-900">${customer.os || 'غير معروف'}</p>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // Close Manage Modal
+  function closeManageModal() {
+    document.getElementById('manageModal').classList.add('hidden');
+  }
+
+  // Update Customer Price
+  function updateCustomerPrice(customerId, productId, price) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    if (!customer.productPrices) customer.productPrices = {};
+
+    if (price && parseFloat(price) > 0) {
+      customer.productPrices[productId] = parseFloat(price);
+    } else {
+      delete customer.productPrices[productId];
+    }
+
+    saveCustomers();
+    showToast('تم تحديث السعر');
+  }
+
+  // Toggle Product Visibility
+  function toggleProductVisibility(customerId, productId, visible) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    if (!customer.productVisibility) customer.productVisibility = {};
+    customer.productVisibility[productId] = visible;
+
+    saveCustomers();
+    showToast(visible? 'تم إظهار المنتج' : 'تم إخفاء المنتج');
+  }
+
+  // Update Permission
+  function updatePermission(customerId, permission, value) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    if (!customer.permissions) customer.permissions = {};
+    customer.permissions[permission] = value;
+
+    saveCustomers();
+    
+              saveCustomers();
+    showToast('تم تحديث الصلاحية');
+  }
+
+  // Toggle Customer Status
+  function toggleCustomerStatus(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    customer.status = customer.status === 'active'? 'suspended' : 'active';
+    saveCustomers();
+    renderCustomers();
+    closeManageModal();
+    showToast(customer.status === 'active'? 'تم تفعيل الحساب' : 'تم إيقاف الحساب');
+  }
+
+  // Reset Password
+  function resetPassword(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    const newPassword = Math.random().toString(36).slice(-8);
+    customer.password = newPassword;
+    saveCustomers();
+    showToast(`كلمة المرور الجديدة: ${newPassword}`);
+    renderManageTab('info', customer);
+  }
+
+  // Delete Customer
+  function deleteCustomer(customerId) {
+    if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
+
+    customers = customers.filter(c => c.id!== customerId);
+    saveCustomers();
+    renderCustomers();
+    closeManageModal();
+    showToast('تم حذف العميل');
+  }
+
+  // Download QR
+  function downloadQR(customerId) {
+    const customer = customers.find(c => c.id === customerId);
+    if (!customer) return;
+
+    const canvas = document.querySelector('#manageQRCode canvas');
+    if (canvas) {
+      const link = document.createElement('a');
+      link.download = `QR_${customer.id}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+  }
+
+  // Copy Text
+  function copyText(text) {
+    navigator.clipboard.writeText(text);
+    showToast('تم النسخ');
+  }
+
+  // Setup Event Listeners
+  function setupEventListeners() {
+    // Search
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderCustomers();
+    });
+
+    // Filter
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        currentFilter = pill.dataset.filter;
+        document.querySelectorAll('.filter-pill').forEach(p => {
+          p.classList.remove('active', 'bg-emerald-600', 'text-white', 'shadow-md');
+          p.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+        });
+        pill.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+        pill.classList.add('active', 'bg-emerald-600', 'text-white', 'shadow-md');
+        renderCustomers();
+      });
+    });
+  }
+
+  // Save Customers
+  function saveCustomers() {
+    localStorage.setItem('customers', JSON.stringify(customers));
+    updateStats();
+  }
+
+  // Show Toast
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const icon = document.getElementById('toastIcon');
+    document.getElementById('toastMessage').textContent = message;
+
+    if (type === 'error') {
+      icon.className = 'fa-solid fa-circle-xmark text-red-400';
+    } else {
+      icon.className = 'fa-solid fa-check-circle text-emerald-400';
+    }
+
+    toast.classList.remove('hidden');
+    setTimeout(() => toast.classList.add('hidden'), 2000);
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
