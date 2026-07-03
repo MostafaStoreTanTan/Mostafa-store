@@ -537,27 +537,27 @@ Password: ${customer.password}
 }
 
   // Render Customers
-  function renderCustomers() {
-    const container = document.getElementById('customersContainer');
-    const emptyState = document.getElementById('emptyState');
+function renderCustomers() {
+  const container = document.getElementById('customersContainer');
+  const emptyState = document.getElementById('emptyState');
 
-    let filtered = customers.filter(c => {
-      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           c.store.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           c.phone.includes(searchQuery) ||
-                           c.id.includes(searchQuery);
-      const matchesFilter = currentFilter === 'all' || c.status === currentFilter;
-      return matchesSearch && matchesFilter;
-    });
+  let filtered = customers.filter(c => {
+    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         c.store.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         c.phone.includes(searchQuery) ||
+                         c.id.includes(searchQuery);
+    const matchesFilter = currentFilter === 'all' || c.status === currentFilter;
+    return matchesSearch && matchesFilter;
+  });
 
-    if (filtered.length === 0) {
-      container.innerHTML = '';
-      emptyState.classList.remove('hidden');
-    } else {
-      emptyState.classList.add('hidden');
-      container.innerHTML = filtered.map(c => createCustomerCard(c)).join('');
-    }
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    emptyState.classList.remove('hidden');
+  } else {
+    emptyState.classList.add('hidden');
+    container.innerHTML = filtered.map(c => createCustomerCard(c)).join('');
   }
+}
 
   // Create Customer Card
   function createCustomerCard(customer) {
