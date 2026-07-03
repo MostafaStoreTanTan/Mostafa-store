@@ -1048,18 +1048,16 @@ Password: ${customer.password}
   }
 
   // Update Permission
-  function updatePermission(customerId, permission, value) {
-    const customer = customers.find(c => c.id === customerId);
-    if (!customer) return;
+function updatePermission(customerId, permission, value) {
+  const customer = customers.find(c => c.id === customerId);
+  if (!customer) return;
 
-    if (!customer.permissions) customer.permissions = {};
-    customer.permissions[permission] = value;
+  if (!customer.permissions) customer.permissions = {};
+  customer.permissions[permission] = value;
 
-    saveCustomers();
-    
-              saveCustomers();
-    showToast('تم تحديث الصلاحية');
-  }
+  saveCustomers();
+  showToast('تم تحديث الصلاحية');
+}
 
   // Toggle Customer Status
   function toggleCustomerStatus(customerId) {
