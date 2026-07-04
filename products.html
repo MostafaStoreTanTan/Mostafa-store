@@ -453,12 +453,12 @@
   let deletingProductId = null;
 
   // Initialize
-  document.addEventListener('DOMContentLoaded', () => {
-    loadProducts();
-    renderProducts();
-    updateStats();
-    setupEventListeners();
-  });
+  document.addEventListener('DOMContentLoaded', async () => {
+  await loadProducts();
+  renderProducts();
+  updateStats();
+  setupEventListeners();
+});
 
 import { db } from "./firebase.js";
 import {
