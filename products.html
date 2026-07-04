@@ -460,22 +460,38 @@
     setupEventListeners();
   });
 
-  function loadProducts() {
-    const stored = localStorage.getItem('products');
-    if (stored) {
-      products = JSON.parse(stored);
-      // تأكد أن كل منتج عندو hidden
-      products = products.map(p => ({...p, hidden: p.hidden || false }));
-    } else {
-      products = [...initialProducts];
-      saveProducts();
-    }
-  }
+import { db } from "./firebase.js";
+import {
+  ref,
+  get,
+  set
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
-  function saveProducts() {
-    localStorage.setItem('products', JSON.stringify(products));
-  }
+async function loadProducts() {
+  const snapshot = await get(ref(db, "products"));
 
+  if (snapshot.exists()) {
+    products = Object.values(snapshot.val());
+
+    products = products.map(p => ({
+      ...p,
+      hidden: p.hidden || false
+    }));
+  } else {
+    products = [...initialProducts];
+    await saveProducts();
+  }
+}
+
+async function saveProducts() {
+  const data = {};
+
+  products.forEach(product => {
+    data[product.id] = product;
+  });
+
+  await set(ref(db, "products"), data);
+}
   function setupEventListeners() {
     document.getElementById('fabBtn').addEventListener('click', openAddModal);
     document.getElementById('filterBtn').addEventListener('click', openFilterModal);
