@@ -209,24 +209,33 @@
   const sideMenuBackdrop = document.getElementById('sideMenuBackdrop');
 
   // Initialize App
-  function init() {
-    loadProducts();
-    setupEventListeners();
-  }
+  async function init() {
+  await loadProducts();
+  setupEventListeners();
+}
 
   // Load Products from localStorage
-  function loadProducts() {
-    const stored = localStorage.getItem('products');
-    if (stored) {
-      const products = JSON.parse(stored);
-      // Filter only visible products
-      allProducts = products.filter(p => p.hidden === false || p.hidden === undefined);
-    } else {
-      allProducts = [];
-    }
-    renderCategories();
-    renderProducts();
+  import { db } from "./firebase.js";
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+async function loadProducts() {
+  const snapshot = await get(ref(db, "products"));
+
+  if (snapshot.exists()) {
+    allProducts = Object.values(snapshot.val());
+
+    // إذا بغيت الرئيسية تبين جميع المنتجات
+    // لا تستعمل hidden هنا
+  } else {
+    allProducts = [];
   }
+
+  performSearch();
+  renderCategories();
+}
 
   // Render Categories
   function renderCategories() {
@@ -374,19 +383,13 @@
   }
 
   // Listen for localStorage changes from products.html
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'products') {
-      loadProducts();
-    }
-  });
 
   // Reload products when page becomes visible
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      loadProducts();
-    }
-  });
-
+  document.addEventListener('visibilitychange', async () => {
+  if (!document.hidden) {
+    await loadProducts();
+  }
+});
   // Initialize on page load
   document.addEventListener('DOMContentLoaded', init);
 </script>
