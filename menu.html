@@ -192,6 +192,14 @@
   </nav>
 
 <script type="module">
+  
+  import { db } from "./firebase.js";
+
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+  
   // Global State
   let allProducts = [];
   let filteredProducts = [];
