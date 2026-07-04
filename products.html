@@ -512,6 +512,8 @@ async function saveProducts() {
     const emptyState = document.getElementById('emptyState');
 
     let filtered = products.filter(p => {
+
+    if (p.hidden) return false;
       const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
       const isLow = p.stock <= p.lowStockThreshold;
@@ -763,9 +765,6 @@ if (menuBtn) {
 }
 
 // إصلاح أزرار onclick
-window.toggleHideProduct = toggleHideProduct;
-window.editProduct = editProduct;
-window.deleteProduct = deleteProduct;
 window.openAddModal = openAddModal;
 window.closeProductModal = closeProductModal;
 window.closeDeleteModal = closeDeleteModal;
