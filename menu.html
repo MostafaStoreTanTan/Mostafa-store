@@ -191,7 +191,7 @@
     </div>
   </nav>
 
-<script>
+<script type="module">
   // Global State
   let allProducts = [];
   let filteredProducts = [];
@@ -210,31 +210,31 @@
 
   // Initialize App
   async function init() {
-  await loadProducts();
-  setupEventListeners();
+    await loadProducts();
+    setupEventListeners();
 }
 
   // Load Products from localStorage
-  import { db } from "./firebase.js";
-import {
-  ref,
-  get
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+  async function loadProducts() {
 
-async function loadProducts() {
-  const snapshot = await get(ref(db, "products"));
+    const snapshot = await get(ref(db, "products"));
 
-  if (snapshot.exists()) {
-    allProducts = Object.values(snapshot.val());
+    if (snapshot.exists()) {
 
-    // إذا بغيت الرئيسية تبين جميع المنتجات
-    // لا تستعمل hidden هنا
-  } else {
-    allProducts = [];
-  }
+        const products = Object.values(snapshot.val());
 
-  performSearch();
-  renderCategories();
+        allProducts = products.filter(
+            p => p.hidden === false || p.hidden === undefined
+        );
+
+    } else {
+
+        allProducts = [];
+
+    }
+
+    performSearch();
+    renderCategories();
 }
 
   // Render Categories
@@ -383,13 +383,19 @@ async function loadProducts() {
   }
 
   // Listen for localStorage changes from products.html
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'products') {
+      loadProducts();
+    }
+  });
 
   // Reload products when page becomes visible
-  document.addEventListener('visibilitychange', async () => {
-  if (!document.hidden) {
-    await loadProducts();
-  }
-});
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      loadProducts();
+    }
+  });
+
   // Initialize on page load
   document.addEventListener('DOMContentLoaded', init);
 </script>
