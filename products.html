@@ -354,7 +354,7 @@
     </div>
   </div>
 
-<script>
+<script type="module">
   // Initial Demo Data - الأثمنة كاملين 0
   const initialProducts = [
   { id: 1, name: 'Asperox Magic Yellow', category: 'منظفات', price: 0, stock: 0, lowStockThreshold: 10, image: 'https://i.ibb.co/Qjz9xgdQ/1779799104968.png', hidden: false },
@@ -598,7 +598,7 @@ async function saveProducts() {
     renderProducts();
   }
 
-  async function handleFormSubmit(e) {
+ function handleFormSubmit(e) {
     searchQuery = e.target.value;
     renderProducts();
   }
@@ -764,9 +764,6 @@ if (menuBtn) {
   });
 }
 </script>
-
-<script type="module" src="firebase.js"></script>
-<script type="module" src="products.js"></script>
 
 </body>
 </html>
