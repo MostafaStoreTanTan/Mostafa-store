@@ -598,11 +598,6 @@ async function saveProducts() {
     renderProducts();
   }
 
- function handleFormSubmit(e) {
-    searchQuery = e.target.value;
-    renderProducts();
-  }
-
   function openAddModal() {
     editingProductId = null;
     document.getElementById('modalTitle').textContent = 'إضافة منتج جديد';
@@ -631,7 +626,7 @@ async function saveProducts() {
     document.getElementById('productForm').reset();
   }
 
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e) {
     e.preventDefault();
 
     const productData = {
