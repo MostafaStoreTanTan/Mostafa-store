@@ -608,7 +608,7 @@ async function saveProducts() {
     document.getElementById('productModal').classList.remove('hidden');
   }
 
-  function editProduct(id) {
+  window.editProduct = function(id) {
     const product = products.find(p => p.id === id);
     if (!product) return;
 
@@ -661,7 +661,7 @@ async function saveProducts() {
     closeProductModal();
   }
 
-  async function toggleHideProduct(id) {
+  window.toggleHideProduct = async function(id) {
     const product = products.find(p => p.id === id);
     if (product) {
       product.hidden =!product.hidden;
@@ -671,7 +671,7 @@ async function saveProducts() {
     }
   }
 
-  function deleteProduct(id) {
+  window.deleteProduct = function(id) {
     deletingProductId = id;
     document.getElementById('deleteModal').classList.remove('hidden');
   }
@@ -761,6 +761,22 @@ if (menuBtn) {
     showToast('القائمة الجانبية - جاهزة للتطوير', 'info');
   });
 }
+
+// إصلاح أزرار onclick
+window.toggleHideProduct = toggleHideProduct;
+window.editProduct = editProduct;
+window.deleteProduct = deleteProduct;
+window.openAddModal = openAddModal;
+window.closeProductModal = closeProductModal;
+window.closeDeleteModal = closeDeleteModal;
+window.openFilterModal = openFilterModal;
+window.closeFilterModal = closeFilterModal;
+window.applyFilters = applyFilters;
+window.resetFilters = resetFilters;
+window.navigateToHome = navigateToHome;
+window.navigateToCustomers = navigateToCustomers;
+window.navigateToSales = navigateToSales;
+window.navigateToReports = navigateToReports;
 </script>
 
 </body>
