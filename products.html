@@ -513,15 +513,17 @@ async function saveProducts() {
 
     let filtered = products.filter(p => {
 
-    if (p.hidden) return false;
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
-      const isLow = p.stock <= p.lowStockThreshold;
-      const matchesStatus = statusFilter === 'all' ||
-                           (statusFilter === 'low' && isLow) ||
-                           (statusFilter === 'available' &&!isLow);
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
+    const isLow = p.stock <= p.lowStockThreshold;
+
+    const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'low' && isLow) ||
+        (statusFilter === 'available' && !isLow);
+
+    return matchesSearch && matchesCategory && matchesStatus;
+});
 
     if (filtered.length === 0) {
       container.innerHTML = '';
