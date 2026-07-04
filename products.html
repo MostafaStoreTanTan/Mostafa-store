@@ -495,7 +495,10 @@ async function saveProducts() {
   function setupEventListeners() {
     document.getElementById('fabBtn').addEventListener('click', openAddModal);
     document.getElementById('filterBtn').addEventListener('click', openFilterModal);
-    document.getElementById('searchInput').addEventListener('input', handleSearch);
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+    searchQuery = e.target.value;
+    renderProducts();
+});
     document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
     document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
 
