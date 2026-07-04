@@ -598,7 +598,7 @@ async function saveProducts() {
     renderProducts();
   }
 
-  function handleSearch(e) {
+  async function handleFormSubmit(e) {
     searchQuery = e.target.value;
     renderProducts();
   }
@@ -657,17 +657,17 @@ async function saveProducts() {
       showToast('تم إضافة المنتج بنجاح', 'success');
     }
 
-    saveProducts();
+    await saveProducts();
     renderProducts();
     updateStats();
     closeProductModal();
   }
 
-  function toggleHideProduct(id) {
+  async function toggleHideProduct(id) {
     const product = products.find(p => p.id === id);
     if (product) {
       product.hidden =!product.hidden;
-      saveProducts();
+      await saveProducts();
       renderProducts();
       showToast(product.hidden? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
     }
@@ -683,10 +683,10 @@ async function saveProducts() {
     deletingProductId = null;
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (deletingProductId) {
       products = products.filter(p => p.id!== deletingProductId);
-      saveProducts();
+      await saveProducts();
       renderProducts();
       updateStats();
       showToast('تم حذف المنتج بنجاح', 'success');
