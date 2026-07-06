@@ -473,17 +473,19 @@
         productVisibility: {}
       };
 
-      customers.push(newCustomer);
-      showToast('تم إضافة العميل بنجاح');
+      const newRef = push(ref(db, "customers"));
 
-      setTimeout(() => {
-        showLoginInfo(newCustomer);
-      }, 500);
-    }
+await set(newRef, newCustomer);
 
-    saveCustomers();
-    closeCustomerModal();
-    renderCustomers();
+showToast("تم إضافة العميل بنجاح");
+
+await loadData();
+
+closeCustomerModal();
+
+setTimeout(() => {
+    showLoginInfo(newCustomer);
+}, 500);
   });
 
   // File to Base64
