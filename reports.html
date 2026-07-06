@@ -802,8 +802,19 @@ window.confirmReceiveProduct = async function(index) {
   const productRef = ref(db, 'products/' + transfer.products[index].productId);
   const productSnap = await get(productRef);
   const currentStock = productSnap.val()?.stock || 0;
-  await update(productRef, { stock: currentStock + transfer.products[index].totalPieces });
+  await update(productRef, {
+    stock: currentStock + transfer.products[index].totalPieces
+});
 
+// أضف هذا مباشرة بعده
+
+await push(ref(db, "sales"), {
+    productId: transfer.products[index].productId,
+    productName: transfer.products[index].productName,
+    quantity: transfer.products[index].totalPieces,
+    date: new Date().toISOString().split("T")[0],
+    timestamp: Date.now()
+});
   if (transfer.receivedCount === transfer.products.length) {
     transfer.status = 'completed';
     transfer.completedAt = Date.now();
@@ -826,7 +837,19 @@ window.confirmAllReceive = async function() {
       const productRef = ref(db, 'products/' + transfer.products[i].productId);
       const productSnap = await get(productRef);
       const currentStock = productSnap.val()?.stock || 0;
-      await update(productRef, { stock: currentStock + transfer.products[i].totalPieces });
+      await update(productRef, {
+    stock: currentStock + transfer.products[i].totalPieces
+});
+
+// أضف هذا مباشرة بعده
+
+await push(ref(db, "sales"), {
+    productId: transfer.products[i].productId,
+    productName: transfer.products[i].productName,
+    quantity: transfer.products[i].totalPieces,
+    date: new Date().toISOString().split("T")[0],
+    timestamp: Date.now()
+});
       transfer.products[i].received = true;
     }
   }
