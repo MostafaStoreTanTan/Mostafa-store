@@ -847,34 +847,54 @@ function renderCustomers() {
   }
 
   // Update Customer Price
-  function updateCustomerPrice(customerId, productId, price) {
+  async function updateCustomerPrice(customerId, productId, price) {
+
     const customer = customers.find(c => c.id === customerId);
+
     if (!customer) return;
 
-    if (!customer.productPrices) customer.productPrices = {};
+    const productPrices = customer.productPrices || {};
 
     if (price && parseFloat(price) > 0) {
-      customer.productPrices[productId] = parseFloat(price);
+        productPrices[productId] = parseFloat(price);
     } else {
-      delete customer.productPrices[productId];
+        delete productPrices[productId];
     }
 
-    saveCustomers();
-    showToast('تم تحديث السعر');
-  }
+    await update(
+        ref(db, "customers/" + customer.firebaseKey),
+        {
+            productPrices: productPrices
+        }
+    );
+
+    await loadData();
+
+    showToast("تم تحديث السعر");
+}
 
   // Toggle Product Visibility
-  function toggleProductVisibility(customerId, productId, visible) {
+  async function toggleProductVisibility(customerId, productId, visible) {
+
     const customer = customers.find(c => c.id === customerId);
+
     if (!customer) return;
 
-    if (!customer.productVisibility) customer.productVisibility = {};
-    customer.productVisibility[productId] = visible;
+    const productVisibility = customer.productVisibility || {};
 
-    saveCustomers();
-    showToast(visible? 'تم إظهار المنتج' : 'تم إخفاء المنتج');
-  }
+    productVisibility[productId] = visible;
 
+    await update(
+        ref(db, "customers/" + customer.firebaseKey),
+        {
+            productVisibility: productVisibility
+        }
+    );
+
+    await loadData();
+
+    showToast(visible ? "تم إظهار المنتج" : "تم إخفاء المنتج");
+}
   // Update Permission
 async function updatePermission(customerId, permission, value) {
 
