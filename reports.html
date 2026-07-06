@@ -676,14 +676,14 @@ function renderStep3() {
 }
 
 window.shareBon = function() {
-  let text = 'بون الشارج\n\n';
+  let text = 'بون الشحن\n\n';
   parsedProducts.forEach(p => {
     text += `${p.productName}\n${p.boxes} × ${p.piecesPerBox} = ${p.totalPieces} قطعة\n\n`;
   });
   text += `الإجمالي: ${parsedProducts.reduce((sum, p) => sum + p.totalPieces, 0)} قطعة`;
 
   if (navigator.share) {
-    navigator.share({ title: 'بون الشارج', text: text });
+    navigator.share({ title: 'بون الشحن', text: text });
   } else {
     navigator.clipboard.writeText(text);
     showToast('تم نسخ البون');
@@ -713,7 +713,7 @@ window.saveStockTransfer = async function() {
   await set(newRef, transfer);
   currentTransferId = newRef.key;
 
-  showToast('تم حفظ الشارج بنجاح');
+  showToast('تم حفظ الشحن بنجاح');
   setTimeout(() => showReceiveStockPage(currentTransferId), 1000);
 }
 
@@ -759,7 +759,7 @@ async function showReceiveStockPage(transferId) {
       </div>
 
       <div class="bg-gray-50 rounded-xl p-4 mb-6">
-        <p class="text-sm font-bold text-gray-900 mb-3">ملخص الشارج</p>
+        <p class="text-sm font-bold text-gray-900 mb-3">ملخص الشحن
         <div class="grid grid-cols-3 gap-3 text-center">
           <div>
             <p class="text-xs text-gray-500">إجمالي القطع</p>
