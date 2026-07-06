@@ -388,10 +388,11 @@ function renderCustomers() {
   const emptyState = document.getElementById('emptyState');
 
   let filtered = customers.filter(c => {
-    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         c.phone.includes(searchQuery) ||
-                         c.id.includes(searchQuery) ||
-                         c.city.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+    (c.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (c.phone || "").includes(searchQuery) ||
+    (String(c.id || "")).includes(searchQuery) ||
+    (c.city || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = currentFilter === 'all' || c.status === currentFilter;
     return matchesSearch && matchesFilter;
   });
