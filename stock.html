@@ -450,7 +450,15 @@ ${p.totalPieces} قطعة
 window.shareBon = function() {
   let text = 'بون الشارج\n\n';
   parsedProducts.forEach(p => {
-    text += `${p.productName}\n${p.boxes} × ${p.piecesPerBox} = ${p.totalPieces} قطعة\n\n`;
+    text += `${p.productName}\n`;
+
+text += `${p.boxes} كرتونة`;
+
+if (p.totalPieces % p.piecesPerBox !== 0) {
+    text += ` + ${p.totalPieces % p.piecesPerBox} قطعة`;
+}
+
+text += "\n\n";
   });
   text += `الإجمالي: ${parsedProducts.reduce((sum, p) => sum + p.totalPieces, 0)} قطعة`;
 
