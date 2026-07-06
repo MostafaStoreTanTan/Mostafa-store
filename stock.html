@@ -525,7 +525,17 @@ function renderReceivePage(transfer) {
             <img src="${p.productImage}" class="w-16 h-16 rounded-lg object-cover">
             <div class="flex-1">
               <p class="font-bold text-gray-900">${p.productName}</p>
-              <p class="text-sm text-gray-600">${p.boxes} × ${p.piecesPerBox} = ${p.totalPieces} قطعة</p>
+              <p class="text-sm mt-1">
+<span class="text-amber-600 font-bold">
+📦 ${p.boxes} كرتونة
+</span>
+
+${p.totalPieces % p.piecesPerBox !== 0 ? `
+<span class="text-blue-600 font-bold">
+ + ${p.totalPieces % p.piecesPerBox} قطعة
+</span>
+` : ""}
+</p>
               <p class="text-xs ${p.received? 'text-emerald-600' : 'text-amber-600'} font-semibold mt-1">
                 ${p.received? 'تم الاستلام' : 'في الانتظار'}
               </p>
