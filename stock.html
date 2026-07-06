@@ -613,6 +613,8 @@ await update(productRef, {
     stock: currentStock - transfer.products[index].totalPieces
 });
 
+await updateStatistics();
+
   if (transfer.receivedCount === transfer.products.length) {
     transfer.status = 'completed';
     transfer.completedAt = Date.now();
@@ -638,8 +640,10 @@ window.confirmAllReceive = async function() {
       if (currentStock >= transfer.products[i].totalPieces) {
 
     await update(productRef, {
-        stock: currentStock - transfer.products[i].totalPieces
-    });
+    stock: currentStock - transfer.products[i].totalPieces
+});
+
+await updateStatistics();
 
 }
       transfer.products[i].received = true;
