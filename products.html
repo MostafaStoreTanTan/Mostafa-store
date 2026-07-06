@@ -453,15 +453,21 @@
   let deletingProductId = null;
 
   // Initialize
-  document.addEventListener('DOMContentLoaded', async () => {
+  import { db } from "./firebase.js";
+import {
+  ref,
+  get,
+  set,
+  push,
+  update
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
   await loadProducts();
   renderProducts();
   updateStats();
   setupEventListeners();
 });
-
-<script type="module">
-import { db } from "./firebase.js";
 import {
   ref,
   get,
@@ -779,7 +785,7 @@ window.navigateToHome = navigateToHome;
 window.navigateToCustomers = navigateToCustomers;
 window.navigateToSales = navigateToSales;
 window.navigateToReports = navigateToReports;
-</script>
 
+</script>
 </body>
 </html>
