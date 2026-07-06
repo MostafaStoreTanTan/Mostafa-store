@@ -340,12 +340,23 @@
   }
 
   // Load Data
-  function loadData() {
-    customers = JSON.parse(localStorage.getItem('customers') || '[]');
-    products = JSON.parse(localStorage.getItem('products') || '[]');
-    updateStats();
-  }
+  async function loadData() {
+    const snapshot = await get(ref(db, "customers"));
 
+    customers = [];
+
+    if (snapshot.exists()) {
+        snapshot.forEach(child => {
+            customers.push({
+                firebaseKey: child.key,
+                ...child.val()
+            });
+        });
+    }
+
+    updateStats();
+    renderCustomers();
+}
   // Update Stats
   function updateStats() {
     document.getElementById('totalCustomers').textContent = customers.length;
