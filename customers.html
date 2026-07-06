@@ -408,21 +408,30 @@
     }
 
     if (editingCustomerId) {
-      // Update existing
-      const index = customers.findIndex(c => c.id === editingCustomerId);
-      if (index!== -1) {
-        customers[index] = {
-        ...customers[index],
-          name,
-          store,
-          phone,
-          city,
-          password,
-          image: imageUrl || customers[index].image
-        };
-        showToast('تم تحديث العميل بنجاح');
+
+  const customer = customers.find(c => c.id === editingCustomerId);
+
+  if (customer) {
+
+    await update(
+      ref(db, "customers/" + customer.firebaseKey),
+      {
+        name,
+        store,
+        phone,
+        city,
+        password,
+        image: imageUrl || customer.image
       }
-    } else {
+    );
+
+    showToast("تم تحديث العميل بنجاح");
+
+    await loadData();
+
+  }
+
+} else {
       // Add new
       const id = generateCustomerId();
       const loginUrl = `${window.location.origin}/login.html?id=${id}`;
