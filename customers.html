@@ -912,19 +912,24 @@ function updatePermission(customerId, permission, value) {
   }
 
   // Delete Customer
-  function deleteCustomer(customerId) {
+  async function deleteCustomer(customerId) {
+
     if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
 
     const customer = customers.find(c => c.id === customerId);
 
-if (customer) {
+    if (!customer) return;
 
-  await remove(
-    ref(db, "customers/" + customer.firebaseKey)
-  );
+    await remove(
+        ref(db, "customers/" + customer.firebaseKey)
+    );
 
-  showToast("تم حذف العميل");
+    await loadData();
 
+    closeManageModal();
+
+    showToast("تم حذف العميل");
+  
   await loadData();
 
 }
