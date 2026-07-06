@@ -353,8 +353,10 @@ window.goToStep3 = function() {
   }
 
   parsedProducts.forEach(p => {
-    p.totalPieces = p.boxes * p.piecesPerBox;
-  });
+    p.boxes = Math.floor(p.quantity / p.piecesPerBox);
+    p.extraPieces = p.quantity % p.piecesPerBox;
+    p.totalPieces = p.quantity;
+});
 
   renderStep3();
 }
