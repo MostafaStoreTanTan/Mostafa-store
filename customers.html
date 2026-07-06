@@ -876,17 +876,27 @@ function renderCustomers() {
   }
 
   // Update Permission
-function updatePermission(customerId, permission, value) {
-  const customer = customers.find(c => c.id === customerId);
-  if (!customer) return;
+async function updatePermission(customerId, permission, value) {
 
-  if (!customer.permissions) customer.permissions = {};
-  customer.permissions[permission] = value;
+    const customer = customers.find(c => c.id === customerId);
 
-  saveCustomers();
-  showToast('تم تحديث الصلاحية');
+    if (!customer) return;
+
+    const permissions = customer.permissions || {};
+
+    permissions[permission] = value;
+
+    await update(
+        ref(db, "customers/" + customer.firebaseKey),
+        {
+            permissions: permissions
+        }
+    );
+
+    await loadData();
+
+    showToast("تم تحديث الصلاحية");
 }
-
   // Toggle Customer Status
   async function toggleCustomerStatus(customerId) {
 
