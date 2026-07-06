@@ -613,8 +613,15 @@ await update(productRef, {
     stock: currentStock - transfer.products[index].totalPieces
 });
 
-await updateStatistics();
+await push(ref(db, "sales"), {
+    productId: transfer.products[index].productId,
+    productName: transfer.products[index].productName,
+    quantity: transfer.products[index].totalPieces,
+    date: new Date().toISOString().split("T")[0],
+    timestamp: Date.now()
+});
 
+await updateStatistics();
   if (transfer.receivedCount === transfer.products.length) {
     transfer.status = 'completed';
     transfer.completedAt = Date.now();
@@ -643,8 +650,15 @@ window.confirmAllReceive = async function() {
     stock: currentStock - transfer.products[i].totalPieces
 });
 
-await updateStatistics();
+await push(ref(db, "sales"), {
+    productId: transfer.products[i].productId,
+    productName: transfer.products[i].productName,
+    quantity: transfer.products[i].totalPieces,
+    date: new Date().toISOString().split("T")[0],
+    timestamp: Date.now()
+});
 
+await updateStatistics();
 }
       transfer.products[i].received = true;
     }
