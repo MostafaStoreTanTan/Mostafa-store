@@ -911,16 +911,29 @@ function updatePermission(customerId, permission, value) {
 }
 
   // Reset Password
-  function resetPassword(customerId) {
+  async function resetPassword(customerId) {
+
     const customer = customers.find(c => c.id === customerId);
+
     if (!customer) return;
 
     const newPassword = Math.random().toString(36).slice(-8);
-    customer.password = newPassword;
-    saveCustomers();
+
+    await update(
+        ref(db, "customers/" + customer.firebaseKey),
+        {
+            password: newPassword
+        }
+    );
+
+    await loadData();
+
+    const updatedCustomer = customers.find(c => c.id === customerId);
+
     showToast(`كلمة المرور الجديدة: ${newPassword}`);
-    renderManageTab('info', customer);
-  }
+
+    renderManageTab("info", updatedCustomer);
+}
 
   // Delete Customer
   async function deleteCustomer(customerId) {
