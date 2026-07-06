@@ -453,27 +453,18 @@
   let deletingProductId = null;
 
   // Initialize
-  import { db } from "./firebase.js";
-import {
-  ref,
-  get,
-  set,
-  push,
-  update
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
-
-document.addEventListener('DOMContentLoaded', async () => {
+  document.addEventListener('DOMContentLoaded', async () => {
   await loadProducts();
   renderProducts();
   updateStats();
   setupEventListeners();
 });
+
+import { db } from "./firebase.js";
 import {
   ref,
   get,
-  set,
-  push,
-  update
+  set
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 async function loadProducts() {
@@ -763,8 +754,10 @@ async function saveProducts() {
   }
 
   function navigateToReports() {
-    window.location.href = "reports.html";
-}
+    showToast('صفحة التقارير - جاهزة للتطوير', 'info');
+    // Add your custom code here
+  }
+
   const menuBtn = document.getElementById('menuBtn');
 
 if (menuBtn) {
@@ -785,7 +778,7 @@ window.navigateToHome = navigateToHome;
 window.navigateToCustomers = navigateToCustomers;
 window.navigateToSales = navigateToSales;
 window.navigateToReports = navigateToReports;
-
 </script>
+
 </body>
 </html>
