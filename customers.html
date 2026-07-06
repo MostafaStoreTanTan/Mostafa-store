@@ -777,29 +777,17 @@ window.deleteCustomer = async function(customerKey) {
 }
 
 // Download QR
-// Send WhatsApp
-window.sendWhatsApp = function(customerKey) {
+window.downloadQR = function(customerKey) {
   const customer = customers.find(c => c.key === customerKey);
   if (!customer) return;
 
-  // ✅ الرابط الصحيح ديال صفحتك
-  const loginUrl = `https://abdohou-2001.github.io/M/?id=${customer.id}`;
-  
-  const message = `مرحباً ${customer.name}
-
-تم إنشاء حسابك بنجاح.
-
-بيانات الدخول:
-ID: ${customer.id}
-Password: ${customer.password}
-
-رابط الدخول المباشر: ${loginUrl}
-
-يمكنك الضغط على الرابط مباشرة للدخول بدون كتابة أي شيء.`;
-
-  const url = `https://wa.me/${customer.phone}?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
-  
+  const canvas = document.querySelector('#manageQRCode canvas');
+  if (canvas) {
+    const link = document.createElement('a');
+    link.download = `QR_${customer.id}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  }
 }
 
 // Send WhatsApp
@@ -807,7 +795,7 @@ window.sendWhatsApp = function(customerKey) {
   const customer = customers.find(c => c.key === customerKey);
   if (!customer) return;
 
-  const loginUrl = `${window.location.origin}/login.html?id=${customer.id}`;
+  const loginUrl = `https://abdohou-2001.github.io/M/?id=${customer.id}`;
   const message = `مرحباً ${customer.name}
 
 تم إنشاء حسابك بنجاح.
