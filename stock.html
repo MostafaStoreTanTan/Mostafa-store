@@ -406,8 +406,14 @@ function renderStep3() {
                   </div>
                 </td>
                 <td class="text-center py-3 px-2">
+<span class="text-amber-600 font-bold">
 ${p.boxes} كرتونة
-${p.extraPieces > 0 ? `<br><span class="text-xs text-gray-500">+ ${p.extraPieces} قطعة</span>` : ""}
+</span>
+${p.extraPieces > 0 ? `
+<span class="text-blue-600 font-bold">
++ ${p.extraPieces} قطعة
+</span>
+` : ""}
 </td>
 
 <td class="text-center py-3 px-2">
