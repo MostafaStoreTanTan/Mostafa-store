@@ -598,7 +598,14 @@ window.confirmReceiveProduct = async function(index) {
   const productRef = ref(db, 'products/' + transfer.products[index].productId);
   const productSnap = await get(productRef);
   const currentStock = productSnap.val()?.stock || 0;
-  await update(productRef, { stock: currentStock + transfer.products[index].totalPieces });
+  if (currentStock < transfer.products[index].totalPieces) {
+    showToast("المخزون غير كاف", "error");
+    return;
+}
+
+await update(productRef, {
+    stock: currentStock - transfer.products[index].totalPieces
+});
 
   if (transfer.receivedCount === transfer.products.length) {
     transfer.status = 'completed';
@@ -622,7 +629,13 @@ window.confirmAllReceive = async function() {
       const productRef = ref(db, 'products/' + transfer.products[i].productId);
       const productSnap = await get(productRef);
       const currentStock = productSnap.val()?.stock || 0;
-      await update(productRef, { stock: currentStock + transfer.products[i].totalPieces });
+      if (currentStock >= transfer.products[i].totalPieces) {
+
+    await update(productRef, {
+        stock: currentStock - transfer.products[i].totalPieces
+    });
+
+}
       transfer.products[i].received = true;
     }
   }
