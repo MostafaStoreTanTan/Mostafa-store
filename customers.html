@@ -955,10 +955,8 @@ function updatePermission(customerId, permission, value) {
   }
 
   // Save Customers
-  function saveCustomers() {
-    localStorage.setItem('customers', JSON.stringify(customers));
-    updateStats();
-  }
+  const newRef = push(ref(db, "customers"));
+await set(newRef, newCustomer);
 
   // Show Toast
   function showToast(message, type = 'success') {
