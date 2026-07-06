@@ -808,13 +808,20 @@ window.confirmReceiveProduct = async function(index) {
 
 // أضف هذا مباشرة بعده
 
-await push(ref(db, "sales"), {
-    productId: transfer.products[index].productId,
-    productName: transfer.products[index].productName,
-    quantity: transfer.products[index].totalPieces,
-    date: new Date().toISOString().split("T")[0],
-    timestamp: Date.now()
-});
+try {
+    await push(ref(db, "sales"), {
+        productId: transfer.products[index].productId,
+        productName: transfer.products[index].productName,
+        quantity: transfer.products[index].totalPieces,
+        date: new Date().toISOString().split("T")[0],
+        timestamp: Date.now()
+    });
+
+    console.log("تم إنشاء sales");
+} catch (e) {
+    alert(e.message);
+    console.error(e);
+}
   if (transfer.receivedCount === transfer.products.length) {
     transfer.status = 'completed';
     transfer.completedAt = Date.now();
