@@ -888,16 +888,27 @@ function updatePermission(customerId, permission, value) {
 }
 
   // Toggle Customer Status
-  function toggleCustomerStatus(customerId) {
+  async function toggleCustomerStatus(customerId) {
+
     const customer = customers.find(c => c.id === customerId);
+
     if (!customer) return;
 
-    customer.status = customer.status === 'active'? 'suspended' : 'active';
-    saveCustomers();
-    renderCustomers();
+    const newStatus = customer.status === "active" ? "suspended" : "active";
+
+    await update(
+        ref(db, "customers/" + customer.firebaseKey),
+        {
+            status: newStatus
+        }
+    );
+
+    await loadData();
+
     closeManageModal();
-    showToast(customer.status === 'active'? 'تم تفعيل الحساب' : 'تم إيقاف الحساب');
-  }
+
+    showToast(newStatus === "active" ? "تم تفعيل الحساب" : "تم إيقاف الحساب");
+}
 
   // Reset Password
   function resetPassword(customerId) {
