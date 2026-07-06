@@ -688,6 +688,32 @@ function showToast(message, type = 'success') {
   toast.classList.remove('hidden');
   setTimeout(() => toast.classList.add('hidden'), 2000);
 }
+
+async function updateStatistics() {
+
+  const snap = await get(ref(db, "products"));
+
+  if (!snap.exists()) return;
+
+  const products = Object.values(snap.val());
+
+  const totalStock = products.reduce((s, p) => s + (p.stock || 0), 0);
+
+  const totalProducts = products.length;
+
+  const lowStock = products.filter(p => (p.stock || 0) <= 10).length;
+
+  const totalValue = products.reduce((s, p) => s + ((p.stock || 0) * (p.purchasePrice || 0)), 0);
+
+  await update(ref(db, "statistics"), {
+    totalStock,
+    totalProducts,
+    lowStock,
+    totalValue,
+    updatedAt: Date.now()
+  });
+
+}
 </script>
 </body>
 </html>
