@@ -211,15 +211,17 @@ window.analyzeList = function() {
         );
 
         parsedProducts.push({
-          boxes: qty,
-          productName: name,
-          productId: product?.id || null,
-          productImage: product?.image || 'https://via.placeholder.com/100',
-          piecesPerBox: product?.piecesPerBox || null,
-          totalPieces: 0,
-          received: false,
-          found:!!product
-        });
+  quantity: qty,
+  productName: name,
+  productId: product?.id || null,
+  productImage: product?.image || 'https://via.placeholder.com/100',
+  piecesPerBox: product?.piecesPerBox || null,
+  boxes: 0,
+  extraPieces: 0,
+  totalPieces: 0,
+  received: false,
+  found: !!product
+});
       }
     }
   }
