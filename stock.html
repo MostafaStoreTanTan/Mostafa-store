@@ -405,9 +405,18 @@ function renderStep3() {
                     <span class="font-semibold">${p.productName}</span>
                   </div>
                 </td>
-                <td class="text-center py-3 px-2">${p.boxes}</td>
-                <td class="text-center py-3 px-2">× ${p.piecesPerBox}</td>
-                <td class="text-center py-3 px-2 font-bold text-emerald-600">= ${p.totalPieces}</td>
+                <td class="text-center py-3 px-2">
+${p.boxes} كرتونة
+${p.extraPieces > 0 ? `<br><span class="text-xs text-gray-500">+ ${p.extraPieces} قطعة</span>` : ""}
+</td>
+
+<td class="text-center py-3 px-2">
+${p.piecesPerBox} قطعة/كرتونة
+</td>
+
+<td class="text-center py-3 px-2 font-bold text-emerald-600">
+${p.totalPieces} قطعة
+</td>
               </tr>
             `).join('')}
           </tbody>
