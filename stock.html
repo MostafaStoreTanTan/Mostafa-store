@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الشارج - Mostafa Clean Shop</title>
+<title>الشحن - Mostafa Clean Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -30,7 +30,7 @@
 <header class="bg-emerald-600 text-white shadow-sm sticky top-0 z-40">
   <div class="max-w-7xl mx-auto px-4 py-4">
     <div class="flex items-center justify-between">
-      <h1 class="text-xl md:text-2xl font-bold">الشارج</h1>
+      <h1 class="text-xl md:text-2xl font-bold">الشحن</h1>
       <i class="fa-solid fa-boxes-stacked text-xl"></i>
     </div>
   </div>
@@ -69,7 +69,7 @@
       <button class="flex flex-col items-center justify-center gap-1 text-emerald-600 relative">
         <div class="absolute -top-1 w-12 h-1 bg-emerald-600 rounded-full"></div>
         <i class="fa-solid fa-boxes-stacked text-xl"></i>
-        <span class="text-xs font-semibold">الشارج</span>
+        <span class="text-xs font-semibold">الشحن</span>
       </button>
       <button onclick="window.location.href='sales.html'" class="flex flex-col items-center justify-center gap-1 text-gray-500 hover:text-emerald-600 transition">
         <i class="fa-solid fa-cart-shopping text-xl"></i>
@@ -91,7 +91,7 @@
 <div id="piecesModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-2xl p-6 max-w-sm w-full animate-slide-up">
     <h3 class="text-lg font-bold text-gray-900 mb-2" id="modalProductName"></h3>
-    <p class="text-sm text-gray-600 mb-4">كم قطعة داخل الكرتونة؟</p>
+    <p class="text-sm text-gray-600 mb-4">كم قطعة داخل العلبة؟</p>
     <input type="number" id="modalPiecesInput" class="w-full p-3 border-2 border-gray-200 rounded-xl text-center text-xl font-bold focus:border-emerald-500 outline-none mb-4" placeholder="0">
     <div class="grid grid-cols-2 gap-3">
       <button onclick="closePiecesModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold transition">إلغاء</button>
@@ -279,12 +279,12 @@ function renderStep2() {
             ` : p.piecesPerBox === null? `
               <button onclick="openPiecesModal(${idx})" class="w-full bg-amber-100 hover:bg-amber-200 text-amber-700 py-2 rounded-lg text-sm font-semibold transition">
                 <i class="fa-solid fa-question-circle ml-1"></i>
-                كم قطعة داخل الكرتونة؟
+                كم قطعة داخل العلبة؟
               </button>
             ` : `
               <p class="text-sm text-emerald-600 font-semibold">
                 <i class="fa-solid fa-check ml-1"></i>
-                ${p.piecesPerBox} قطعة/كرتونة
+                ${p.piecesPerBox} قطعة/علبة
               </p>
             `}
           </div>
@@ -407,7 +407,7 @@ function renderStep3() {
                 </td>
                 <td class="text-center py-3 px-2">
 <span class="text-amber-600 font-bold">
-${p.boxes} كرتونة
+${p.boxes} علبة
 </span>
 ${p.extraPieces > 0 ? `
 <span class="text-blue-600 font-bold">
@@ -417,7 +417,7 @@ ${p.extraPieces > 0 ? `
 </td>
 
 <td class="text-center py-3 px-2">
-${p.piecesPerBox} قطعة/كرتونة
+${p.piecesPerBox} قطعة/علبة
 </td>
 
 <td class="text-center py-3 px-2 font-bold text-emerald-600">
@@ -454,11 +454,11 @@ ${p.totalPieces} قطعة
 }
 
 window.shareBon = function() {
-  let text = 'بون الشارج\n\n';
+  let text = 'بون الشحن\n\n';
   parsedProducts.forEach(p => {
     text += `${p.productName}\n`;
 
-text += `${p.boxes} كرتونة`;
+text += `${p.boxes} علبة`;
 
 if (p.totalPieces % p.piecesPerBox !== 0) {
     text += ` + ${p.totalPieces % p.piecesPerBox} قطعة`;
@@ -469,7 +469,7 @@ text += "\n\n";
   text += `الإجمالي: ${parsedProducts.reduce((sum, p) => sum + p.totalPieces, 0)} قطعة`;
 
   if (navigator.share) {
-    navigator.share({ title: 'بون الشارج', text: text });
+    navigator.share({ title: 'بون الشحن', text: text });
   } else {
     navigator.clipboard.writeText(text);
     showToast('تم نسخ البون');
@@ -499,7 +499,7 @@ window.saveStockTransfer = async function() {
   await set(newRef, transfer);
   currentTransferId = newRef.key;
 
-  showToast('تم حفظ الشارج بنجاح');
+  showToast('تم حفظ الشحن بنجاح');
   setTimeout(() => showReceivePage(currentTransferId), 1000);
 }
 
@@ -541,7 +541,7 @@ function renderReceivePage(transfer) {
               <p class="font-bold text-gray-900">${p.productName}</p>
               <p class="text-sm mt-1">
 <span class="text-amber-600 font-bold">
-📦 ${p.boxes} كرتونة
+📦 ${p.boxes} علبة
 </span>
 
 ${p.totalPieces % p.piecesPerBox !== 0 ? `
@@ -559,7 +559,7 @@ ${p.totalPieces % p.piecesPerBox !== 0 ? `
       </div>
 
       <div class="bg-gray-50 rounded-xl p-4 mb-6">
-        <p class="text-sm font-bold text-gray-900 mb-3">ملخص الشارج</p>
+        <p class="text-sm font-bold text-gray-900 mb-3">ملخص الشحن</p>
         <div class="grid grid-cols-3 gap-3 text-center">
           <div>
             <p class="text-xs text-gray-500">إجمالي القطع</p>
