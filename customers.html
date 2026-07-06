@@ -913,8 +913,19 @@ function updatePermission(customerId, permission, value) {
   function deleteCustomer(customerId) {
     if (!confirm('هل أنت متأكد من حذف هذا العميل؟')) return;
 
-    customers = customers.filter(c => c.id!== customerId);
-    saveCustomers();
+    const customer = customers.find(c => c.id === customerId);
+
+if (customer) {
+
+  await remove(
+    ref(db, "customers/" + customer.firebaseKey)
+  );
+
+  showToast("تم حذف العميل");
+
+  await loadData();
+
+}
     renderCustomers();
     closeManageModal();
     showToast('تم حذف العميل');
