@@ -553,13 +553,15 @@ window.openScanModal = function() {
 
 // فتح المسح للإدخال
 window.openScanModalForInput = function() {
-  closeEditModal();
+
+  // نخفي النافذة فقط بدون حذف المنتج المحدد
+  document.getElementById('editModal').classList.add('hidden');
+
   setTimeout(() => {
     document.getElementById('scanModal').classList.remove('hidden');
     startScanning();
   }, 300);
 }
-
 // إغلاق مودال المسح
 window.closeScanModal = function() {
   stopScanning();
