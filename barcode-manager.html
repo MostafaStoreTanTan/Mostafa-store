@@ -504,20 +504,34 @@ function createProductCard(product) {
 
 // فتح مودال التعديل
 window.openEditModal = function(productId) {
-  selectedProductId = productId;
-  const product = products.find(p => p.id === productId);
-  if (!product) return;
 
-  document.getElementById('editProductImage').src = product.image || 'https://via.placeholder.com/80';
+  console.log("Product ID:", productId);
+
+  selectedProductId = productId;
+
+  const product = products.find(p => p.id === productId);
+
+  if (!product) {
+    alert("المنتج غير موجود");
+    return;
+  }
+
+  document.getElementById('editProductImage').src =
+      product.image || 'https://via.placeholder.com/80';
+
   document.getElementById('editProductName').textContent = product.name;
-  document.getElementById('editProductPrice').textContent = `${product.price} درهم`;
-  document.getElementById('barcodeInput').value = '';
+
+  document.getElementById('editProductPrice').textContent =
+      `${product.price} درهم`;
+
+  document.getElementById('barcodeInput').value =
+      product.barcode || '';
 
   if (product.barcode) {
-    document.getElementById('currentBarcodeAlert').classList.remove('hidden');
-    document.getElementById('currentBarcodeText').textContent = product.barcode;
+      document.getElementById('currentBarcodeAlert').classList.remove('hidden');
+      document.getElementById('currentBarcodeText').textContent = product.barcode;
   } else {
-    document.getElementById('currentBarcodeAlert').classList.add('hidden');
+      document.getElementById('currentBarcodeAlert').classList.add('hidden');
   }
 
   document.getElementById('editModal').classList.remove('hidden');
