@@ -742,20 +742,29 @@ async function showReceiveStockPage(transferId) {
 
       <div class="space-y-3 mb-6">
         ${transfer.products.map((p, idx) => `
-          <div class="bg-${p.received? 'emerald' : 'amber'}-50 border-2 border-${p.received? 'emerald' : 'amber'}-200 rounded-xl p-4 flex items-center gap-4 transition">
-            <button onclick="confirmReceiveProduct(${idx})" ${p.received? 'disabled' : ''} class="w-12 h-12 rounded-full ${p.received? 'bg-emerald-600' : 'bg-white border-2 border-gray-300'} flex items-center justify-center transition ${p.received? '' : 'hover:border-emerald-600'}">
-              ${p.received? '<i class="fa-solid fa-check text-white text-xl"></i>' : ''}
-            </button>
-            <img src="${p.productImage}" class="w-16 h-16 rounded-lg object-cover">
-            <div class="flex-1">
-              <p class="font-bold text-gray-900">${p.productName}</p>
-              <p class="text-sm text-gray-600">${p.boxes} × ${p.piecesPerBox} = ${p.totalPieces} قطعة</p>
-              <p class="text-xs ${p.received? 'text-emerald-600' : 'text-amber-600'} font-semibold mt-1">
-                ${p.received? 'تم الاستلام' : 'في الانتظار'}
-              </p>
-            </div>
-          </div>
-        `).join('')}
+  <div class="bg-${p.received? 'emerald' : 'amber'}-50 border-2 border-${p.received? 'emerald' : 'amber'}-200 rounded-xl p-4 flex flex-col gap-3 transition">
+    <div class="flex items-center gap-4">
+      <button onclick="confirmReceiveProduct(${idx})" ${p.received? 'disabled' : ''} class="w-12 h-12 rounded-full ${p.received? 'bg-emerald-600' : 'bg-white border-2 border-gray-300'} flex items-center justify-center">
+        ${p.received? '<i class="fa-solid fa-check text-white text-xl"></i>' : ''}
+      </button>
+      <img src="${p.productImage}" class="w-16 h-16 rounded-lg object-cover">
+      <div class="flex-1">
+        <p class="font-bold text-gray-900">${p.productName}</p>
+        <p class="text-sm text-gray-600">${p.boxes} × ${p.piecesPerBox} = ${p.totalPieces} قطعة</p>
+      </div>
+    </div>
+
+    <!-- الازرار الجديدة -->
+    <div class="flex gap-2">
+      <button onclick="editProductPieces(${idx})" class="flex-1 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
+        <i class="fa-solid fa-pen text-emerald-600"></i> تعديل القطع
+      </button>
+      <button onclick="deleteProductFromTransfer(${idx})" class="flex-1 bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
+        <i class="fa-solid fa-trash"></i> حذف
+      </button>
+    </div>
+  </div>
+`).join('')}
       </div>
 
       <div class="bg-gray-50 rounded-xl p-4 mb-6">
