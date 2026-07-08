@@ -336,7 +336,11 @@ window.openPiecesModal = function(index) {
   document.getElementById('piecesModal').classList.remove('hidden');
   document.getElementById('modalPiecesInput').focus();
 }
-
+  
+window.editPieces = function(index){
+    openPiecesModal(index);
+}
+  
 window.closePiecesModal = function() {
   document.getElementById('piecesModal').classList.add('hidden');
   document.getElementById('modalPiecesInput').value = '';
