@@ -340,7 +340,16 @@ window.openPiecesModal = function(index) {
 window.editPieces = function(index){
     openPiecesModal(index);
 }
-  
+
+window.deleteProduct = function(index){
+
+    if(!confirm("هل تريد حذف هذا المنتج؟")) return;
+
+    parsedProducts.splice(index,1);
+
+    renderStep2();
+}
+
 window.closePiecesModal = function() {
   document.getElementById('piecesModal').classList.add('hidden');
   document.getElementById('modalPiecesInput').value = '';
