@@ -525,7 +525,10 @@ async function saveProducts() {
     return matchesSearch && matchesCategory && matchesStatus;
 });
 
-    if (filtered.length === 0) {
+// ترتيب المنتجات من A إلى Z
+filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+if (filtered.length === 0) {
       container.innerHTML = '';
       emptyState.classList.remove('hidden');
     } else {
