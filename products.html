@@ -526,7 +526,7 @@ async function saveProducts() {
 });
 
 // ترتيب المنتجات من A إلى Z
-filtered.sort((a, b) => a.name.localeCompare(b.name));
+filtered.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
 
 if (filtered.length === 0) {
       container.innerHTML = '';
