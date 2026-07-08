@@ -512,7 +512,6 @@ async function saveProducts() {
     const emptyState = document.getElementById('emptyState');
 
     let filtered = products.filter(p => {
-let filtered = products.filter(p => {
 
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
@@ -526,15 +525,7 @@ let filtered = products.filter(p => {
     return matchesSearch && matchesCategory && matchesStatus;
 });
 
-// ترتيب المنتجات من A إلى Z
-filtered.sort((a, b) =>
-    a.name.localeCompare(b.name, 'en', {
-        sensitivity: 'base',
-        numeric: true
-    })
-);
-
-if (filtered.length === 0) {
+    if (filtered.length === 0) {
       container.innerHTML = '';
       emptyState.classList.remove('hidden');
     } else {
