@@ -513,7 +513,7 @@ async function saveProducts() {
 
     let filtered = products.filter(p => {
 
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (p.name || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
     const isLow = p.stock <= p.lowStockThreshold;
 
