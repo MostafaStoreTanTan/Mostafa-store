@@ -358,13 +358,17 @@ import {
 
   // Perform Search
   function performSearch() {
-    filteredProducts = allProducts.filter(p => {
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = currentCategory === 'الكل' || p.category === currentCategory;
-      return matchesSearch && matchesCategory;
-    });
-    renderProducts();
-  }
+  filteredProducts = allProducts.filter(p => {
+    const matchesSearch = (p.name || "").toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = currentCategory === 'الكل' || p.category === currentCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  // ترتيب المنتجات من A إلى Z
+  filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+
+  renderProducts();
+}
 
   // Setup Event Listeners
   function setupEventListeners() {
