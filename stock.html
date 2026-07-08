@@ -282,10 +282,26 @@ function renderStep2() {
                 كم قطعة داخل العلبة؟
               </button>
             ` : `
-              <p class="text-sm text-emerald-600 font-semibold">
-                <i class="fa-solid fa-check ml-1"></i>
-                ${p.piecesPerBox} قطعة/علبة
-              </p>
+              <p class="text-sm text-emerald-600 font-semibold mb-3">
+    <i class="fa-solid fa-check ml-1"></i>
+    ${p.piecesPerBox} قطعة/علبة
+</p>
+
+<div class="flex gap-2">
+    <button
+        onclick="editPieces(${idx})"
+        class="flex-1 border border-emerald-500 text-emerald-600 rounded-lg py-2 text-sm">
+        <i class="fa-solid fa-pen ml-1"></i>
+        تعديل القطع
+    </button>
+
+    <button
+        onclick="deleteProduct(${idx})"
+        class="flex-1 border border-red-500 text-red-600 rounded-lg py-2 text-sm">
+        <i class="fa-solid fa-trash ml-1"></i>
+        إزالة المنتج
+    </button>
+</div>
             `}
           </div>
         `).join('')}
