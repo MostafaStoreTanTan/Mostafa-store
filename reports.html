@@ -859,13 +859,17 @@ window.confirmAllReceive = async function() {
 
 // أضف هذا مباشرة بعده
 
-await push(ref(db, "sales"), {
+try {
+  await push(ref(db, "sales"), {
     productId: transfer.products[i].productId,
     productName: transfer.products[i].productName,
     quantity: transfer.products[i].totalPieces,
     date: new Date().toISOString().split("T")[0],
     timestamp: Date.now()
-});
+  });
+} catch(e) {
+  console.error("خطأ في sales", e);
+}
       transfer.products[i].received = true;
     }
   }
