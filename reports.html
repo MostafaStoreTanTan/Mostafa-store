@@ -813,24 +813,10 @@ window.confirmReceiveProduct = async function(index) {
   const currentStock = productSnap.val()?.stock || 0;
   await update(productRef, {
     stock: currentStock + transfer.products[index].totalPieces
-});
+  });
 
-// أضف هذا مباشرة بعده
+  //... كود الـ sales...
 
-try {
-    await push(ref(db, "sales"), {
-        productId: transfer.products[index].productId,
-        productName: transfer.products[index].productName,
-        quantity: transfer.products[index].totalPieces,
-        date: new Date().toISOString().split("T")[0],
-        timestamp: Date.now()
-    });
-
-    console.log("تم إنشاء sales");
-} catch (e) {
-    alert(e.message);
-    console.error(e);
-}
   if (transfer.receivedCount === transfer.products.length) {
     transfer.status = 'completed';
     transfer.completedAt = Date.now();
@@ -841,6 +827,45 @@ try {
   showToast('تم استلام المنتج وتحديث المخزون');
   showReceiveStockPage(currentTransferId);
 }
+
+// ====== من هنا الدوال الجديدة اللي زدنا ======
+window.deleteProductFromTransfer = async function(index) {
+  if (!confirm('هل أنت متأكد من حذف هذا المنتج من البون؟')) return;
+
+  const snap = await get(ref(db, 'stockTransfers/' + currentTransferId));
+  let transfer = snap.val();
+
+  transfer.products.splice(index, 1);
+  transfer.totalPieces = transfer.products.reduce((sum, p) => sum + p.totalPieces, 0);
+
+  await set(ref(db, 'stockTransfers/' + currentTransferId), transfer);
+  showToast('تم حذف المنتج');
+  showReceiveStockPage(currentTransferId);
+}
+
+window.editProductPieces = async function(index) {
+  const snap = await get(ref(db, 'stockTransfers/' + currentTransferId));
+  let transfer = snap.val();
+  let product = transfer.products[index];
+
+  const newPieces = prompt(`تعديل عدد القطع في العلبة لـ ${product.productName}:`, product.piecesPerBox);
+  if (!newPieces) return;
+
+  const pieces = parseInt(newPieces);
+  if (isNaN(pieces) || pieces <= 0) {
+    showToast('عدد غير صحيح', 'error');
+    return;
+  }
+
+  product.piecesPerBox = pieces;
+  product.totalPieces = product.boxes * pieces;
+  transfer.totalPieces = transfer.products.reduce((sum, p) => sum + p.totalPieces, 0);
+
+  await set(ref(db, 'stockTransfers/' + currentTransferId), transfer);
+  showToast('تم تعديل القطع');
+  showReceiveStockPage(currentTransferId);
+}
+// ====== الى هنا الدوال الجديدة ======
 
 window.confirmAllReceive = async function() {
   if (!confirm('هل أنت متأكد من استلام جميع المنتجات؟')) return;
