@@ -297,7 +297,7 @@ import {
     const statusText = isLowStock ? 'منخفض' : 'متوفر';
     
     return `
-      <div class="product-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in">
+      <div class="product-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in cursor-pointer" onclick="openProductDetails('${product.id}')">
         <div class="relative">
           <div class="aspect-square bg-gray-100 overflow-hidden">
             <img src="${product.image || defaultImage}" alt="${product.name}" class="w-full h-full object-cover" onerror="this.src='${defaultImage}'">
