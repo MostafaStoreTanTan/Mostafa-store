@@ -409,7 +409,12 @@ import {
   });
 
   // Initialize on page load
-  document.addEventListener('DOMContentLoaded', init);
+  window.openProductDetails = function(productId) {
+  window.location.href = `product-details.html?id=${productId}`;
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', init);
 </script>
 
 </body>
