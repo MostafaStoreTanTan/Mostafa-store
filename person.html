@@ -268,7 +268,31 @@ get(customerRef).then((snapshot)=>{
         document.getElementById('name').textContent = name;
         document.getElementById('phone').textContent = data.phone || 'لا يوجد هاتف';
         document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
-        document.getElementById('city').value = data.city || "";
+        onValue(citiesRef,(snapshot)=>{
+
+    const cities = snapshot.val() || {};
+
+    const select = document.getElementById("city");
+
+    select.innerHTML = "";
+
+    Object.keys(cities).forEach(key=>{
+
+        const option = document.createElement("option");
+
+        option.value = cities[key].name;
+
+        option.textContent = cities[key].name;
+
+        if(cities[key].name === data.city){
+            option.selected = true;
+        }
+
+        select.appendChild(option);
+
+    });
+
+});
         document.getElementById('date').value = data.paymentDate || '';
         document.getElementById('paid').value = data.paid || '';
         document.getElementById('received').value = data.received || '';
