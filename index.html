@@ -675,10 +675,54 @@ id="searchInput">
         </div>
     </div>
 
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">تم الحفظ</span>
+<!-- نافذة إدارة المدن -->
+<div class="modal" id="citiesModal">
+    <div class="modal-content">
+
+        <h3 style="margin-bottom:20px;font-size:22px;">
+            🏙️ إدارة المدن
+        </h3>
+
+        <div class="form-group">
+            <input
+                type="text"
+                id="newCity"
+                class="form-input"
+                placeholder="اكتب اسم المدينة">
+        </div>
+
+        <div class="form-buttons">
+            <button
+                type="button"
+                class="btn btn-save"
+                onclick="addCity()">
+                ➕ إضافة
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-cancel"
+                onclick="closeCities()">
+                إغلاق
+            </button>
+        </div>
+
+        <div
+            id="citiesList"
+            style="
+                margin-top:20px;
+                max-height:250px;
+                overflow-y:auto;">
+        </div>
+
     </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">تم الحفظ</span>
+</div>
 
     <!-- ================================================================= -->
     <!-- JAVASCRIPT + FIREBASE - 350 سطر -->
