@@ -626,11 +626,16 @@ id="searchInput">
     </div>
 
     <div class="filter-tabs">
-        <button class="filter-tab active" onclick="filterBy('all')">الكل</button>
-        <button class="filter-tab" onclick="filterBy('today')">اليوم</button>
-        <button class="filter-tab" onclick="filterBy('overdue')">متأخر</button>
-        <button class="filter-tab" onclick="filterBy('upcoming')">قادم</button>
-    </div>
+    <button class="filter-tab active" onclick="filterBy('all')">الكل</button>
+    <button class="filter-tab" onclick="filterBy('today')">اليوم</button>
+    <button class="filter-tab" onclick="filterBy('overdue')">متأخر</button>
+    <button class="filter-tab" onclick="filterBy('upcoming')">قادم</button>
+
+    <button class="filter-tab" onclick="openCities()">
+        <i class="fas fa-city"></i>
+        المدن
+    </button>
+</div>
 
     <div class="customers-list" id="customersList">
         <div class="empty-state">
