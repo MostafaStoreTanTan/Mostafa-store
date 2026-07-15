@@ -83,17 +83,9 @@ cursor:pointer;
                 <div class="total-value" id="totalAmount">0 درهم</div>
             </div>
 
-            <<div style="display:none;">
-    <input type="number" id="amount" class="input" placeholder="0" readonly>
-</div>
+            <label class="label">💰 المبلغ الأساسي</label>
+            <input type="number" id="amount" class="input" placeholder="0" readonly>
 
-<label class="label">🏙️ المدينة</label>
-<input
-    type="text"
-    id="city"
-    class="input"
-    placeholder="اكتب اسم المدينة">
-               
             <label class="label">📅 تاريخ الأداء</label>
             <input type="date" id="date" class="input">
 
@@ -267,7 +259,7 @@ get(customerRef).then((snapshot)=>{
         document.getElementById('name').textContent = name;
         document.getElementById('phone').textContent = data.phone || 'لا يوجد هاتف';
         document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
-        document.getElementById('city').value = data.city || "";
+        document.getElementById('amount').value = data.amount || 0;
         document.getElementById('date').value = data.paymentDate || '';
         document.getElementById('paid').value = data.paid || '';
         document.getElementById('received').value = data.received || '';
@@ -299,7 +291,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     btn.textContent = '⏳ جاري الحفظ...';
     btn.disabled = true;
 
-    const city = document.getElementById('city').value;
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
     const date = document.getElementById('date').value;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
@@ -337,7 +329,6 @@ if(paid > 0){
 
 }
 const updateData = {
-    city: city,
     date: date,
     paymentDate: date,
     operations: operations,
