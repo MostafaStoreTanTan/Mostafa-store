@@ -796,6 +796,7 @@ let searchTimer;
 
         function initFirebase() {
 
+    // تحميل الزبناء
     onValue(customersRef, (snapshot) => {
 
         const data = snapshot.val();
@@ -807,9 +808,81 @@ let searchTimer;
         document.getElementById('syncStatus').innerHTML =
         '<i class="fas fa-circle" style="color:#4ade80"></i> متصل بـ Firebase';
 
+    }, (error) => {
+
+        console.error(error);
+
+        document.getElementById('syncStatus').innerHTML =
+        '<i class="fas fa-circle" style="color:#ef4444"></i> غير متصل';
+
     });
 
-    loadCities();
+    // تحميل المدن
+    onValue(citiesRef, (snapshot) => {
+
+        allCities = snapshot.val() || {};
+
+        loadCities();
+
+    });
+
+}
+
+async function loadCities() {
+
+    const snapshot = await get(citiesRef);
+
+    allCities = snapshot.val() || {};
+
+    const select =
+    document.getElementById("customerCity");
+
+    const list =
+    document.getElementById("citiesList");
+
+    if(select){
+
+        select.innerHTML =
+        '<option value="">اختر المدينة</option>';
+
+    }
+
+    list.innerHTML = "";
+
+    Object.keys(allCities).forEach(id => {
+
+        const city = allCities[id];
+
+        if(select){
+
+            select.innerHTML += `
+                <option value="${city.name}">
+                    ${city.name}
+                </option>
+            `;
+
+        }
+
+        list.innerHTML += `
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                padding:10px;
+                border-bottom:1px solid #ddd;">
+
+                <span>${city.name}</span>
+
+                <button
+                    class="btn btn-delete"
+                    onclick="deleteCity('${id}')">
+                    🗑️
+                </button>
+
+            </div>
+        `;
+
+    });
 
 }
 
