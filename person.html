@@ -299,7 +299,7 @@ document.getElementById('saveBtn').addEventListener('click', ()=>{
     btn.textContent = '⏳ جاري الحفظ...';
     btn.disabled = true;
 
-    const amount = parseFloat(document.getElementById('amount').value) || 0;
+    const city = document.getElementById('city').value;
     const date = document.getElementById('date').value;
     const paid = parseFloat(document.getElementById('paid').value) || 0;
     const received = parseFloat(document.getElementById('received').value) || 0;
