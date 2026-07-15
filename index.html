@@ -281,7 +281,7 @@
      .customer-card {
             background: var(--card);
             border-radius: var(--radius);
-            padding: 8px;
+            padding: 18px;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border);
             transition: var(--transition);
@@ -304,19 +304,19 @@
 
      .customer-header {
             display: flex;
-            gap: 4px;
-            margin-bottom: 6px;
+            gap: 14px;
+            margin-bottom: 12px;
         }
 
      .customer-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
             background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--primary);
         }
@@ -326,30 +326,30 @@
         }
 
      .customer-name {
-            font-size: 14px;
+            font-size: 19px;
             font-weight: 800;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
 
      .customer-amount {
-            font-size: 16px;
+            font-size: 22px;
             font-weight: 900;
             color: var(--primary);
-            margin-bottom: 2px;
+            margin-bottom: 8px;
         }
 
      .customer-meta {
             display: flex;
-            gap: 6px;
-            font-size: 9px;
+            gap: 12px;
+            font-size: 13px;
             color: var(--text-muted);
         }
 
      .customer-actions {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 3px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 14px;
 }
      .btn-calendar {
             background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
@@ -357,12 +357,12 @@
         }
         
      .btn {
-            padding: 7px 8px;
+            padding: 12px 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
-            font-size: 9px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -580,7 +580,7 @@ title="التقارير">
 
 </div>
         <div class="sync-status online" id="syncStatus">
-            <i class="fas fa-circle"></i> جاري الاتصال بـ الانترنت...
+            <i class="fas fa-circle"></i> جاري الاتصال بـ Firebase...
         </div>
     </header>
 
@@ -626,21 +626,16 @@ id="searchInput">
     </div>
 
     <div class="filter-tabs">
-    <button class="filter-tab active" onclick="filterBy('all')">الكل</button>
-    <button class="filter-tab" onclick="filterBy('today')">اليوم</button>
-    <button class="filter-tab" onclick="filterBy('overdue')">متأخر</button>
-    <button class="filter-tab" onclick="filterBy('upcoming')">قادم</button>
-
-    <button class="filter-tab" onclick="openCities()">
-        <i class="fas fa-city"></i>
-        المدينة
-    </button>
-</div>
+        <button class="filter-tab active" onclick="filterBy('all')">الكل</button>
+        <button class="filter-tab" onclick="filterBy('today')">اليوم</button>
+        <button class="filter-tab" onclick="filterBy('overdue')">متأخر</button>
+        <button class="filter-tab" onclick="filterBy('upcoming')">قادم</button>
+    </div>
 
     <div class="customers-list" id="customersList">
         <div class="empty-state">
             <div class="empty-icon">📋</div>
-            <p>جاري تحميل الزبناء ...</p>
+            <p>جاري تحميل الزبناء من Firebase...</p>
         </div>
     </div>
 
@@ -660,17 +655,9 @@ id="searchInput">
                     <input type="number" class="form-input" id="customerAmount" required>
                 </div>
                 <div class="form-group">
-    <label class="form-label">رقم الهاتف</label>
-    <input type="tel" class="form-input" id="customerPhone">
-</div>
-
-<div class="form-group">
-    <label class="form-label">المدينة</label>
-
-    <select class="form-input" id="customerCity">
-        <option value="">اختر المدينة</option>
-    </select>
-</div>
+                    <label class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="form-input" id="customerPhone">
+                </div>
                 <div class="form-group">
                     <label class="form-label">تاريخ الاستحقاق *</label>
                     <input type="date" class="form-input" id="customerDate" required>
@@ -683,54 +670,10 @@ id="searchInput">
         </div>
     </div>
 
-<!-- نافذة إدارة المدن -->
-<div class="modal" id="citiesModal">
-    <div class="modal-content">
-
-        <h3 style="margin-bottom:20px;font-size:22px;">
-            🏙️ إدارة المدن
-        </h3>
-
-        <div class="form-group">
-            <input
-                type="text"
-                id="newCity"
-                class="form-input"
-                placeholder="اكتب اسم المدينة">
-        </div>
-
-        <div class="form-buttons">
-            <button
-                type="button"
-                class="btn btn-save"
-                onclick="addCity()">
-                ➕ إضافة
-            </button>
-
-            <button
-                type="button"
-                class="btn btn-cancel"
-                onclick="closeCities()">
-                إغلاق
-            </button>
-        </div>
-
-        <div
-            id="citiesList"
-            style="
-                margin-top:20px;
-                max-height:250px;
-                overflow-y:auto;">
-        </div>
-
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">تم الحفظ</span>
     </div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast">
-    <i class="fas fa-check-circle"></i>
-    <span id="toastMessage">تم الحفظ</span>
-</div>
 
     <!-- ================================================================= -->
     <!-- JAVASCRIPT + FIREBASE - 350 سطر -->
@@ -738,16 +681,7 @@ id="searchInput">
     <script type="module">
         // Firebase Configuration
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import {
-    getDatabase,
-    ref,
-    onValue,
-    set,
-    push,
-    remove,
-    update,
-    get
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getDatabase, ref, onValue, set, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
@@ -760,16 +694,11 @@ id="searchInput">
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
-const customersRef = ref(db, 'customers');
-const citiesRef = ref(db, 'cities');
-
-let allCustomers = {};
-let allCities = {};
-
+        const customersRef = ref(db, 'customers');
+        let allCustomers = {};
 let currentFilter = 'all';
-let currentCity = '';
 let searchTimer;
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
     loadTheme();
@@ -789,100 +718,16 @@ let searchTimer;
 });
 
         function initFirebase() {
-
-    // تحميل الزبناء
-    onValue(customersRef, (snapshot) => {
-
-        const data = snapshot.val();
-
-        allCustomers = data || {};
-
-        applyFilter(currentFilter);
-
-        document.getElementById('syncStatus').innerHTML =
-        '<i class="fas fa-circle" style="color:#4ade80"></i> متصل بـ Firebase';
-
-    }, (error) => {
-
-        console.error(error);
-
-        document.getElementById('syncStatus').innerHTML =
-        '<i class="fas fa-circle" style="color:#ef4444"></i> غير متصل';
-
-    });
-
-    // تحميل المدن
-    onValue(citiesRef, (snapshot) => {
-
-        allCities = snapshot.val() || {};
-
-        loadCities();
-
-    });
-
-}
-
-async function loadCities() {
-
-    const snapshot = await get(citiesRef);
-
-    allCities = snapshot.val() || {};
-
-    const select =
-    document.getElementById("customerCity");
-
-    const list =
-    document.getElementById("citiesList");
-
-    if(select){
-
-        select.innerHTML =
-        '<option value="">اختر المدينة</option>';
-
-    }
-
-    list.innerHTML = "";
-
-    Object.keys(allCities).forEach(id => {
-
-        const city = allCities[id];
-
-        if(select){
-
-            select.innerHTML += `
-                <option value="${city.name}">
-                    ${city.name}
-                </option>
-            `;
-
+            onValue(customersRef, (snapshot) => {
+                const data = snapshot.val();
+                allCustomers = data || {};
+                applyFilter(currentFilter);
+                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-circle" style="color: #4ade80"></i> متصل بـ Firebase';
+            }, (error) => {
+                console.error(error);
+                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-circle" style="color: #ef4444"></i> غير متصل';
+            });
         }
-
-        list.innerHTML += `
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                padding:10px;
-                border-bottom:1px solid #ddd;">
-
-                <span
-    style="cursor:pointer;font-weight:bold;"
-    onclick="filterByCity('${city.name}')">
-    ${city.name}
-</span>
-
-<button
-    class="btn btn-delete"
-    onclick="event.stopPropagation(); deleteCity('${id}')">
-    🗑️
-</button>
-
-            </div>
-        `;
-
-    });
-
-}
 
         // ========== Navigation Functions ==========
 
@@ -898,16 +743,8 @@ async function loadCities() {
 
         // 2. زر Route - يحول مباشرة لـ route.html
         window.openRoute = function() {
-    window.location.href = 'route.html';
-}
-
-window.openCities = function() {
-    document.getElementById("citiesModal").classList.add("active");
-}
-
-window.closeCities = function() {
-    document.getElementById("citiesModal").classList.remove("active");
-}
+            window.location.href = 'route.html';
+        }
 
         // 3. الضغط على زبون - يحول لـ person.html
         window.viewCustomer = function(id) {
@@ -956,35 +793,15 @@ window.closeCities = function() {
             }
 
             let totalAmount = 0;
-let customersCount = 0;
-let todayCount = 0;
-let overdueCount = 0;
-const today = new Date().toISOString().split('T')[0];
+            let customersCount = 0;
+            let todayCount = 0;
+            let overdueCount = 0;
+            const today = new Date().toISOString().split('T')[0];
 
             Object.keys(customers).forEach((key, index) => {
                 const customer = customers[key];
                 customersCount++;
-                let totalPaid = 0;
-let totalReceived = 0;
-
-(customer.operations || []).forEach(op => {
-
-    if(op.type === "paid"){
-        totalPaid += Number(op.amount || 0);
-    }
-
-    if(op.type === "received"){
-        totalReceived += Number(op.amount || 0);
-    }
-
-});
-
-const customerTotal =
-    (Number(customer.amount) || 0)
-    + totalPaid
-    - totalReceived;
-
-totalAmount += customerTotal;
+                totalAmount += parseInt(customer.amount) || 0;
 
                 if(customer.date === today) todayCount++;
                 else if(customer.date < today) overdueCount++;
@@ -997,7 +814,7 @@ totalAmount += customerTotal;
                             <div class="customer-avatar">${customer.name.charAt(0)}</div>
                             <div class="customer-info">
                                 <div class="customer-name">${customer.name}</div>
-                                <div class="customer-amount">${customerTotal} درهم</div>
+                                <div class="customer-amount">${customer.amount} درهم</div>
                                 <div class="customer-meta">
                                     <span><i class="fas fa-phone"></i> ${customer.phone || '-'}</span>
                                     <span><i class="fas fa-calendar"></i> ${customer.date}</span>
@@ -1005,6 +822,7 @@ totalAmount += customerTotal;
                             </div>
                         </div>
                         <div class="customer-actions">
+   <div class="customer-actions">
 
 <button class="btn btn-profile"
 onclick="event.stopPropagation(); openDetails('${key}')">
@@ -1065,13 +883,12 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
             e.preventDefault();
             const id = document.getElementById('customerId').value;
             const data = {
-    name: document.getElementById('customerName').value,
-    amount: parseInt(document.getElementById('customerAmount').value),
-    phone: document.getElementById('customerPhone').value,
-    city: document.getElementById('customerCity').value,
-    date: document.getElementById('customerDate').value,
-    updatedAt: new Date().toISOString()
-};
+                name: document.getElementById('customerName').value,
+                amount: parseInt(document.getElementById('customerAmount').value),
+                phone: document.getElementById('customerPhone').value,
+                date: document.getElementById('customerDate').value,
+                updatedAt: new Date().toISOString()
+            };
 
             if(id) await updateCustomer(id, data);
             else await addCustomer(data);
@@ -1248,46 +1065,7 @@ window.editCustomerPhone = async function(id){
     });
 
     showToast('تم حفظ رقم الهاتف');
-}
-
-window.addCity = async function(){
-
-    const name = document.getElementById("newCity").value.trim();
-
-    if(!name) return;
-
-    const newRef = push(citiesRef);
-
-    await set(newRef,{
-        name:name
-    });
-
-    document.getElementById("newCity").value = "";
-
-    showToast("تمت إضافة المدينة");
-}
-
-window.deleteCity = async function(id){
-
-    if(!confirm("حذف المدينة؟")) return;
-
-    await remove(ref(db,"cities/"+id));
-
-    showToast("تم حذف المدينة");
-}
-
-window.filterByCity = function(city){
-
-    currentCity = city;
-
-    closeCities();
-
-    showToast("تم اختيار مدينة: " + city);
-
-    applyFilter(currentFilter);
-
-}
-
+}        
 </script>
 
 <script>
