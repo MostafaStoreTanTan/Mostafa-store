@@ -708,8 +708,13 @@ id="searchInput">
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-        const customersRef = ref(db, 'customers');
-        let allCustomers = {};
+
+const customersRef = ref(db, 'customers');
+const citiesRef = ref(db, 'cities');
+
+let allCustomers = {};
+let allCities = {};
+
 let currentFilter = 'all';
 let searchTimer;
 
