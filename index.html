@@ -894,8 +894,16 @@ async function loadCities() {
 
         // 2. زر Route - يحول مباشرة لـ route.html
         window.openRoute = function() {
-            window.location.href = 'route.html';
-        }
+    window.location.href = 'route.html';
+}
+
+window.openCities = function() {
+    document.getElementById("citiesModal").classList.add("active");
+}
+
+window.closeCities = function() {
+    document.getElementById("citiesModal").classList.remove("active");
+}
 
         // 3. الضغط على زبون - يحول لـ person.html
         window.viewCustomer = function(id) {
