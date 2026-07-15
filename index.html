@@ -795,16 +795,23 @@ let searchTimer;
 });
 
         function initFirebase() {
-            onValue(customersRef, (snapshot) => {
-                const data = snapshot.val();
-                allCustomers = data || {};
-                applyFilter(currentFilter);
-                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-circle" style="color: #4ade80"></i> متصل بـ Firebase';
-            }, (error) => {
-                console.error(error);
-                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-circle" style="color: #ef4444"></i> غير متصل';
-            });
-        }
+
+    onValue(customersRef, (snapshot) => {
+
+        const data = snapshot.val();
+
+        allCustomers = data || {};
+
+        applyFilter(currentFilter);
+
+        document.getElementById('syncStatus').innerHTML =
+        '<i class="fas fa-circle" style="color:#4ade80"></i> متصل بـ Firebase';
+
+    });
+
+    loadCities();
+
+}
 
         // ========== Navigation Functions ==========
 
