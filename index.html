@@ -801,7 +801,27 @@ let searchTimer;
             Object.keys(customers).forEach((key, index) => {
                 const customer = customers[key];
                 customersCount++;
-                totalAmount += parseInt(customer.amount) || 0;
+                let totalPaid = 0;
+let totalReceived = 0;
+
+(customer.operations || []).forEach(op => {
+
+    if(op.type === "paid"){
+        totalPaid += Number(op.amount || 0);
+    }
+
+    if(op.type === "received"){
+        totalReceived += Number(op.amount || 0);
+    }
+
+});
+
+const customerTotal =
+    (Number(customer.amount) || 0)
+    + totalPaid
+    - totalReceived;
+
+totalAmount += customerTotal;
 
                 if(customer.date === today) todayCount++;
                 else if(customer.date < today) overdueCount++;
