@@ -1244,7 +1244,34 @@ window.editCustomerPhone = async function(id){
     });
 
     showToast('تم حفظ رقم الهاتف');
-}        
+}
+
+window.addCity = async function(){
+
+    const name = document.getElementById("newCity").value.trim();
+
+    if(!name) return;
+
+    const newRef = push(citiesRef);
+
+    await set(newRef,{
+        name:name
+    });
+
+    document.getElementById("newCity").value = "";
+
+    showToast("تمت إضافة المدينة");
+}
+
+window.deleteCity = async function(id){
+
+    if(!confirm("حذف المدينة؟")) return;
+
+    await remove(ref(db,"cities/"+id));
+
+    showToast("تم حذف المدينة");
+}
+
 </script>
 
 <script>
