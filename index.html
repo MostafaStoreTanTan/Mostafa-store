@@ -865,13 +865,17 @@ async function loadCities() {
                 padding:10px;
                 border-bottom:1px solid #ddd;">
 
-                <span>${city.name}</span>
+                <span
+    style="cursor:pointer;font-weight:bold;"
+    onclick="filterByCity('${city.name}')">
+    ${city.name}
+</span>
 
-                <button
-                    class="btn btn-delete"
-                    onclick="deleteCity('${id}')">
-                    🗑️
-                </button>
+<button
+    class="btn btn-delete"
+    onclick="event.stopPropagation(); deleteCity('${id}')">
+    🗑️
+</button>
 
             </div>
         `;
