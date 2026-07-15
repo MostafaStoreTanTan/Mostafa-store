@@ -908,12 +908,13 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
             e.preventDefault();
             const id = document.getElementById('customerId').value;
             const data = {
-                name: document.getElementById('customerName').value,
-                amount: parseInt(document.getElementById('customerAmount').value),
-                phone: document.getElementById('customerPhone').value,
-                date: document.getElementById('customerDate').value,
-                updatedAt: new Date().toISOString()
-            };
+    name: document.getElementById('customerName').value,
+    amount: parseInt(document.getElementById('customerAmount').value),
+    phone: document.getElementById('customerPhone').value,
+    city: document.getElementById('customerCity').value,
+    date: document.getElementById('customerDate').value,
+    updatedAt: new Date().toISOString()
+};
 
             if(id) await updateCustomer(id, data);
             else await addCustomer(data);
