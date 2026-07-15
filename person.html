@@ -88,10 +88,11 @@ cursor:pointer;
 </div>
 
 <label class="label">🏙️ المدينة</label>
-
-<select id="city" class="input">
-    <option value="">اختر المدينة</option>
-</select>
+<input
+    type="text"
+    id="city"
+    class="input"
+    placeholder="اكتب اسم المدينة">
                
             <label class="label">📅 تاريخ الأداء</label>
             <input type="date" id="date" class="input">
@@ -125,7 +126,6 @@ padding-left:5px;
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -148,7 +148,6 @@ const content = document.getElementById('content');
 
 if(!id){alert('خطأ: ما كاينش id');window.location.href = 'index.html';}
 const customerRef = ref(db, 'customers/' + id);
-const citiesRef = ref(db, 'cities');
 
 // القاعدة الجديدة: الإجمالي = الأساسي + دفع - استلام
 let customerOperations = [];
@@ -268,31 +267,7 @@ get(customerRef).then((snapshot)=>{
         document.getElementById('name').textContent = name;
         document.getElementById('phone').textContent = data.phone || 'لا يوجد هاتف';
         document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
-        onValue(citiesRef,(snapshot)=>{
-
-    const cities = snapshot.val() || {};
-
-    const select = document.getElementById("city");
-
-    select.innerHTML = "";
-
-    Object.keys(cities).forEach(key=>{
-
-        const option = document.createElement("option");
-
-        option.value = cities[key].name;
-
-        option.textContent = cities[key].name;
-
-        if(cities[key].name === data.city){
-            option.selected = true;
-        }
-
-        select.appendChild(option);
-
-    });
-
-});
+        document.getElementById('city').value = data.city || "";
         document.getElementById('date').value = data.paymentDate || '';
         document.getElementById('paid').value = data.paid || '';
         document.getElementById('received').value = data.received || '';
