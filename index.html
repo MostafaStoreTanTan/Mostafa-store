@@ -1096,22 +1096,40 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
         }
 
         function applyFilter(filter) {
-            const filtered = {};
-            const today = new Date().toISOString().split('T')[0];
-            const weekStart = new Date();
-            weekStart.setDate(weekStart.getDate() - 7);
 
-            Object.keys(allCustomers).forEach(key => {
-                const customer = allCustomers[key];
-                if(filter === 'all') filtered[key] = customer;
-                else if(filter === 'today' && customer.date === today) filtered[key] = customer;
-                else if(filter === 'overdue' && customer.date < today) filtered[key] = customer;
-                else if(filter === 'upcoming' && customer.date > today) filtered[key] = customer;
-            });
+    const filtered = {};
+    const today = new Date().toISOString().split('T')[0];
 
-            renderCustomers(filtered);
+    Object.keys(allCustomers).forEach(key => {
+
+        const customer = allCustomers[key];
+
+        // فلترة المدينة
+        if(currentCity && customer.city !== currentCity){
+            return;
         }
 
+        if(filter === 'all'){
+            filtered[key] = customer;
+        }
+
+        else if(filter === 'today' && customer.date === today){
+            filtered[key] = customer;
+        }
+
+        else if(filter === 'overdue' && customer.date < today){
+            filtered[key] = customer;
+        }
+
+        else if(filter === 'upcoming' && customer.date > today){
+            filtered[key] = customer;
+        }
+
+    });
+
+    renderCustomers(filtered);
+
+}
         window.searchCustomer = function() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             const filtered = {};
