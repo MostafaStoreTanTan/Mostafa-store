@@ -738,7 +738,16 @@ id="searchInput">
     <script type="module">
         // Firebase Configuration
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+        import {
+    getDatabase,
+    ref,
+    onValue,
+    set,
+    push,
+    remove,
+    update,
+    get
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
   apiKey: "AIzaSyBCVOOouLET3GDGyHj2i7ncvUZBjUUVB7Y",
@@ -1087,40 +1096,22 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
         }
 
         function applyFilter(filter) {
+            const filtered = {};
+            const today = new Date().toISOString().split('T')[0];
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - 7);
 
-    const filtered = {};
-    const today = new Date().toISOString().split('T')[0];
+            Object.keys(allCustomers).forEach(key => {
+                const customer = allCustomers[key];
+                if(filter === 'all') filtered[key] = customer;
+                else if(filter === 'today' && customer.date === today) filtered[key] = customer;
+                else if(filter === 'overdue' && customer.date < today) filtered[key] = customer;
+                else if(filter === 'upcoming' && customer.date > today) filtered[key] = customer;
+            });
 
-    Object.keys(allCustomers).forEach(key => {
-
-        const customer = allCustomers[key];
-
-        // فلترة المدينة
-        if(currentCity && customer.city !== currentCity){
-            return;
+            renderCustomers(filtered);
         }
 
-        if(filter === 'all'){
-            filtered[key] = customer;
-        }
-
-        else if(filter === 'today' && customer.date === today){
-            filtered[key] = customer;
-        }
-
-        else if(filter === 'overdue' && customer.date < today){
-            filtered[key] = customer;
-        }
-
-        else if(filter === 'upcoming' && customer.date > today){
-            filtered[key] = customer;
-        }
-
-    });
-
-    renderCustomers(filtered);
-
-}
         window.searchCustomer = function() {
             const search = document.getElementById('searchInput').value.toLowerCase();
             const filtered = {};
