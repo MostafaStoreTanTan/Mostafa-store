@@ -812,10 +812,10 @@ let searchTimer;
             }
 
             let totalAmount = 0;
-            let customersCount = 0;
-            let todayCount = 0;
-            let overdueCount = 0;
-            const today = new Date().toISOString().split('T')[0];
+let customersCount = 0;
+let todayCount = 0;
+let overdueCount = 0;
+const today = new Date().toISOString().split('T')[0];
 
             Object.keys(customers).forEach((key, index) => {
                 const customer = customers[key];
