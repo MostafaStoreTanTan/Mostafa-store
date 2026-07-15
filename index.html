@@ -1276,6 +1276,18 @@ window.deleteCity = async function(id){
     showToast("تم حذف المدينة");
 }
 
+window.filterByCity = function(city){
+
+    currentCity = city;
+
+    closeCities();
+
+    showToast("تم اختيار مدينة: " + city);
+
+    applyFilter(currentFilter);
+
+}
+
 </script>
 
 <script>
