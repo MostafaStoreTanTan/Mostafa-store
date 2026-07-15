@@ -148,6 +148,7 @@ const content = document.getElementById('content');
 
 if(!id){alert('خطأ: ما كاينش id');window.location.href = 'index.html';}
 const customerRef = ref(db, 'customers/' + id);
+const citiesRef = ref(db, 'cities');
 
 // القاعدة الجديدة: الإجمالي = الأساسي + دفع - استلام
 let customerOperations = [];
