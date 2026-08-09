@@ -8,7 +8,7 @@
     <meta name="description" content="Karni Pro - نظام إدارة الكرني الذكي">
 
     <link rel="manifest" href="manifest.webmanifest">
-
+    
     <title>Karni Pro - الصفحة الرئيسية</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -66,7 +66,7 @@
         }
 
         /* ========== Header ========== */
-    .header {
+     .header {
             background: var(--gradient);
             color: white;
             padding: 35px 20px 25px;
@@ -78,14 +78,14 @@
             z-index: 100;
         }
 
-    .header-top {
+     .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
 
-    .header h1 {
+     .header h1 {
             font-size: 34px;
             font-weight: 900;
             display: flex;
@@ -94,7 +94,7 @@
             gap: 12px;
         }
 
-    .icon-btn {
+     .icon-btn {
             width: 42px;
             height: 42px;
             border-radius: 14px;
@@ -109,12 +109,12 @@
             transition: var(--transition);
         }
 
-    .icon-btn:active {
+     .icon-btn:active {
             transform: scale(0.9);
             background: rgba(255,255,255,0.3);
         }
 
-    .sync-status {
+     .sync-status {
             background: rgba(255,255,255,0.25);
             padding: 6px 14px;
             border-radius: 50px;
@@ -126,7 +126,7 @@
             margin-top: 10px;
         }
 
-    .sync-status.online i {
+     .sync-status.online i {
             color: #4ade80;
             animation: pulse 2s infinite;
         }
@@ -137,14 +137,14 @@
         }
 
         /* ========== Stats ========== */
-    .stats-grid {
+     .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 14px;
             padding: 24px 20px 10px;
         }
 
-    .stat-card {
+     .stat-card {
             background: var(--card);
             padding: 24px 15px;
             border-radius: var(--radius);
@@ -155,32 +155,32 @@
             cursor: pointer;
         }
 
-    .stat-card:active {
+     .stat-card:active {
             transform: scale(0.96);
         }
 
-    .stat-number {
+     .stat-number {
             font-size: 30px;
             font-weight: 900;
             color: var(--primary);
             margin-bottom: 6px;
         }
 
-    .stat-label {
+     .stat-label {
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 700;
         }
 
         /* ========== Action Buttons ========== */
-    .actions-row {
+     .actions-row {
             padding: 15px 20px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-    .action-btn {
+     .action-btn {
             background: var(--card);
             border: 2px solid var(--border);
             padding: 16px 14px;
@@ -198,22 +198,22 @@
             box-shadow: var(--shadow-md);
         }
 
-    .action-btn.primary {
+     .action-btn.primary {
             background: var(--gradient);
             color: white;
             border-color: transparent;
         }
 
-    .action-btn:active {
+     .action-btn:active {
             transform: scale(0.95);
         }
 
-    .action-btn i {
+     .action-btn i {
             font-size: 20px;
         }
 
         /* ========== Search ========== */
-    .search-box {
+     .search-box {
             margin: 0 20px 15px;
             background: var(--card);
             padding: 14px 18px;
@@ -225,7 +225,7 @@
             border: 2px solid var(--border);
         }
 
-    .search-box input {
+     .search-box input {
             border: none;
             outline: none;
             flex: 1;
@@ -236,7 +236,7 @@
         }
 
         /* ========== Filter Tabs ========== */
-    .filter-tabs {
+     .filter-tabs {
             display: flex;
             gap: 8px;
             padding: 15px 20px;
@@ -244,11 +244,11 @@
             scrollbar-width: none;
         }
 
-    .filter-tabs::-webkit-scrollbar {
+     .filter-tabs::-webkit-scrollbar {
             display: none;
         }
 
-    .filter-tab {
+     .filter-tab {
             background: var(--card);
             border: 2px solid var(--border);
             padding: 10px 18px;
@@ -264,21 +264,21 @@
             color: var(--text-muted);
         }
 
-    .filter-tab.active {
+     .filter-tab.active {
             background: var(--gradient);
             color: white;
             border-color: transparent;
         }
 
         /* ========== Customer Cards ========== */
-    .customers-list {
+     .customers-list {
             padding: 0 20px;
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-    .customer-card {
+     .customer-card {
             background: var(--card);
             border-radius: var(--radius);
             padding: 18px;
@@ -294,21 +294,21 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-    .customer-card:active {
+     .customer-card:active {
             transform: scale(0.98);
         }
 
-    .customer-card.overdue {
+     .customer-card.overdue {
             border-right: 5px solid var(--danger);
         }
 
-    .customer-header {
+     .customer-header {
             display: flex;
             gap: 14px;
             margin-bottom: 12px;
         }
 
-    .customer-avatar {
+     .customer-avatar {
             width: 58px;
             height: 58px;
             border-radius: 18px;
@@ -321,42 +321,42 @@
             color: var(--primary);
         }
 
-    .customer-info {
+     .customer-info {
             flex: 1;
         }
 
-    .customer-name {
+     .customer-name {
             font-size: 19px;
             font-weight: 800;
             margin-bottom: 4px;
         }
 
-    .customer-amount {
+     .customer-amount {
             font-size: 22px;
             font-weight: 900;
             color: var(--primary);
             margin-bottom: 8px;
         }
 
-    .customer-meta {
+     .customer-meta {
             display: flex;
             gap: 12px;
             font-size: 13px;
             color: var(--text-muted);
         }
 
-    .customer-actions {
+     .customer-actions {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
     gap: 8px;
     margin-top: 14px;
 }
-    .btn-calendar {
+     .btn-calendar {
             background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
             color: white;
         }
-
-    .btn {
+        
+     .btn {
             padding: 12px 16px;
             border: none;
             border-radius: 12px;
@@ -371,21 +371,21 @@
             transition: var(--transition);
         }
 
-    .btn:active {
+     .btn:active {
             transform: scale(0.95);
         }
 
-    .btn-profile {
+     .btn-profile {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
         }
 
-    .btn-collect {
+     .btn-collect {
             background: linear-gradient(135deg, var(--success) 0%, #16a34a 100%);
             color: white;
         }
 
-    .btn-delete {
+     .btn-delete {
     background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
     color: white;
 }
@@ -406,7 +406,7 @@
 }
 
         /* ========== FAB ========== */
-    .fab {
+     .fab {
             position: fixed;
             bottom: 30px;
             left: 30px;
@@ -426,12 +426,12 @@
             transition: var(--transition);
         }
 
-    .fab:active {
+     .fab:active {
             transform: scale(0.9);
         }
 
         /* ========== Modal ========== */
-    .modal {
+     .modal {
             display: none;
             position: fixed;
             top: 0;
@@ -443,14 +443,14 @@
             backdrop-filter: blur(8px);
         }
 
-    .modal.active {
+     .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-    .modal-content {
+     .modal-content {
             background: var(--card);
             border-radius: 25px;
             padding: 30px 25px;
@@ -458,8 +458,6 @@
             max-width: 450px;
             box-shadow: var(--shadow-lg);
             animation: slideUpModal 0.3s;
-            max-height: 90vh;
-            overflow-y: auto;
         }
 
         @keyframes slideUpModal {
@@ -467,18 +465,18 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-    .form-group {
+     .form-group {
             margin-bottom: 20px;
         }
 
-    .form-label {
+     .form-label {
             display: block;
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 8px;
         }
 
-    .form-input {
+     .form-input {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid var(--border);
@@ -489,65 +487,26 @@
             color: var(--text);
         }
 
-        /* ===== New Operation Fields ===== */
-       .operations-divider {
-            margin: 22px 0 15px;
-            padding-top: 18px;
-            border-top: 2px dashed var(--border);
-        }
-       .operations-divider-title {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--text-muted);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-       .operations-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-       .input-received {
-            border-color: #86efac!important;
-            background: #f0fdf4!important;
-        }
-       .input-received:focus {
-            border-color: var(--success)!important;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15)!important;
-        }
-       .input-paid {
-            border-color: #93c5fd!important;
-            background: #eff6ff!important;
-        }
-       .input-paid:focus {
-            border-color: var(--accent)!important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15)!important;
-        }
-        [data-theme="dark"].input-received { background: #052e16!important; color: #f1f5f9; }
-        [data-theme="dark"].input-paid { background: #0c1a3a!important; color: #f1f5f9; }
-
-    .form-buttons {
+     .form-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 25px;
         }
 
-    .btn-save {
+     .btn-save {
             background: var(--gradient);
             color: white;
         }
 
-    .btn-cancel {
+     .btn-cancel {
             background: var(--bg);
             color: var(--text-muted);
             border: 2px solid var(--border);
         }
 
         /* ========== Toast ========== */
-    .toast {
+     .toast {
             position: fixed;
             top: 80px;
             left: 50%;
@@ -564,18 +523,18 @@
             transition: transform 0.3s;
         }
 
-    .toast.show {
+     .toast.show {
             transform: translateX(-50%) translateY(0);
         }
 
         /* ========== Empty State ========== */
-    .empty-state {
+     .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: var(--text-muted);
         }
 
-    .empty-icon {
+     .empty-icon {
             font-size: 64px;
             margin-bottom: 15px;
             opacity: 0.3;
@@ -583,10 +542,7 @@
 
         /* ========== Responsive ========== */
         @media (max-width: 380px) {
-        .stats-grid {
-                grid-template-columns: 1fr;
-            }
-           .operations-row {
+         .stats-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -695,33 +651,13 @@ id="searchInput">
                     <input type="text" class="form-input" id="customerName" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">المبلغ الأساسي *</label>
+                    <label class="form-label">المبلغ *</label>
                     <input type="number" class="form-input" id="customerAmount" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">رقم الهاتف</label>
                     <input type="tel" class="form-input" id="customerPhone">
                 </div>
-
-                <!-- ====== التعديل الجديد: عملية مالية أولى اختيارية ====== -->
-                <div class="operations-divider">
-                    <div class="operations-divider-title">
-                        <i class="fas fa-exchange-alt"></i> عملية مالية أولى (اختياري)
-                    </div>
-                    <div class="operations-row">
-                        <div class="form-group" style="margin-bottom:0">
-                            <label class="form-label" style="color: #16a34a;">📤 استلام</label>
-                            <input type="number" min="0" step="0.01" class="form-input input-received" id="customerReceived" placeholder="0">
-                        </div>
-                        <div class="form-group" style="margin-bottom:0">
-                            <label class="form-label" style="color: #2563eb;">📥 دفع</label>
-                            <input type="number" min="0" step="0.01" class="form-input input-paid" id="customerPaid" placeholder="0">
-                        </div>
-                    </div>
-                    <div style="font-size:12px; color: var(--text-muted); margin-top:8px;">يمكن ترك الحقلين فارغين لإنشاء الزبون بدون عملية</div>
-                </div>
-                <!-- ====== نهاية التعديل الجديد ====== -->
-
                 <div class="form-group">
                     <label class="form-label">تاريخ الاستحقاق *</label>
                     <input type="date" class="form-input" id="customerDate" required>
@@ -770,7 +706,7 @@ let searchTimer;
     initFirebase();
 
     document.getElementById('searchInput')
-   .addEventListener('input', function(){
+    .addEventListener('input', function(){
 
         clearTimeout(searchTimer);
 
@@ -817,51 +753,16 @@ let searchTimer;
         }
 
         // ========== CRUD Functions ==========
-        async function addCustomer(customerData, firstOperations = {}) {
-            // إنشاء ID بـ push() أولا كما طلبت
+        async function addCustomer(customerData) {
             const newRef = push(customersRef);
-            const newId = newRef.key;
-            const now = new Date();
-            const dateStr = now.toISOString().split('T')[0];
-            const timeStr = now.toTimeString().slice(0,5);
-
-            let operations = {};
-
-            // تحويل العمليات الممررة إلى بنية Firebase
-            // firstOperations = { received: number, paid: number }
-            if(firstOperations.received && firstOperations.received > 0) {
-                const opRef = push(ref(db, `customers/${newId}/operations`));
-                operations[opRef.key] = {
-                    type: "received",
-                    amount: firstOperations.received,
-                    date: dateStr,
-                    time: timeStr
-                };
-            }
-            if(firstOperations.paid && firstOperations.paid > 0) {
-                const opRef = push(ref(db, `customers/${newId}/operations`));
-                operations[opRef.key] = {
-                    type: "paid",
-                    amount: firstOperations.paid,
-                    date: dateStr,
-                    time: timeStr
-                };
-            }
-
-            const finalData = {
-             ...customerData,
-                id: newId,
-                createdAt: now.toISOString(),
+            await set(newRef, {
+              ...customerData,
+                id: newRef.key,
+                createdAt: new Date().toISOString(),
                 status: 'pending',
                 collected: 0
-            };
-
-            if(Object.keys(operations).length > 0) {
-                finalData.operations = operations;
-            }
-
-            await set(newRef, finalData);
-            showToast(Object.keys(operations).length > 0? 'تم إضافة الزبون مع العملية' : 'تم إضافة الزبون بنجاح');
+            });
+            showToast('تم إضافة الزبون بنجاح');
         }
 
         async function updateCustomer(id, data) {
@@ -970,10 +871,6 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
             document.getElementById('customerName').value = '';
             document.getElementById('customerAmount').value = '';
             document.getElementById('customerPhone').value = '';
-            const recEl = document.getElementById('customerReceived');
-            const paidEl = document.getElementById('customerPaid');
-            if(recEl) recEl.value = '';
-            if(paidEl) paidEl.value = '';
             setTodayDate();
             document.getElementById('customerModal').classList.add('active');
         }
@@ -993,15 +890,8 @@ onclick="event.stopPropagation(); confirmDelete('${key}')">
                 updatedAt: new Date().toISOString()
             };
 
-            if(id) {
-                // في حالة التعديل: لا ننشئ عمليات
-                await updateCustomer(id, data);
-            } else {
-                // في حالة الإضافة: نقرأ حقلي الاستلام والدفع
-                const receivedVal = parseFloat(document.getElementById('customerReceived').value) || 0;
-                const paidVal = parseFloat(document.getElementById('customerPaid').value) || 0;
-                await addCustomer(data, { received: receivedVal, paid: paidVal });
-            }
+            if(id) await updateCustomer(id, data);
+            else await addCustomer(data);
             closeModal();
         }
 
@@ -1088,7 +978,7 @@ window.openReportsPage = function() {
 
         alert('كلمة المرور صحيحة');
 window.location.href = 'products.html';
-
+        
     } else {
 
         alert('كلمة المرور غير صحيحة');
@@ -1175,13 +1065,13 @@ window.editCustomerPhone = async function(id){
     });
 
     showToast('تم حفظ رقم الهاتف');
-}
+}        
 </script>
 
 <script>
 const appVersion = "11";
 
-if(localStorage.getItem("appVersion")!== appVersion){
+if(localStorage.getItem("appVersion") !== appVersion){
     localStorage.clear();
     window.location.href = "login.html";
 }
