@@ -10,18 +10,18 @@
   @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
     * { font-family: 'Cairo', sans-serif; }
   body { background: #f8fafc; }
- .scrollbar-hide::-webkit-scrollbar { display: none; }
- .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
- .soft-shadow { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
- .soft-shadow-lg { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
- .card-hover { transition: all 0.3s ease; }
- .card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
- .animate-slide-up { animation: slideUp 0.3s ease-out; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.soft-shadow { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
+.soft-shadow-lg { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
+.card-hover { transition: all 0.3s ease; }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
+.animate-slide-up { animation: slideUp 0.3s ease-out; }
   @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
- .animate-fade-in { animation: fadeIn 0.2s ease-out; }
+.animate-fade-in { animation: fadeIn 0.2s ease-out; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
- .step-active { background: #10b981; color: white; }
- .step-inactive { background: #e5e7eb; color: #6b7280; }
+.step-active { background: #10b981; color: white; }
+.step-inactive { background: #e5e7eb; color: #6b7280; }
 </style>
 </head>
 <body class="pb-24">
@@ -39,13 +39,13 @@
 <main class="max-w-7xl mx-auto px-4 pt-6 pb-6">
   <!-- الخطوة 1: لصق اللائحة -->
   <div id="step1Page"></div>
-  
+
   <!-- الخطوة 2: عدد القطع -->
   <div id="step2Page" class="hidden"></div>
-  
+
   <!-- الخطوة 3: البون -->
   <div id="step3Page" class="hidden"></div>
-  
+
   <!-- صفحة الاستلام -->
   <div id="receivePage" class="hidden"></div>
 </main>
@@ -191,7 +191,7 @@ window.analyzeList = function() {
     const line = lines[i];
     const parts = line.split(/\s+/);
     const qty = parseInt(parts[0]);
-    
+
     if (!isNaN(qty)) {
       let name;
       if (parts.length > 1) {
@@ -204,9 +204,9 @@ window.analyzeList = function() {
       }
 
       if (name) {
-        const product = allProducts.find(p => 
-          p.name.toLowerCase() === name || 
-          p.name.toLowerCase().includes(name) || 
+        const product = allProducts.find(p =>
+          p.name.toLowerCase() === name ||
+          p.name.toLowerCase().includes(name) ||
           name.includes(p.name.toLowerCase())
         );
 
@@ -220,7 +220,7 @@ window.analyzeList = function() {
   extraPieces: 0,
   totalPieces: 0,
   received: false,
-  found: !!product
+  found:!!product
 });
       }
     }
@@ -336,7 +336,7 @@ window.openPiecesModal = function(index) {
   document.getElementById('piecesModal').classList.remove('hidden');
   document.getElementById('modalPiecesInput').focus();
 }
-  
+
 window.editPieces = function(index){
     openPiecesModal(index);
 }
@@ -435,10 +435,10 @@ function renderStep3() {
                   </div>
                 </td>
                 <td class="text-center py-3 px-2">
-<span class="text-amber-600 font-bold">
+<span class="${p.boxes === 0? 'text-red-600' : 'text-emerald-600'} font-bold">
 ${p.boxes} علبة
 </span>
-${p.extraPieces > 0 ? `
+${p.extraPieces > 0? `
 <span class="text-blue-600 font-bold">
 + ${p.extraPieces} قطعة
 </span>
@@ -489,7 +489,7 @@ window.shareBon = function() {
 
 text += `${p.boxes} علبة`;
 
-if (p.totalPieces % p.piecesPerBox !== 0) {
+if (p.totalPieces % p.piecesPerBox!== 0) {
     text += ` + ${p.totalPieces % p.piecesPerBox} قطعة`;
 }
 
@@ -569,11 +569,11 @@ function renderReceivePage(transfer) {
             <div class="flex-1">
               <p class="font-bold text-gray-900">${p.productName}</p>
               <p class="text-sm mt-1">
-<span class="text-amber-600 font-bold">
+<span class="${p.boxes === 0? 'text-red-600' : 'text-emerald-600'} font-bold">
 📦 ${p.boxes} علبة
 </span>
 
-${p.totalPieces % p.piecesPerBox !== 0 ? `
+${p.totalPieces % p.piecesPerBox!== 0? `
 <span class="text-blue-600 font-bold">
  + ${p.totalPieces % p.piecesPerBox} قطعة
 </span>
