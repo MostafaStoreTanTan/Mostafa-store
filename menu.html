@@ -13,7 +13,6 @@
  .scrollbar-hide::-webkit-scrollbar { display: none; }
  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* Tablet First Gallery Grid */
  .products-grid{
     display:grid;
     grid-template-columns:repeat(2, minmax(0,1fr));
@@ -38,27 +37,32 @@
     box-shadow:0 12px 28px rgba(0,0,0,.08);
     border-color:#e2e8f0;
   }
+  /* IMAGE CONTAINER FIX - يملأ الكادر بالكامل */
  .product-image-wrap{
     position:relative;
-    aspect-ratio:1/1;
-    background:#f8fafc;
+    width:100%;
+    aspect-ratio:1 / 1;
     overflow:hidden;
+    background:#ffffff;
     cursor:zoom-in;
+    display:block;
   }
  .product-image-wrap.skeleton{
     position:absolute; inset:0;
     background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);
     background-size:200% 100%;
     animation:shimmer 1.2s infinite;
+    z-index:1;
   }
   @keyframes shimmer{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
  .product-img{
-    width:100%; height:100%;
-    object-fit:contain;
-    padding:12px;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
     opacity:0;
     transition:opacity.35s ease;
-    background:#fff;
   }
  .product-img.loaded{opacity:1}
  .product-info{
@@ -67,6 +71,7 @@
     flex-direction:column;
     gap:4px;
     flex:1;
+    background:#fff;
   }
  .product-name{
     font-size:13px;
@@ -86,7 +91,6 @@
     margin-top:2px;
   }
 
-  /* Lightbox */
  .lightbox{
     position:fixed; inset:0;
     z-index:100;
@@ -153,7 +157,6 @@
 </head>
 <body class="pb-24">
 
-  <!-- Header -->
   <header class="bg-white shadow-sm sticky top-0 z-40">
     <div class="max-w-[1600px] mx-auto px-4 py-4">
       <div class="flex items-center justify-between">
@@ -177,7 +180,6 @@
     </div>
   </header>
 
-  <!-- Side Menu -->
   <div id="sideMenuBackdrop" class="hidden fixed inset-0 bg-black/50 z-40"></div>
   <aside id="sideMenu" class="side-menu hidden fixed top-0 right-0 w-72 h-full bg-white shadow-2xl z-50">
     <div class="p-6 border-b border-gray-100">
@@ -222,34 +224,24 @@
   </aside>
 
   <main class="max-w-[1600px] mx-auto px-4 pt-6 pb-6">
-    <!-- Welcome -->
     <div class="mb-5">
       <h2 class="text-[22px] md:text-[26px] font-bold text-gray-900 mb-1">أهلاً بك في متجر مصطفى كلين</h2>
       <p class="text-[13px] text-gray-500">تصفح المنتجات - اضغط على الصورة للتكبير</p>
     </div>
 
-    <!-- Search -->
     <div class="bg-white rounded-2xl shadow-sm p-3.5 mb-4 border border-gray-100">
       <div class="relative">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="البحث عن منتج..."
-          class="w-full pr-10 pl-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition text-[14px]"
-        >
+        <input type="text" id="searchInput" placeholder="البحث عن منتج..." class="w-full pr-10 pl-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition text-[14px]">
         <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
       </div>
     </div>
 
-    <!-- Category Pills -->
     <div class="mb-5 overflow-x-auto scrollbar-hide">
       <div class="flex gap-2 pb-1" id="categoryContainer"></div>
     </div>
 
-    <!-- Products Grid - Tablet First -->
     <div id="productsGrid" class="products-grid"></div>
 
-    <!-- No Results -->
     <div id="noResults" class="hidden text-center py-16">
       <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
         <i class="fa-solid fa-search text-2xl text-gray-400"></i>
@@ -259,7 +251,6 @@
     </div>
   </main>
 
-  <!-- Lightbox -->
   <div id="lightbox" class="lightbox" aria-hidden="true">
     <div id="lightboxBackdrop" class="lightbox-backdrop"></div>
     <div class="lightbox-content">
@@ -271,7 +262,6 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
     <div class="max-w-7xl mx-auto">
       <div class="grid grid-cols-5 h-16">
@@ -318,7 +308,6 @@
   const sideMenu = document.getElementById('sideMenu');
   const sideMenuBackdrop = document.getElementById('sideMenuBackdrop');
 
-  // Lightbox Elements
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxCaption = document.getElementById('lightboxCaption');
@@ -346,14 +335,8 @@
   function renderCategories() {
     const categories = ['الكل',...new Set(allProducts.map(p => p.category).filter(Boolean))];
     categoryContainer.innerHTML = categories.map(cat => `
-      <button
-        class="category-pill ${cat === 'الكل'? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200 hover:border-emerald-300'} px-4 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition"
-        data-category="${cat}"
-      >
-        ${cat}
-      </button>
+      <button class="category-pill ${cat === 'الكل'? 'bg-emerald-600 text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200 hover:border-emerald-300'} px-4 py-2 rounded-full text-[13px] font-medium whitespace-nowrap transition" data-category="${cat}">${cat}</button>
     `).join('');
-
     document.querySelectorAll('.category-pill').forEach(pill => {
       pill.addEventListener('click', () => {
         currentCategory = pill.dataset.category;
@@ -386,7 +369,6 @@
     const hasValidPrice = product.price!== null && product.price!== undefined &&!isNaN(Number(product.price)) && Number(product.price) > 0;
     const priceText = hasValidPrice? `${Number(product.price).toFixed(2)} درهم` : '';
     const isFirstRow = index < 8;
-
     return `
       <div class="product-card animate-fade-in">
         <div class="product-image-wrap" data-image="${(product.image||'').replace(/"/g,'&quot;')}" data-name="${(product.name||'').replace(/"/g,'&quot;')}">
@@ -398,12 +380,9 @@
             loading="${isFirstRow? 'eager' : 'lazy'}"
             decoding="async"
             ${isFirstRow? 'fetchpriority="high"' : ''}
-            onerror="this.style.display='none'; this.nextElementSibling && (this.nextElementSibling.style.display='flex')"
-            onload="this.classList.add('loaded'); this.previousElementSibling && (this.previousElementSibling.style.display='none')"
+            onerror="this.style.display='none'; this.previousElementSibling.style.display='none'; this.parentElement.style.background='#f1f5f9';"
+            onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none'"
           >
-          <div style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; background:#f8fafc; color:#94a3b8; font-size:12px;">
-            <i class="fa-solid fa-image"></i>
-          </div>
         </div>
         <div class="product-info">
           <div class="product-name">${product.name || 'بدون اسم'}</div>
@@ -414,7 +393,6 @@
   }
 
   function setupLightbox(){
-    // Open on image click - delegation
     productsGrid.addEventListener('click', (e)=>{
       const wrap = e.target.closest('.product-image-wrap');
       if(!wrap) return;
@@ -422,10 +400,8 @@
       const name = wrap.getAttribute('data-name');
       if(imgSrc) openLightbox(imgSrc, name);
     });
-
     lightboxClose.addEventListener('click', closeLightbox);
     lightboxBackdrop.addEventListener('click', closeLightbox);
-
     document.addEventListener('keydown', (e)=>{
       if(e.key === 'Escape' && lightbox.classList.contains('active')){
         closeLightbox();
@@ -446,7 +422,6 @@
     lightbox.classList.remove('active');
     lightbox.setAttribute('aria-hidden','true');
     document.body.style.overflow = '';
-    // تأخير إزالة الصورة لتجنب الوميض
     setTimeout(()=>{
       if(!lightbox.classList.contains('active')){
         lightboxImg.src = '';
@@ -469,12 +444,10 @@
       searchQuery = e.target.value;
       performSearch();
     });
-
     menuBtn.addEventListener('click', () => {
       sideMenu.classList.remove('hidden');
       sideMenuBackdrop.classList.remove('hidden');
     });
-
     closeMenuBtn.addEventListener('click', closeSideMenu);
     sideMenuBackdrop.addEventListener('click', closeSideMenu);
   }
@@ -496,7 +469,6 @@
     }
   });
 
-  // نحتفظ بالدالة للتوافق لكن لا نستخدمها عند الضغط على الصورة
   window.openProductDetails = function(productId) {
     window.location.href = `product-details.html?id=${productId}`;
   }
