@@ -560,7 +560,7 @@ window.editCustomerPhone=function(id){
 }
 </script>
 <script>
-const appVersion="11"; if(localStorage.getItem("appVersion")!==appVersion){ localStorage.clear(); window.location.href="login.html"; }
+const appVersion="12"; if(localStorage.getItem("appVersion")!==appVersion){ localStorage.clear(); window.location.href="login.html"; }
 if(!localStorage.getItem("loggedIn")){ window.location.href="login.html"; }
 if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js',{scope:'./'})); }
 </script>
