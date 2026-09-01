@@ -279,8 +279,44 @@ let allCustomers = {};
 const reportDate =
 document.getElementById('reportDate');
 
+function getLocalDateString(date = new Date()){
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function addLocalDays(dateString, days){
+    const d = new Date(`${dateString}T12:00:00`);
+    d.setDate(d.getDate() + days);
+    return getLocalDateString(d);
+}
+
+// العمليات القديمة حُفظ تاريخها بـ UTC بينما الوقت محلي.
+// لذلك العملية بين 00:00 و00:59 تُحسب لليوم المحلي التالي.
+function getOperationDate(op){
+    const date = op.date;
+    const time = String(op.time || '00:00').slice(0,5);
+    if(!date) return '';
+    if(/^00:[0-5]\d$/.test(time)){
+        return addLocalDays(date, 1);
+    }
+    return date;
+}
+
+function timeToMinutes(time){
+    const m = String(time || '00:00').match(/^(\d{1,2}):(\d{2})/);
+    if(!m) return 0;
+    return Number(m[1]) * 60 + Number(m[2]);
+}
+
+function formatAmount(value){
+    const n = Number(value || 0);
+    return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(2)));
+}
+
 const today =
-new Date().toISOString().split('T')[0];
+getLocalDateString();
 
 reportDate.value = today;
 
@@ -303,8 +339,10 @@ loadCustomers();
 function generateReport(selectedDate){
 
     const receivedMap = {};
+const receivedTimesMap = {};
 const remainingMap = {};
 const paidMap = {};
+const paidTimesMap = {};
 
     let totalReceived = 0;
     let totalPaid = 0;
@@ -320,23 +358,27 @@ const paidMap = {};
 
         operations.forEach(op=>{
 
-           if(op.date !== selectedDate){
-    return;
-}
+           const operationDate = getOperationDate(op);
+           if(operationDate !== selectedDate){
+               return;
+           }
 
-const fromTime =
-document.getElementById('fromTime').value;
+           const fromTime = document.getElementById('fromTime').value || '00:00';
+           const toTime = document.getElementById('toTime').value || '23:59';
+           const opTime = String(op.time || '00:00').slice(0,5);
+           const opMinutes = timeToMinutes(opTime);
+           const fromMinutes = timeToMinutes(fromTime);
+           const toMinutes = timeToMinutes(toTime);
 
-const toTime =
-document.getElementById('toTime').value;
+           // يدعم أيضا الفترات التي تعبر منتصف الليل.
+           const inTimeRange = fromMinutes <= toMinutes
+               ? (opMinutes >= fromMinutes && opMinutes <= toMinutes)
+               : (opMinutes >= fromMinutes || opMinutes <= toMinutes);
 
-const opTime =
-op.time || "00:00";
-
-if(opTime < fromTime || opTime > toTime){
-    return;
-}
-            operationsCount++;
+           if(!inTimeRange){
+               return;
+           }
+           operationsCount++;
 
             if(op.type === 'received'){
 
@@ -344,13 +386,12 @@ if(opTime < fromTime || opTime > toTime){
                 Number(op.amount);
 
                 if(!receivedMap[customer.name]){
-
                     receivedMap[customer.name] = 0;
-
+                    receivedTimesMap[customer.name] = [];
                 }
 
-                receivedMap[customer.name] +=
-Number(op.amount);
+                receivedMap[customer.name] += Number(op.amount);
+                if(op.time) receivedTimesMap[customer.name].push(String(op.time).slice(0,5));
 
 let totalPaidAll = 0;
 let totalReceivedAll = 0;
@@ -381,13 +422,12 @@ totalReceivedAll;
                 Number(op.amount);
 
                 if(!paidMap[customer.name]){
-
                     paidMap[customer.name] = 0;
-
+                    paidTimesMap[customer.name] = [];
                 }
 
-                paidMap[customer.name] +=
-                Number(op.amount);
+                paidMap[customer.name] += Number(op.amount);
+                if(op.time) paidTimesMap[customer.name].push(String(op.time).slice(0,5));
 
             }
 
@@ -404,42 +444,43 @@ totalReceivedAll;
     receivedList.innerHTML = '';
     paidList.innerHTML = '';
 
-    Object.keys(receivedMap).forEach(name=>{
+    // ترتيب الزبناء حسب وقت العملية، ثم الاسم عند تساوي الوقت.
+    const sortByTime = (a,b,timesMap) => {
+        const ta = timeToMinutes((timesMap[a] || [])[0] || '00:00');
+        const tb = timeToMinutes((timesMap[b] || [])[0] || '00:00');
+        return ta - tb || a.localeCompare(b);
+    };
 
-        const remaining =
-Math.round(Number(remainingMap[name] || 0));
-receivedList.innerHTML += `
-<div class="report-row" style="display:block">
+    Object.keys(receivedMap).sort((a,b)=>sortByTime(a,b,receivedTimesMap)).forEach(name=>{
 
-<div style="display:flex;justify-content:space-between">
-<span>${name}</span>
-<span>${receivedMap[name]} درهم</span>
-</div>
-
-<div style="margin-top:6px;
-font-weight:bold;
-color:${remaining>0?'red':'green'}">
-
-${remaining>0
-?`🔴 باقي : ${remaining} درهم`
-:`🟢 خالص 0 درهم`}
-
-</div>
-
-</div>
-`;
-
+        const remaining = Math.round(Number(remainingMap[name] || 0));
+        const times = [...new Set((receivedTimesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
+        receivedList.innerHTML += `
+        <div class="report-row report-operation" data-time="${times[0] || '00:00'}" style="display:block">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+                <span>${name}</span>
+                <span>${formatAmount(receivedMap[name])} درهم</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px">
+                <span style="color:#64748b">🕐 ${times.length ? times.join(' • ') : '--:--'}</span>
+                <span style="font-weight:bold;color:${remaining>0?'red':'green'}">
+                    ${remaining>0 ? `🔴 باقي : ${formatAmount(remaining)} درهم` : `🟢 خالص 0 درهم`}
+                </span>
+            </div>
+        </div>`;
     });
 
-    Object.keys(paidMap).forEach(name=>{
-
+    Object.keys(paidMap).sort((a,b)=>sortByTime(a,b,paidTimesMap)).forEach(name=>{
+        const times = [...new Set((paidTimesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
         paidList.innerHTML += `
-            <div class="report-row">
-                <span>${name}</span>
-                <span>${paidMap[name]} درهم</span>
+            <div class="report-row report-operation" data-time="${times[0] || '00:00'}" style="display:block">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+                    <span>${name}</span>
+                    <span>${formatAmount(paidMap[name])} درهم</span>
+                </div>
+                <div style="margin-top:7px;color:#64748b;font-size:13px">🕐 ${times.length ? times.join(' • ') : '--:--'}</div>
             </div>
         `;
-
     });
 
     const netTotal =
@@ -447,15 +488,15 @@ ${remaining>0
 
     document.getElementById('totalReceived')
     .textContent =
-    totalReceived;
+    formatAmount(totalReceived);
 
     document.getElementById('totalPaid')
     .textContent =
-    totalPaid;
+    formatAmount(totalPaid);
 
     document.getElementById('netTotal')
     .textContent =
-    netTotal;
+    formatAmount(netTotal);
 
     const uniqueCustomers =
     new Set([
@@ -513,7 +554,7 @@ document.getElementById('searchInput')
 
         row.style.display =
         text.includes(search)
-        ? 'flex'
+        ? 'block'
         : 'none';
 
     });
