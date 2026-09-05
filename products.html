@@ -454,7 +454,19 @@
 
   // Initialize
   document.addEventListener('DOMContentLoaded', async () => {
-  await loadProducts();
+  try {
+    await loadProducts();
+  } catch (error) {
+    console.error('تعذر تحميل المنتجات من Firebase:', error);
+    // Keep the products page usable even if Firebase is temporarily unavailable.
+    products = [...initialProducts].map(p => ({
+      ...p,
+      price: Number(p.price) || 0,
+      stock: Number(p.stock) || 0,
+      lowStockThreshold: Number(p.lowStockThreshold) || 0,
+      hidden: p.hidden === true
+    }));
+  }
   renderProducts();
   updateStats();
   setupEventListeners();
@@ -475,7 +487,12 @@ async function loadProducts() {
 
     products = products.map(p => ({
       ...p,
-      hidden: p.hidden || false
+      // Firebase may return numeric values as strings; normalize them
+      // so rendering/stats never fail on .toFixed() or arithmetic.
+      price: Number(p.price) || 0,
+      stock: Number(p.stock) || 0,
+      lowStockThreshold: Number(p.lowStockThreshold) || 0,
+      hidden: p.hidden === true
     }));
   } else {
     products = [...initialProducts];
