@@ -454,7 +454,19 @@
 
   // Initialize
   document.addEventListener('DOMContentLoaded', async () => {
-  await loadProducts();
+  try {
+    await loadProducts();
+  } catch (error) {
+    console.error('تعذر تحميل المنتجات من Firebase:', error);
+    // Keep the products page usable even if Firebase is temporarily unavailable.
+    products = [...initialProducts].map(p => ({
+      ...p,
+      price: Number(p.price) || 0,
+      stock: Number(p.stock) || 0,
+      lowStockThreshold: Number(p.lowStockThreshold) || 0,
+      hidden: p.hidden === true
+    }));
+  }
   renderProducts();
   updateStats();
   setupEventListeners();
@@ -464,33 +476,63 @@ import { db } from "./firebase.js";
 import {
   ref,
   get,
-  set
+  set,
+  update,
+  remove
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 async function loadProducts() {
   const snapshot = await get(ref(db, "products"));
 
+  // Firebase can return an object, an array with empty entries, or a value
+  // that was partially written by another device. Normalize it before
+  // rendering so one bad entry cannot make the whole products page blank.
   if (snapshot.exists()) {
-    products = Object.values(snapshot.val());
+    const raw = snapshot.val();
+    const list = Array.isArray(raw) ? raw : Object.values(raw || {});
 
-    products = products.map(p => ({
-      ...p,
-      hidden: p.hidden || false
-    }));
+    products = list
+      .filter(p => p && typeof p === 'object')
+      .map((p, index) => ({
+        ...p,
+        id: p.id ?? index + 1,
+        name: String(p.name ?? '').trim(),
+        category: String(p.category ?? 'أخرى'),
+        price: Number.isFinite(Number(p.price)) ? Number(p.price) : 0,
+        stock: Number.isFinite(Number(p.stock)) ? Number(p.stock) : 0,
+        lowStockThreshold: Number.isFinite(Number(p.lowStockThreshold)) ? Number(p.lowStockThreshold) : 0,
+        image: String(p.image ?? ''),
+        hidden: p.hidden === true || p.hidden === 'true'
+      }))
+      .filter(p => p.name);
+
+    // If the node exists but contains no usable products, keep the page
+    // visible using the built-in catalogue without overwriting Firebase.
+    if (!products.length) {
+      products = initialProducts.map(p => ({ ...p }));
+    }
   } else {
-    products = [...initialProducts];
+    products = initialProducts.map(p => ({ ...p }));
+    // Only seed Firebase when the node genuinely does not exist.
     await saveProducts();
   }
 }
 
 async function saveProducts() {
+  // DO NOT replace the whole /products node.
+  // Two users can edit products at the same time; a full set() would
+  // overwrite the other user's latest changes. Keep this helper only for
+  // the initial seed when /products does not exist.
   const data = {};
-
   products.forEach(product => {
     data[product.id] = product;
   });
-
   await set(ref(db, "products"), data);
+}
+
+async function saveProduct(product) {
+  // Save only this product so simultaneous users do not overwrite each other.
+  await update(ref(db, `products/${product.id}`), product);
 }
   function setupEventListeners() {
     document.getElementById('fabBtn').addEventListener('click', openAddModal);
@@ -513,7 +555,7 @@ async function saveProducts() {
 
     let filtered = products.filter(p => {
 
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (p.name || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
     const isLow = p.stock <= p.lowStockThreshold;
 
@@ -525,7 +567,10 @@ async function saveProducts() {
     return matchesSearch && matchesCategory && matchesStatus;
 });
 
-    if (filtered.length === 0) {
+// ترتيب المنتجات من A إلى Z
+filtered.sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'en', { sensitivity: 'base' }));
+
+if (filtered.length === 0) {
       container.innerHTML = '';
       emptyState.classList.remove('hidden');
     } else {
@@ -560,7 +605,7 @@ async function saveProducts() {
               <p class="text-xs text-gray-500 mb-2">${product.category}</p>
               <div class="flex items-center justify-between">
                 <div>
-                  <p class="text-lg md:text-xl font-bold text-emerald-600">${product.price.toFixed(2)} <span class="text-xs font-normal text-gray-500">درهم</span></p>
+                  <p class="text-lg md:text-xl font-bold text-emerald-600">${Number(product.price || 0).toFixed(2)} <span class="text-xs font-normal text-gray-500">درهم</span></p>
                   <p class="text-xs text-gray-500 mt-0.5">المخزون: ${product.stock}</p>
                 </div>
               </div>
@@ -584,9 +629,9 @@ async function saveProducts() {
   }
 
   function updateStats() {
-    const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
-    const totalValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
-    const lowStockCount = products.filter(p => p.stock <= p.lowStockThreshold).length;
+    const totalStock = products.reduce((sum, p) => sum + (Number(p.stock) || 0), 0);
+    const totalValue = products.reduce((sum, p) => sum + ((Number(p.price) || 0) * (Number(p.stock) || 0)), 0);
+    const lowStockCount = products.filter(p => (Number(p.stock) || 0) <= (Number(p.lowStockThreshold) || 0)).length;
 
     document.getElementById('totalStock').textContent = totalStock.toLocaleString('ar-MA');
     document.getElementById('totalValue').textContent = totalValue.toLocaleString('ar-MA', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -646,20 +691,33 @@ async function saveProducts() {
       hidden: false
     };
 
-    if (editingProductId) {
-      const index = products.findIndex(p => p.id === editingProductId);
-      products[index] = {...products[index],...productData };
-      showToast('تم تحديث المنتج بنجاح', 'success');
-    } else {
-      const newProduct = {
-        id: Date.now(),
-       ...productData
-      };
-      products.push(newProduct);
-      showToast('تم إضافة المنتج بنجاح', 'success');
-    }
+    try {
+      if (editingProductId) {
+        const index = products.findIndex(p => p.id === editingProductId);
+        if (index === -1) {
+          showToast('المنتج غير موجود، أعد تحميل الصفحة', 'error');
+          return;
+        }
 
-    await saveProducts();
+        const updatedProduct = { ...products[index], ...productData };
+        products[index] = updatedProduct;
+        await saveProduct(updatedProduct);
+        showToast('تم تحديث المنتج بنجاح', 'success');
+      } else {
+        // Date + random suffix prevents two devices creating the same id.
+        const newProduct = {
+          id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
+          ...productData
+        };
+        products.push(newProduct);
+        await saveProduct(newProduct);
+        showToast('تم إضافة المنتج بنجاح', 'success');
+      }
+    } catch (error) {
+      console.error('فشل حفظ المنتج:', error);
+      showToast('تعذر حفظ المنتج، تحقق من الاتصال ثم حاول مرة أخرى', 'error');
+      return;
+    }
     renderProducts();
     updateStats();
     closeProductModal();
@@ -668,10 +726,16 @@ async function saveProducts() {
   window.toggleHideProduct = async function(id) {
     const product = products.find(p => p.id === id);
     if (product) {
-      product.hidden =!product.hidden;
-      await saveProducts();
-      renderProducts();
-      showToast(product.hidden? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
+      product.hidden = !product.hidden;
+      try {
+        await update(ref(db, `products/${product.id}`), { hidden: product.hidden });
+        renderProducts();
+        showToast(product.hidden ? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
+      } catch (error) {
+        console.error('فشل تحديث حالة المنتج:', error);
+        product.hidden = !product.hidden;
+        showToast('تعذر تحديث المنتج', 'error');
+      }
     }
   }
 
@@ -687,12 +751,18 @@ async function saveProducts() {
 
   async function confirmDelete() {
     if (deletingProductId) {
-      products = products.filter(p => p.id!== deletingProductId);
-      await saveProducts();
-      renderProducts();
-      updateStats();
-      showToast('تم حذف المنتج بنجاح', 'success');
-      closeDeleteModal();
+      const id = deletingProductId;
+      try {
+        await remove(ref(db, `products/${id}`));
+        products = products.filter(p => p.id !== id);
+        renderProducts();
+        updateStats();
+        showToast('تم حذف المنتج بنجاح', 'success');
+        closeDeleteModal();
+      } catch (error) {
+        console.error('فشل حذف المنتج:', error);
+        showToast('تعذر حذف المنتج', 'error');
+      }
     }
   }
 
