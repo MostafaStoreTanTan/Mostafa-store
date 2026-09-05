@@ -178,61 +178,103 @@ Pando
 }
 
 window.analyzeList = function() {
-  const text = document.getElementById('stockTextArea').value.trim();
+  const area = document.getElementById('stockTextArea');
+  const text = area ? area.value.trim() : '';
   if (!text) {
     showToast('الرجاء لصق اللائحة أولا', 'error');
     return;
   }
 
   parsedProducts = [];
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
+  // توحيد النص للمقارنة مع أسماء المنتجات الموجودة في Firebase
+  const normalize = value => String(value || '')
+    .toLowerCase()
+    .replace(/[ًٌٍَُِّْـ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const findProduct = name => {
+    const n = normalize(name);
+    if (!n) return null;
+
+    return allProducts.find(p => normalize(p.name) === n) ||
+           allProducts.find(p => normalize(p.name).includes(n)) ||
+           allProducts.find(p => n.includes(normalize(p.name))) ||
+           null;
+  };
+
+  const addParsed = (name, qty) => {
+    name = String(name || '').trim();
+    qty = parseInt(qty, 10);
+    if (!name || !Number.isFinite(qty) || qty <= 0) return;
+
+    const product = findProduct(name);
+    parsedProducts.push({
+      quantity: qty,
+      productName: product?.name || name,
+      productId: product?.id || null,
+      productImage: product?.image || 'https://via.placeholder.com/100',
+      piecesPerBox: product?.piecesPerBox || null,
+      boxes: 0,
+      extraPieces: 0,
+      totalPieces: 0,
+      received: false,
+      found: !!product
+    });
+  };
+
+  // يدعم جميع الصيغ:
+  // 12 Dalaa Bakal
+  // Dalaa Bakal 12
+  // 12 ثم Dalaa Bakal
+  // Dalaa Bakal ثم 12
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const parts = line.split(/\s+/);
-    const qty = parseInt(parts[0]);
+    const next = lines[i + 1];
+    const lineQty = /^\d+$/.test(line) ? parseInt(line, 10) : null;
+    const nextQty = next && /^\d+$/.test(next) ? parseInt(next, 10) : null;
 
-    if (!isNaN(qty)) {
-      let name;
-      if (parts.length > 1) {
-        // نفس السطر: "12 Dalaa Bakal"
-        name = parts.slice(1).join(' ').toLowerCase();
-      } else {
-        // سطرين: "12" ثم "Dalaa Bakal"
-        i++;
-        name = lines[i]?.toLowerCase();
-      }
+    // الكمية ثم اسم المنتج
+    if (lineQty !== null && next && nextQty === null) {
+      addParsed(next, lineQty);
+      i++;
+      continue;
+    }
 
-      if (name) {
-        const product = allProducts.find(p =>
-          p.name.toLowerCase() === name ||
-          p.name.toLowerCase().includes(name) ||
-          name.includes(p.name.toLowerCase())
-        );
+    // اسم المنتج ثم الكمية — هذه هي الصيغة الظاهرة في اللائحة التي أرسلتها
+    if (lineQty === null && nextQty !== null) {
+      addParsed(line, nextQty);
+      i++;
+      continue;
+    }
 
-        parsedProducts.push({
-  quantity: qty,
-  productName: name,
-  productId: product?.id || null,
-  productImage: product?.image || 'https://via.placeholder.com/100',
-  piecesPerBox: product?.piecesPerBox || null,
-  boxes: 0,
-  extraPieces: 0,
-  totalPieces: 0,
-  received: false,
-  found:!!product
-});
+    // صيغة في سطر واحد: 12 Dalaa Bakal
+    const leading = line.match(/^(\d+)\s+(.+)$/);
+    if (leading) {
+      addParsed(leading[2], parseInt(leading[1], 10));
+      continue;
+    }
+
+    // صيغة في سطر واحد: Dalaa Bakal 12
+    // نستعملها فقط إذا كان الجزء قبل الرقم يطابق منتجاً معروفاً، حتى لا نفسد أسماء مثل "yes eco 3".
+    const trailing = line.match(/^(.+?)\s+(\d+)$/);
+    if (trailing) {
+      const possibleProduct = findProduct(trailing[1]);
+      if (possibleProduct) {
+        addParsed(possibleProduct.name, parseInt(trailing[2], 10));
       }
     }
   }
 
   if (parsedProducts.length === 0) {
-    showToast('لم يتم العثور على أي منتج', 'error');
+    showToast('لم يتم العثور على أي منتج أو كمية. تأكد من أن كل منتج بجانبه الكمية.', 'error');
     return;
   }
 
   renderStep2();
-}
+};
 
 function renderStep2() {
   document.getElementById('step1Page').classList.add('hidden');
