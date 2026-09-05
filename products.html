@@ -513,7 +513,7 @@ async function saveProducts() {
 
     let filtered = products.filter(p => {
 
-    const matchesSearch = (p.name || "").toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = currentFilter === 'الكل' || p.category === currentFilter;
     const isLow = p.stock <= p.lowStockThreshold;
 
@@ -525,10 +525,7 @@ async function saveProducts() {
     return matchesSearch && matchesCategory && matchesStatus;
 });
 
-// ترتيب المنتجات من A إلى Z
-filtered.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
-
-if (filtered.length === 0) {
+    if (filtered.length === 0) {
       container.innerHTML = '';
       emptyState.classList.remove('hidden');
     } else {
