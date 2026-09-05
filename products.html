@@ -476,7 +476,9 @@ import { db } from "./firebase.js";
 import {
   ref,
   get,
-  set
+  set,
+  update,
+  remove
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 async function loadProducts() {
@@ -501,13 +503,20 @@ async function loadProducts() {
 }
 
 async function saveProducts() {
+  // DO NOT replace the whole /products node.
+  // Two users can edit products at the same time; a full set() would
+  // overwrite the other user's latest changes. Keep this helper only for
+  // the initial seed when /products does not exist.
   const data = {};
-
   products.forEach(product => {
     data[product.id] = product;
   });
-
   await set(ref(db, "products"), data);
+}
+
+async function saveProduct(product) {
+  // Save only this product so simultaneous users do not overwrite each other.
+  await update(ref(db, `products/${product.id}`), product);
 }
   function setupEventListeners() {
     document.getElementById('fabBtn').addEventListener('click', openAddModal);
@@ -666,20 +675,33 @@ if (filtered.length === 0) {
       hidden: false
     };
 
-    if (editingProductId) {
-      const index = products.findIndex(p => p.id === editingProductId);
-      products[index] = {...products[index],...productData };
-      showToast('تم تحديث المنتج بنجاح', 'success');
-    } else {
-      const newProduct = {
-        id: Date.now(),
-       ...productData
-      };
-      products.push(newProduct);
-      showToast('تم إضافة المنتج بنجاح', 'success');
-    }
+    try {
+      if (editingProductId) {
+        const index = products.findIndex(p => p.id === editingProductId);
+        if (index === -1) {
+          showToast('المنتج غير موجود، أعد تحميل الصفحة', 'error');
+          return;
+        }
 
-    await saveProducts();
+        const updatedProduct = { ...products[index], ...productData };
+        products[index] = updatedProduct;
+        await saveProduct(updatedProduct);
+        showToast('تم تحديث المنتج بنجاح', 'success');
+      } else {
+        // Date + random suffix prevents two devices creating the same id.
+        const newProduct = {
+          id: Date.now() * 1000 + Math.floor(Math.random() * 1000),
+          ...productData
+        };
+        products.push(newProduct);
+        await saveProduct(newProduct);
+        showToast('تم إضافة المنتج بنجاح', 'success');
+      }
+    } catch (error) {
+      console.error('فشل حفظ المنتج:', error);
+      showToast('تعذر حفظ المنتج، تحقق من الاتصال ثم حاول مرة أخرى', 'error');
+      return;
+    }
     renderProducts();
     updateStats();
     closeProductModal();
@@ -688,10 +710,16 @@ if (filtered.length === 0) {
   window.toggleHideProduct = async function(id) {
     const product = products.find(p => p.id === id);
     if (product) {
-      product.hidden =!product.hidden;
-      await saveProducts();
-      renderProducts();
-      showToast(product.hidden? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
+      product.hidden = !product.hidden;
+      try {
+        await update(ref(db, `products/${product.id}`), { hidden: product.hidden });
+        renderProducts();
+        showToast(product.hidden ? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
+      } catch (error) {
+        console.error('فشل تحديث حالة المنتج:', error);
+        product.hidden = !product.hidden;
+        showToast('تعذر تحديث المنتج', 'error');
+      }
     }
   }
 
@@ -707,12 +735,18 @@ if (filtered.length === 0) {
 
   async function confirmDelete() {
     if (deletingProductId) {
-      products = products.filter(p => p.id!== deletingProductId);
-      await saveProducts();
-      renderProducts();
-      updateStats();
-      showToast('تم حذف المنتج بنجاح', 'success');
-      closeDeleteModal();
+      const id = deletingProductId;
+      try {
+        await remove(ref(db, `products/${id}`));
+        products = products.filter(p => p.id !== id);
+        renderProducts();
+        updateStats();
+        showToast('تم حذف المنتج بنجاح', 'success');
+        closeDeleteModal();
+      } catch (error) {
+        console.error('فشل حذف المنتج:', error);
+        showToast('تعذر حذف المنتج', 'error');
+      }
     }
   }
 
