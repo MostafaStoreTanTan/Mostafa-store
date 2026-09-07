@@ -453,23 +453,26 @@
   let deletingProductId = null;
 
   // Initialize
-  document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    await loadProducts();
-  } catch (error) {
-    console.error('تعذر تحميل المنتجات من Firebase:', error);
-    // Keep the products page usable even if Firebase is temporarily unavailable.
-    products = [...initialProducts].map(p => ({
-      ...p,
-      price: Number(p.price) || 0,
-      stock: Number(p.stock) || 0,
-      lowStockThreshold: Number(p.lowStockThreshold) || 0,
-      hidden: p.hidden === true
-    }));
-  }
+  document.addEventListener('DOMContentLoaded', () => {
+  // Render the built-in catalogue immediately so the page is not blocked by
+  // the Firebase round-trip. Firebase then replaces it with the real data.
+  products = [...initialProducts].map(p => ({
+    ...p,
+    price: Number(p.price) || 0,
+    stock: Number(p.stock) || 0,
+    lowStockThreshold: Number(p.lowStockThreshold) || 0,
+    hidden: p.hidden === true
+  }));
   renderProducts();
   updateStats();
   setupEventListeners();
+
+  loadProducts().then(() => {
+    renderProducts();
+    updateStats();
+  }).catch(error => {
+    console.error('تعذر تحميل المنتجات من Firebase:', error);
+  });
 });
 
 import { db } from "./firebase.js";
@@ -548,6 +551,8 @@ async function saveProduct(product) {
       pill.addEventListener('click', () => filterByCategory(pill.dataset.category, pill));
     });
   }
+
+  function sameProductId(a, b) { return String(a) === String(b); }
 
   function renderProducts() {
     const container = document.getElementById('productsContainer');
@@ -658,7 +663,7 @@ if (filtered.length === 0) {
   }
 
   window.editProduct = function(id) {
-    const product = products.find(p => p.id === id);
+    const product = products.find(p => sameProductId(p.id, id));
     if (!product) return;
 
     editingProductId = id;
@@ -693,7 +698,7 @@ if (filtered.length === 0) {
 
     try {
       if (editingProductId) {
-        const index = products.findIndex(p => p.id === editingProductId);
+        const index = products.findIndex(p => sameProductId(p.id, editingProductId));
         if (index === -1) {
           showToast('المنتج غير موجود، أعد تحميل الصفحة', 'error');
           return;
@@ -723,19 +728,31 @@ if (filtered.length === 0) {
     closeProductModal();
   }
 
+  const hideUpdateInProgress = new Set();
+
   window.toggleHideProduct = async function(id) {
-    const product = products.find(p => p.id === id);
-    if (product) {
-      product.hidden = !product.hidden;
-      try {
-        await update(ref(db, `products/${product.id}`), { hidden: product.hidden });
-        renderProducts();
-        showToast(product.hidden ? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
-      } catch (error) {
-        console.error('فشل تحديث حالة المنتج:', error);
-        product.hidden = !product.hidden;
-        showToast('تعذر تحديث المنتج', 'error');
-      }
+    const product = products.find(p => sameProductId(p.id, id));
+    if (!product || hideUpdateInProgress.has(String(product.id))) return;
+
+    const key = String(product.id);
+    const previousHidden = product.hidden === true;
+    const nextHidden = !previousHidden;
+
+    // تحديث الواجهة فوراً، ثم حفظ التغيير في Firebase في الخلفية.
+    product.hidden = nextHidden;
+    renderProducts();
+    hideUpdateInProgress.add(key);
+
+    try {
+      await update(ref(db, `products/${product.id}`), { hidden: nextHidden });
+      showToast(nextHidden ? 'تم إخفاء المنتج من الرئيسية' : 'تم إظهار المنتج في الرئيسية', 'success');
+    } catch (error) {
+      console.error('فشل تحديث حالة المنتج:', error);
+      product.hidden = previousHidden;
+      renderProducts();
+      showToast('تعذر تحديث المنتج، تحقق من الاتصال', 'error');
+    } finally {
+      hideUpdateInProgress.delete(key);
     }
   }
 
