@@ -292,12 +292,13 @@
 
 <script type="module">
   import { db } from "./firebase.js";
-  import { ref, get } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+  import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
   let allProducts = [];
   let filteredProducts = [];
   let currentCategory = 'الكل';
   let searchQuery = '';
+  const PRODUCT_CACHE_KEY = 'mostafa_products_cache_v1';
 
   const productsGrid = document.getElementById('productsGrid');
   const noResults = document.getElementById('noResults');
@@ -314,22 +315,41 @@
   const lightboxClose = document.getElementById('lightboxClose');
   const lightboxBackdrop = document.getElementById('lightboxBackdrop');
 
-  async function init() {
-    await loadProducts();
+  function init() {
+    // اعرض آخر نسخة محلية فوراً، ثم حدّثها من Firebase في الخلفية.
+    try {
+      const cached = JSON.parse(localStorage.getItem(PRODUCT_CACHE_KEY) || 'null');
+      if (Array.isArray(cached)) {
+        allProducts = cached;
+        renderCategories();
+        performSearch();
+      }
+    } catch (e) {
+      console.warn('تعذر قراءة كاش المنتجات:', e);
+    }
+
+    // مستمع واحد لحظي بدل إعادة تحميل المنتجات في كل مرة تعود فيها الصفحة
+    // للواجهة. هذا يجعل الإخفاء/الإظهار يصل للجهاز الآخر تلقائياً أيضاً.
+    onValue(ref(db, "products"), (snapshot) => {
+      if (snapshot.exists()) {
+        const raw = snapshot.val();
+        const list = Array.isArray(raw) ? raw : Object.values(raw || {});
+        allProducts = list.filter(p => p && (p.hidden === false || p.hidden === undefined || p.hidden === 'false'));
+      } else {
+        allProducts = [];
+      }
+      try { localStorage.setItem(PRODUCT_CACHE_KEY, JSON.stringify(allProducts)); } catch (e) {}
+      renderCategories();
+      performSearch();
+    }, (error) => {
+      console.error('تعذر تحميل المنتجات:', error);
+      allProducts = [];
+      renderCategories();
+      performSearch();
+    });
+
     setupEventListeners();
     setupLightbox();
-  }
-
-  async function loadProducts() {
-    const snapshot = await get(ref(db, "products"));
-    if (snapshot.exists()) {
-        const products = Object.values(snapshot.val());
-        allProducts = products.filter(p => p.hidden === false || p.hidden === undefined);
-    } else {
-        allProducts = [];
-    }
-    performSearch();
-    renderCategories();
   }
 
   function renderCategories() {
@@ -368,7 +388,7 @@
   function createProductCard(product, index) {
     const hasValidPrice = product.price!== null && product.price!== undefined &&!isNaN(Number(product.price)) && Number(product.price) > 0;
     const priceText = hasValidPrice? `${Number(product.price).toFixed(2)} درهم` : '';
-    const isFirstRow = index < 8;
+    const isFirstRow = index < 4;
     return `
       <div class="product-card animate-fade-in">
         <div class="product-image-wrap" data-image="${(product.image||'').replace(/"/g,'&quot;')}" data-name="${(product.name||'').replace(/"/g,'&quot;')}">
@@ -456,18 +476,6 @@
     sideMenu.classList.add('hidden');
     sideMenuBackdrop.classList.add('hidden');
   }
-
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'products') {
-      loadProducts();
-    }
-  });
-
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      loadProducts();
-    }
-  });
 
   window.openProductDetails = function(productId) {
     window.location.href = `product-details.html?id=${productId}`;
