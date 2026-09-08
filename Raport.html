@@ -70,7 +70,8 @@ gap:10px;
 margin-bottom:20px;
 }
 
-.tools-box input{
+.tools-box input,
+.tools-box select{
 padding:14px;
 border-radius:12px;
 border:2px solid #ccfbf1;
@@ -184,24 +185,23 @@ color:white;
 
     <div class="tools-box">
 
+      <select id="reportMode" aria-label="نوع التقرير">
+        <option value="day">📅 تقرير يومي</option>
+        <option value="month">🗓️ تقرير شهري</option>
+      </select>
+
+      <input type="date" id="reportDate">
+      <input type="month" id="reportMonth" style="display:none">
+
+      <div id="timeFilters" style="display:flex;flex-direction:column;gap:10px">
+        <input type="time" id="fromTime" value="00:00">
+        <input type="time" id="toTime" value="23:59">
+      </div>
+
       <input
-type="date"
-id="reportDate">
-
-<input
-type="time"
-id="fromTime"
-value="00:00">
-
-<input
-type="time"
-id="toTime"
-value="23:59">
-
-<input
-type="text"
-id="searchInput"
-placeholder="🔍 ابحث عن زبون">
+        type="text"
+        id="searchInput"
+        placeholder="🔍 ابحث عن زبون">
     </div>
 
     <div class="report-section">
@@ -319,6 +319,7 @@ const today =
 getLocalDateString();
 
 reportDate.value = today;
+reportMonth.value = today.slice(0,7);
 
 async function loadCustomers(){
 
@@ -336,205 +337,182 @@ async function loadCustomers(){
 
 loadCustomers();
 
-function generateReport(selectedDate){
+function generateReport(selectedPeriod){
 
+    const mode = document.getElementById('reportMode').value;
     const receivedMap = {};
-const receivedTimesMap = {};
-const remainingMap = {};
-const paidMap = {};
-const paidTimesMap = {};
+    const receivedTimesMap = {};
+    const receivedDatesMap = {};
+    const paidMap = {};
+    const paidTimesMap = {};
+    const paidDatesMap = {};
+    const remainingMap = {};
+    const customerIdMap = {};
 
     let totalReceived = 0;
     let totalPaid = 0;
-    let operationsCount = 0;
 
     Object.keys(allCustomers).forEach(customerId=>{
 
-        const customer =
-        allCustomers[customerId];
+        const customer = allCustomers[customerId];
+        const operations = customer.operations || [];
+        const customerName = customer.name || 'بدون اسم';
+        customerIdMap[customerName] = customerId;
 
-        const operations =
-        customer.operations || [];
+        let totalPaidAll = 0;
+        let totalReceivedAll = 0;
+        operations.forEach(operation=>{
+            if(operation.type === 'paid') totalPaidAll += Number(operation.amount || 0);
+            if(operation.type === 'received') totalReceivedAll += Number(operation.amount || 0);
+        });
+        remainingMap[customerName] = Number(customer.amount || 0) + totalPaidAll - totalReceivedAll;
 
         operations.forEach(op=>{
+            const operationDate = getOperationDate(op);
+            const matchesPeriod = mode === 'month'
+                ? operationDate.slice(0,7) === selectedPeriod
+                : operationDate === selectedPeriod;
 
-           const operationDate = getOperationDate(op);
-           if(operationDate !== selectedDate){
-               return;
-           }
+            if(!matchesPeriod) return;
 
-           const fromTime = document.getElementById('fromTime').value || '00:00';
-           const toTime = document.getElementById('toTime').value || '23:59';
-           const opTime = String(op.time || '00:00').slice(0,5);
-           const opMinutes = timeToMinutes(opTime);
-           const fromMinutes = timeToMinutes(fromTime);
-           const toMinutes = timeToMinutes(toTime);
+            // في التقرير اليومي فقط نطبق فلتر الساعة.
+            if(mode === 'day'){
+                const fromTime = document.getElementById('fromTime').value || '00:00';
+                const toTime = document.getElementById('toTime').value || '23:59';
+                const opTime = String(op.time || '00:00').slice(0,5);
+                const opMinutes = timeToMinutes(opTime);
+                const fromMinutes = timeToMinutes(fromTime);
+                const toMinutes = timeToMinutes(toTime);
+                const inTimeRange = fromMinutes <= toMinutes
+                    ? (opMinutes >= fromMinutes && opMinutes <= toMinutes)
+                    : (opMinutes >= fromMinutes || opMinutes <= toMinutes);
+                if(!inTimeRange) return;
+            }
 
-           // يدعم أيضا الفترات التي تعبر منتصف الليل.
-           const inTimeRange = fromMinutes <= toMinutes
-               ? (opMinutes >= fromMinutes && opMinutes <= toMinutes)
-               : (opMinutes >= fromMinutes || opMinutes <= toMinutes);
-
-           if(!inTimeRange){
-               return;
-           }
-           operationsCount++;
+            const amount = Number(op.amount || 0);
 
             if(op.type === 'received'){
-
-                totalReceived +=
-                Number(op.amount);
-
-                if(!receivedMap[customer.name]){
-                    receivedMap[customer.name] = 0;
-                    receivedTimesMap[customer.name] = [];
+                totalReceived += amount;
+                if(!receivedMap[customerName]){
+                    receivedMap[customerName] = 0;
+                    receivedTimesMap[customerName] = [];
+                    receivedDatesMap[customerName] = [];
                 }
-
-                receivedMap[customer.name] += Number(op.amount);
-                if(op.time) receivedTimesMap[customer.name].push(String(op.time).slice(0,5));
-
-let totalPaidAll = 0;
-let totalReceivedAll = 0;
-
-operations.forEach(operation=>{
-
-    if(operation.type === "paid"){
-        totalPaidAll += Number(operation.amount || 0);
-    }
-
-    if(operation.type === "received"){
-        totalReceivedAll += Number(operation.amount || 0);
-    }
-
-});
-
-remainingMap[customer.name] =
-Number(customer.amount || 0)
-+
-totalPaidAll
--
-totalReceivedAll;
+                receivedMap[customerName] += amount;
+                if(op.time) receivedTimesMap[customerName].push(String(op.time).slice(0,5));
+                if(operationDate) receivedDatesMap[customerName].push(operationDate);
             }
 
             if(op.type === 'paid'){
-
-                totalPaid +=
-                Number(op.amount);
-
-                if(!paidMap[customer.name]){
-                    paidMap[customer.name] = 0;
-                    paidTimesMap[customer.name] = [];
+                totalPaid += amount;
+                if(!paidMap[customerName]){
+                    paidMap[customerName] = 0;
+                    paidTimesMap[customerName] = [];
+                    paidDatesMap[customerName] = [];
                 }
-
-                paidMap[customer.name] += Number(op.amount);
-                if(op.time) paidTimesMap[customer.name].push(String(op.time).slice(0,5));
-
+                paidMap[customerName] += amount;
+                if(op.time) paidTimesMap[customerName].push(String(op.time).slice(0,5));
+                if(operationDate) paidDatesMap[customerName].push(operationDate);
             }
-
         });
-
     });
 
-    const receivedList =
-    document.getElementById('receivedList');
-
-    const paidList =
-    document.getElementById('paidList');
-
+    const receivedList = document.getElementById('receivedList');
+    const paidList = document.getElementById('paidList');
     receivedList.innerHTML = '';
     paidList.innerHTML = '';
 
-    // ترتيب الزبناء حسب وقت العملية، ثم الاسم عند تساوي الوقت.
-    const sortByTime = (a,b,timesMap) => {
-        const ta = timeToMinutes((timesMap[a] || [])[0] || '00:00');
-        const tb = timeToMinutes((timesMap[b] || [])[0] || '00:00');
-        return ta - tb || a.localeCompare(b);
-    };
+    function escapeHtml(value){
+        return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    }
 
-    Object.keys(receivedMap).sort((a,b)=>sortByTime(a,b,receivedTimesMap)).forEach(name=>{
+    function renderRows(map, timesMap, datesMap, list, type){
+        const names = Object.keys(map).sort((a,b)=>{
+            const amountDiff = Number(map[b] || 0) - Number(map[a] || 0);
+            return amountDiff || a.localeCompare(b);
+        });
 
-        const remaining = Math.round(Number(remainingMap[name] || 0));
-        const times = [...new Set((receivedTimesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
-        receivedList.innerHTML += `
-        <div class="report-row report-operation" data-time="${times[0] || '00:00'}" style="display:block">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                <span>${name}</span>
-                <span>${formatAmount(receivedMap[name])} درهم</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px">
-                <span style="color:#64748b">🕐 ${times.length ? times.join(' • ') : '--:--'}</span>
-                <span style="font-weight:bold;color:${remaining>0?'red':'green'}">
-                    ${remaining>0 ? `🔴 باقي : ${formatAmount(remaining)} درهم` : `🟢 خالص 0 درهم`}
-                </span>
-            </div>
-        </div>`;
-    });
+        names.forEach(name=>{
+            const times = [...new Set((timesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
+            const dates = [...new Set(datesMap[name] || [])].sort();
+            const customerId = customerIdMap[name];
+            const details = mode === 'month'
+                ? `📅 ${dates.length ? dates.map(formatReportDate).join(' • ') : '--'}`
+                : `🕐 ${times.length ? times.join(' • ') : '--:--'}`;
 
-    Object.keys(paidMap).sort((a,b)=>sortByTime(a,b,paidTimesMap)).forEach(name=>{
-        const times = [...new Set((paidTimesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
-        paidList.innerHTML += `
-            <div class="report-row report-operation" data-time="${times[0] || '00:00'}" style="display:block">
+            const remaining = Math.round(Number(remainingMap[name] || 0));
+            const remainingHtml = type === 'received'
+                ? `<span style="font-weight:bold;color:${remaining>0?'#dc2626':'#16a34a'}">${remaining>0 ? `🔴 باقي : ${formatAmount(remaining)} درهم` : `🟢 خالص 0 درهم`}</span>`
+                : '';
+
+            list.innerHTML += `
+            <div class="report-row report-operation" data-time="${times[0] || '00:00'}" data-name="${escapeHtml(name)}" style="display:block;cursor:pointer" data-customer-id="${escapeHtml(customerId)}">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                    <span>${name}</span>
-                    <span>${formatAmount(paidMap[name])} درهم</span>
+                    <span style="font-weight:600">${escapeHtml(name)}</span>
+                    <span>${formatAmount(map[name])} درهم</span>
                 </div>
-                <div style="margin-top:7px;color:#64748b;font-size:13px">🕐 ${times.length ? times.join(' • ') : '--:--'}</div>
-            </div>
-        `;
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px;gap:8px">
+                    <span style="color:#64748b">${details}</span>
+                    ${remainingHtml}
+                </div>
+            </div>`;
+        });
+    }
+
+    renderRows(receivedMap, receivedTimesMap, receivedDatesMap, receivedList, 'received');
+    renderRows(paidMap, paidTimesMap, paidDatesMap, paidList, 'paid');
+
+    // الضغط على اسم الزبون يفتح ملفه الشخصي مباشرة.
+    document.querySelectorAll('.report-operation').forEach(row=>{
+        row.addEventListener('click', ()=>{
+            const customerId = row.dataset.customerId;
+            if(customerId) window.location.href = 'person.html?id=' + encodeURIComponent(customerId);
+        });
     });
 
-    const netTotal =
-    totalReceived - totalPaid;
+    const netTotal = totalReceived - totalPaid;
+    document.getElementById('totalReceived').textContent = formatAmount(totalReceived);
+    document.getElementById('totalPaid').textContent = formatAmount(totalPaid);
+    document.getElementById('netTotal').textContent = formatAmount(netTotal);
 
-    document.getElementById('totalReceived')
-    .textContent =
-    formatAmount(totalReceived);
-
-    document.getElementById('totalPaid')
-    .textContent =
-    formatAmount(totalPaid);
-
-    document.getElementById('netTotal')
-    .textContent =
-    formatAmount(netTotal);
-
-    const uniqueCustomers =
-    new Set([
-        ...Object.keys(receivedMap),
-        ...Object.keys(paidMap)
-    ]);
-
-    document.getElementById('customersCount')
-    .textContent =
-    uniqueCustomers.size;
-
+    const uniqueCustomers = new Set([...Object.keys(receivedMap), ...Object.keys(paidMap)]);
+    document.getElementById('customersCount').textContent = uniqueCustomers.size;
 }
 
+function formatReportDate(dateString){
+    if(!dateString) return '--';
+    const m = String(dateString).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return m ? `${m[3]}/${m[2]}/${m[1]}` : dateString;
+}
+
+const reportMode = document.getElementById('reportMode');
+const reportMonth = document.getElementById('reportMonth');
+const timeFilters = document.getElementById('timeFilters');
+
 reportDate.addEventListener('change',()=>{
-
-    generateReport(
-        reportDate.value
-    );
-
+    if(reportMode.value === 'day') generateReport(reportDate.value);
 });
 
-document.getElementById('fromTime')
-.addEventListener('change',()=>{
-
-    generateReport(
-        reportDate.value
-    );
-
+reportMonth.addEventListener('change',()=>{
+    if(reportMode.value === 'month') generateReport(reportMonth.value);
 });
 
-document.getElementById('toTime')
-.addEventListener('change',()=>{
-
-    generateReport(
-        reportDate.value
-    );
-
+document.getElementById('fromTime').addEventListener('change',()=>{
+    if(reportMode.value === 'day') generateReport(reportDate.value);
 });
+
+document.getElementById('toTime').addEventListener('change',()=>{
+    if(reportMode.value === 'day') generateReport(reportDate.value);
+});
+
+reportMode.addEventListener('change',()=>{
+    const monthly = reportMode.value === 'month';
+    reportDate.style.display = monthly ? 'none' : 'block';
+    reportMonth.style.display = monthly ? 'block' : 'none';
+    timeFilters.style.display = monthly ? 'none' : 'flex';
+    generateReport(monthly ? reportMonth.value : reportDate.value);
+});
+
 document.getElementById('searchInput')
 .addEventListener('input',()=>{
 
@@ -575,8 +553,12 @@ document.getElementById('whatsappBtn')
     const selectedDate =
     reportDate.value;
 
+    const reportTitle = document.getElementById('reportMode').value === 'month'
+        ? `شهر ${reportMonth.value}`
+        : `يوم ${selectedDate}`;
+
     let reportText =
-`📊 تقرير يوم ${selectedDate}
+`📊 تقرير ${reportTitle}
 
 `;
 
@@ -659,11 +641,14 @@ document.getElementById('pdfBtn')
 
     const selectedDate =
     reportDate.value;
+    const pdfPeriod = document.getElementById('reportMode').value === 'month'
+        ? reportMonth.value
+        : selectedDate;
 
     let content =
 `Raport Pro
 
-Date: ${selectedDate}
+Period: ${pdfPeriod}
 
 Received:
 ${document.getElementById('receivedList').innerText}
@@ -682,7 +667,7 @@ ${document.getElementById('customersCount').textContent}
 
     doc.save(
         'Raport-' +
-        selectedDate +
+        pdfPeriod +
         '.pdf'
     );
 
