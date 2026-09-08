@@ -416,6 +416,15 @@ function renderCustomers(customers){
   const list=document.getElementById('customersList');
   if(!list) return;
   const keys = Object.keys(customers);
+
+  // ترتيب الزبناء حسب المبلغ المتبقي: الأكبر في الأعلى والأصغر في الأسفل
+  // نستعمل totalRemaining المحسوب فعلياً من الديون والعمليات.
+  keys.sort((a,b)=>{
+    const amountA = Number(getCachedSmartData(a, customers[a])?.totalRemaining || 0);
+    const amountB = Number(getCachedSmartData(b, customers[b])?.totalRemaining || 0);
+    return amountB - amountA;
+  });
+
   if(keys.length===0){
     list.innerHTML=`<div class="empty"><div style="font-size:36px">👥</div><p>لا يوجد زبناء</p></div>`;
     updateStats({totalAmount:0,customersCount:0,todayCount:0,overdueCount:0});
@@ -560,7 +569,7 @@ window.editCustomerPhone=function(id){
 }
 </script>
 <script>
-const appVersion="15"; if(localStorage.getItem("appVersion")!==appVersion){ localStorage.clear(); window.location.href="login.html"; }
+const appVersion="16"; if(localStorage.getItem("appVersion")!==appVersion){ localStorage.clear(); window.location.href="login.html"; }
 if(!localStorage.getItem("loggedIn")){ window.location.href="login.html"; }
 if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js',{scope:'./'})); }
 </script>
