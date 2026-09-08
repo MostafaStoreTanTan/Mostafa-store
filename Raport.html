@@ -145,6 +145,40 @@ background:#0f766e;
 color:white;
 }
 
+
+
+.report-type-wrap{margin-bottom:12px;}
+.report-type-btn{
+width:100%;padding:15px 18px;border:2px solid #ccfbf1;border-radius:16px;background:white;
+font-size:18px;font-weight:800;color:#0f766e;box-shadow:0 3px 10px rgba(0,0,0,.06);cursor:pointer;
+transition:.2s;display:flex;align-items:center;justify-content:space-between;
+}
+.report-type-btn:active{transform:scale(.99);}
+.report-type-btn span:last-child{font-size:14px;color:#64748b;}
+.mode-panel{display:none;margin-top:10px;background:white;border:1px solid #dff7f3;border-radius:16px;padding:8px;box-shadow:0 3px 10px rgba(0,0,0,.06);}
+.mode-panel.show{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mode-option{border:0;background:#f0fdfa;color:#0f766e;border-radius:12px;padding:12px;font-weight:800;font-size:15px;cursor:pointer;}
+.mode-option.active{background:linear-gradient(135deg,#0f766e,#14b8a6);color:white;}
+.filters-chart{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;direction:ltr;align-items:stretch;margin-bottom:15px;}
+.filters-panel{grid-column:2;direction:rtl;display:flex;flex-direction:column;gap:10px;min-width:0;}
+.chart-card{grid-column:1;direction:rtl;background:white;border:1px solid #dff7f3;border-radius:22px;min-height:100%;padding:10px;box-shadow:0 4px 14px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.chart-card svg{width:100%;height:100%;min-height:220px;display:block;}
+.chart-empty{width:100%;min-height:220px;display:flex;align-items:center;justify-content:center;color:#cbd5e1;font-size:46px;}
+.month-picker{display:none;}
+.month-picker.show{display:block;}
+.day-picker.hide{display:none;}
+.filters-panel input{width:100%;}
+.report-row{cursor:pointer;transition:background .15s,transform .15s;}
+.report-row:active{background:#f0fdfa;transform:scale(.995);}
+.report-row .person-link{color:#0f172a;font-weight:700;}
+@media(max-width:520px){
+ .filters-chart{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;}
+ .chart-card{padding:5px;border-radius:18px;}
+ .chart-card svg,.chart-empty{min-height:205px;}
+ .filters-panel{gap:8px;}
+ .report-type-btn{font-size:16px;}
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -182,26 +216,29 @@ color:white;
 
     </div>
 
-    <div class="tools-box">
+    <div class="report-type-wrap">
+      <button type="button" class="report-type-btn" id="reportTypeBtn">
+        <span id="reportTypeLabel">📅 تقرير يومي</span>
+        <span>⌄</span>
+      </button>
+      <div class="mode-panel" id="modePanel">
+        <button type="button" class="mode-option active" id="dailyModeBtn">📅 يومي</button>
+        <button type="button" class="mode-option" id="monthlyModeBtn">🗓️ شهري</button>
+      </div>
+    </div>
 
-      <input
-type="date"
-id="reportDate">
+    <div class="filters-chart">
+      <div class="chart-card" id="chartCard" aria-hidden="true"></div>
+      <div class="filters-panel">
+        <input class="day-picker" type="date" id="reportDate">
+        <input class="month-picker" type="month" id="reportMonth">
+        <input type="time" id="fromTime" value="00:00">
+        <input type="time" id="toTime" value="23:59">
+      </div>
+    </div>
 
-<input
-type="time"
-id="fromTime"
-value="00:00">
-
-<input
-type="time"
-id="toTime"
-value="23:59">
-
-<input
-type="text"
-id="searchInput"
-placeholder="🔍 ابحث عن زبون">
+    <div class="tools-box" style="margin-bottom:20px;">
+      <input type="text" id="searchInput" placeholder="🔍 ابحث عن زبون">
     </div>
 
     <div class="report-section">
@@ -275,9 +312,16 @@ const db =
 getDatabase(app);
 
 let allCustomers = {};
+let reportMode = 'daily';
 
-const reportDate =
-document.getElementById('reportDate');
+const reportDate = document.getElementById('reportDate');
+const reportMonth = document.getElementById('reportMonth');
+const chartCard = document.getElementById('chartCard');
+const reportTypeBtn = document.getElementById('reportTypeBtn');
+const modePanel = document.getElementById('modePanel');
+const reportTypeLabel = document.getElementById('reportTypeLabel');
+const dailyModeBtn = document.getElementById('dailyModeBtn');
+const monthlyModeBtn = document.getElementById('monthlyModeBtn');
 
 function getLocalDateString(date = new Date()){
     const y = date.getFullYear();
@@ -292,15 +336,11 @@ function addLocalDays(dateString, days){
     return getLocalDateString(d);
 }
 
-// العمليات القديمة حُفظ تاريخها بـ UTC بينما الوقت محلي.
-// لذلك العملية بين 00:00 و00:59 تُحسب لليوم المحلي التالي.
 function getOperationDate(op){
     const date = op.date;
     const time = String(op.time || '00:00').slice(0,5);
     if(!date) return '';
-    if(/^00:[0-5]\d$/.test(time)){
-        return addLocalDays(date, 1);
-    }
+    if(/^00:[0-5]\d$/.test(time)) return addLocalDays(date, 1);
     return date;
 }
 
@@ -315,339 +355,223 @@ function formatAmount(value){
     return Number.isInteger(n) ? String(n) : String(Number(n.toFixed(2)));
 }
 
-const today =
-getLocalDateString();
+function escapeHtml(value){
+    return String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
 
+function operationNet(op){
+    const amount = Number(op.amount || 0);
+    return op.type === 'received' ? amount : -amount;
+}
+
+function monthLabel(year, monthIndex){
+    const names = ['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
+    return names[monthIndex] + ' ' + year;
+}
+
+function renderLineChart(values, labels){
+    const width = 460, height = 230;
+    const pad = {l:20,r:16,t:18,b:30};
+    const plotW = width-pad.l-pad.r, plotH = height-pad.t-pad.b;
+    const nums = values.map(v=>Number(v)||0);
+    const maxAbs = Math.max(...nums.map(v=>Math.abs(v)), 1);
+    const maxY = maxAbs * 1.15;
+    const minY = -maxAbs * 0.15;
+    const y = v => pad.t + (maxY-v)/(maxY-minY)*plotH;
+    const x = i => pad.l + (labels.length===1 ? plotW/2 : i*plotW/(labels.length-1));
+    const points = nums.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const area = `${pad.l},${y(0).toFixed(1)} ${points} ${x(nums.length-1).toFixed(1)},${y(0).toFixed(1)}`;
+    const zeroY = y(0);
+    let circles='';
+    nums.forEach((v,i)=>{
+        circles += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#14b8a6" stroke="white" stroke-width="2"><title>${labels[i]}: ${formatAmount(v)}</title></circle>`;
+    });
+    const every = labels.length > 8 ? 2 : 1;
+    let labelSvg='';
+    labels.forEach((lab,i)=>{
+        if(i % every !== 0 && i !== labels.length-1) return;
+        labelSvg += `<text x="${x(i)}" y="${height-8}" text-anchor="middle" font-size="10" fill="#94a3b8">${escapeHtml(lab)}</text>`;
+    });
+    return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="تقرير بياني">\n      <defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14b8a6" stop-opacity=".24"/><stop offset="1" stop-color="#14b8a6" stop-opacity="0"/></linearGradient></defs>
+      <line x1="${pad.l}" y1="${zeroY}" x2="${width-pad.r}" y2="${zeroY}" stroke="#e2e8f0" stroke-width="1"/>
+      <polygon points="${area}" fill="url(#chartFill)"/>
+      <polyline points="${points}" fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      ${circles}${labelSvg}
+    </svg>`;
+}
+
+function updateChart(){
+    if(reportMode === 'daily'){
+        const endDate = reportDate.value || getLocalDateString();
+        const dates=[];
+        for(let i=6;i>=0;i--) dates.push(addLocalDays(endDate,-i));
+        const values=dates.map(date=>{
+            let net=0;
+            Object.values(allCustomers).forEach(c=>(c.operations||[]).forEach(op=>{ if(getOperationDate(op)===date) net += operationNet(op); }));
+            return net;
+        });
+        const labels=dates.map(d=>d.slice(5).replace('-','/'));
+        chartCard.innerHTML=renderLineChart(values,labels);
+    }else{
+        const monthValue=reportMonth.value || `${new Date().getFullYear()}-01`;
+        const year=Number(monthValue.slice(0,4));
+        const values=Array.from({length:12},(_,m)=>{
+            let net=0;
+            const prefix=`${year}-${String(m+1).padStart(2,'0')}-`;
+            Object.values(allCustomers).forEach(c=>(c.operations||[]).forEach(op=>{ if(String(getOperationDate(op)).startsWith(prefix)) net += operationNet(op); }));
+            return net;
+        });
+        const labels=['ينا','فبر','مار','أبر','ماي','يون','يول','غشت','شتن','أكت','نون','دجن'];
+        chartCard.innerHTML=renderLineChart(values,labels);
+    }
+}
+
+function setReportMode(mode){
+    reportMode = mode;
+    const monthly = mode === 'monthly';
+    reportTypeLabel.textContent = monthly ? '🗓️ تقرير شهري' : '📅 تقرير يومي';
+    reportMonth.classList.toggle('show', monthly);
+    reportDate.classList.toggle('hide', monthly);
+    document.getElementById('fromTime').style.display = monthly ? 'none' : '';
+    document.getElementById('toTime').style.display = monthly ? 'none' : '';
+    dailyModeBtn.classList.toggle('active', !monthly);
+    monthlyModeBtn.classList.toggle('active', monthly);
+    modePanel.classList.remove('show');
+    if(monthly) generateMonthlyReport(reportMonth.value);
+    else generateReport(reportDate.value);
+    updateChart();
+}
+
+const today = getLocalDateString();
 reportDate.value = today;
+reportMonth.value = today.slice(0,7);
 
 async function loadCustomers(){
-
-    const snapshot =
-    await get(ref(db,'customers'));
-
+    const snapshot = await get(ref(db,'customers'));
     if(!snapshot.exists()) return;
-
-    allCustomers =
-    snapshot.val();
-
+    allCustomers = snapshot.val() || {};
     generateReport(today);
-
+    updateChart();
 }
 
 loadCustomers();
 
 function generateReport(selectedDate){
-
-    const receivedMap = {};
-const receivedTimesMap = {};
-const remainingMap = {};
-const paidMap = {};
-const paidTimesMap = {};
-
-    let totalReceived = 0;
-    let totalPaid = 0;
-    let operationsCount = 0;
-
-    Object.keys(allCustomers).forEach(customerId=>{
-
-        const customer =
-        allCustomers[customerId];
-
-        const operations =
-        customer.operations || [];
-
+    const receivedMap={}, receivedTimesMap={}, paidMap={}, paidTimesMap={}, remainingMap={};
+    let totalReceived=0,totalPaid=0;
+    const fromTime=document.getElementById('fromTime').value||'00:00';
+    const toTime=document.getElementById('toTime').value||'23:59';
+    const fromMinutes=timeToMinutes(fromTime), toMinutes=timeToMinutes(toTime);
+    Object.entries(allCustomers).forEach(([customerId,customer])=>{
+        const operations=customer.operations||[];
+        let paidAll=0,receivedAll=0;
         operations.forEach(op=>{
-
-           const operationDate = getOperationDate(op);
-           if(operationDate !== selectedDate){
-               return;
-           }
-
-           const fromTime = document.getElementById('fromTime').value || '00:00';
-           const toTime = document.getElementById('toTime').value || '23:59';
-           const opTime = String(op.time || '00:00').slice(0,5);
-           const opMinutes = timeToMinutes(opTime);
-           const fromMinutes = timeToMinutes(fromTime);
-           const toMinutes = timeToMinutes(toTime);
-
-           // يدعم أيضا الفترات التي تعبر منتصف الليل.
-           const inTimeRange = fromMinutes <= toMinutes
-               ? (opMinutes >= fromMinutes && opMinutes <= toMinutes)
-               : (opMinutes >= fromMinutes || opMinutes <= toMinutes);
-
-           if(!inTimeRange){
-               return;
-           }
-           operationsCount++;
-
-            if(op.type === 'received'){
-
-                totalReceived +=
-                Number(op.amount);
-
-                if(!receivedMap[customer.name]){
-                    receivedMap[customer.name] = 0;
-                    receivedTimesMap[customer.name] = [];
-                }
-
-                receivedMap[customer.name] += Number(op.amount);
-                if(op.time) receivedTimesMap[customer.name].push(String(op.time).slice(0,5));
-
-let totalPaidAll = 0;
-let totalReceivedAll = 0;
-
-operations.forEach(operation=>{
-
-    if(operation.type === "paid"){
-        totalPaidAll += Number(operation.amount || 0);
-    }
-
-    if(operation.type === "received"){
-        totalReceivedAll += Number(operation.amount || 0);
-    }
-
-});
-
-remainingMap[customer.name] =
-Number(customer.amount || 0)
-+
-totalPaidAll
--
-totalReceivedAll;
-            }
-
-            if(op.type === 'paid'){
-
-                totalPaid +=
-                Number(op.amount);
-
-                if(!paidMap[customer.name]){
-                    paidMap[customer.name] = 0;
-                    paidTimesMap[customer.name] = [];
-                }
-
-                paidMap[customer.name] += Number(op.amount);
-                if(op.time) paidTimesMap[customer.name].push(String(op.time).slice(0,5));
-
-            }
-
+            if(op.type==='paid') paidAll+=Number(op.amount||0);
+            if(op.type==='received') receivedAll+=Number(op.amount||0);
+            if(getOperationDate(op)!==selectedDate) return;
+            const opTime=String(op.time||'00:00').slice(0,5), mins=timeToMinutes(opTime);
+            const inRange=fromMinutes<=toMinutes ? mins>=fromMinutes&&mins<=toMinutes : mins>=fromMinutes||mins<=toMinutes;
+            if(!inRange) return;
+            if(op.type==='received'){totalReceived+=Number(op.amount||0);receivedMap[customerId]=(receivedMap[customerId]||0)+Number(op.amount||0);(receivedTimesMap[customerId] ||= []).push(opTime);}
+            if(op.type==='paid'){totalPaid+=Number(op.amount||0);paidMap[customerId]=(paidMap[customerId]||0)+Number(op.amount||0);(paidTimesMap[customerId] ||= []).push(opTime);}
         });
-
+        remainingMap[customerId]=Number(customer.amount||0)+paidAll-receivedAll;
     });
-
-    const receivedList =
-    document.getElementById('receivedList');
-
-    const paidList =
-    document.getElementById('paidList');
-
-    receivedList.innerHTML = '';
-    paidList.innerHTML = '';
-
-    // ترتيب الزبناء حسب وقت العملية، ثم الاسم عند تساوي الوقت.
-    const sortByTime = (a,b,timesMap) => {
-        const ta = timeToMinutes((timesMap[a] || [])[0] || '00:00');
-        const tb = timeToMinutes((timesMap[b] || [])[0] || '00:00');
-        return ta - tb || a.localeCompare(b);
-    };
-
-    Object.keys(receivedMap).sort((a,b)=>sortByTime(a,b,receivedTimesMap)).forEach(name=>{
-
-        const remaining = Math.round(Number(remainingMap[name] || 0));
-        const times = [...new Set((receivedTimesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
-        receivedList.innerHTML += `
-        <div class="report-row report-operation" data-time="${times[0] || '00:00'}" style="display:block">
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                <span>${name}</span>
-                <span>${formatAmount(receivedMap[name])} درهم</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px">
-                <span style="color:#64748b">🕐 ${times.length ? times.join(' • ') : '--:--'}</span>
-                <span style="font-weight:bold;color:${remaining>0?'red':'green'}">
-                    ${remaining>0 ? `🔴 باقي : ${formatAmount(remaining)} درهم` : `🟢 خالص 0 درهم`}
-                </span>
-            </div>
-        </div>`;
+    const receivedList=document.getElementById('receivedList'), paidList=document.getElementById('paidList');
+    receivedList.innerHTML=''; paidList.innerHTML='';
+    Object.keys(receivedMap).sort((a,b)=>Number(receivedMap[b])-Number(receivedMap[a])).forEach(customerId=>{
+        const customer=allCustomers[customerId]||{}, name=escapeHtml(customer.name||'بدون اسم');
+        const times=[...new Set(receivedTimesMap[customerId]||[])].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
+        const remaining=Math.round(Number(remainingMap[customerId]||0));
+        receivedList.innerHTML += `<div class="report-row report-operation" data-customer-id="${escapeHtml(customerId)}" data-time="${times[0]||'00:00'}" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="person-link">${name}</span><span>${formatAmount(receivedMap[customerId])} درهم</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px"><span style="color:#64748b">🕐 ${times.length?times.join(' • '):'--:--'}</span><span style="font-weight:bold;color:${remaining>0?'red':'green'}">${remaining>0?`🔴 باقي : ${formatAmount(remaining)} درهم`:`🟢 خالص 0 درهم`}</span></div></div>`;
     });
-
-    Object.keys(paidMap).sort((a,b)=>sortByTime(a,b,paidTimesMap)).forEach(name=>{
-        const times = [...new Set((paidTimesMap[name] || []).map(t=>String(t).slice(0,5)))].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
-        paidList.innerHTML += `
-            <div class="report-row report-operation" data-time="${times[0] || '00:00'}" style="display:block">
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                    <span>${name}</span>
-                    <span>${formatAmount(paidMap[name])} درهم</span>
-                </div>
-                <div style="margin-top:7px;color:#64748b;font-size:13px">🕐 ${times.length ? times.join(' • ') : '--:--'}</div>
-            </div>
-        `;
+    Object.keys(paidMap).sort((a,b)=>Number(paidMap[b])-Number(paidMap[a])).forEach(customerId=>{
+        const customer=allCustomers[customerId]||{}, name=escapeHtml(customer.name||'بدون اسم');
+        const times=[...new Set(paidTimesMap[customerId]||[])].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
+        paidList.innerHTML += `<div class="report-row report-operation" data-customer-id="${escapeHtml(customerId)}" data-time="${times[0]||'00:00'}" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="person-link">${name}</span><span>${formatAmount(paidMap[customerId])} درهم</span></div><div style="margin-top:7px;color:#64748b;font-size:13px">🕐 ${times.length?times.join(' • '):'--:--'}</div></div>`;
     });
-
-    const netTotal =
-    totalReceived - totalPaid;
-
-    document.getElementById('totalReceived')
-    .textContent =
-    formatAmount(totalReceived);
-
-    document.getElementById('totalPaid')
-    .textContent =
-    formatAmount(totalPaid);
-
-    document.getElementById('netTotal')
-    .textContent =
-    formatAmount(netTotal);
-
-    const uniqueCustomers =
-    new Set([
-        ...Object.keys(receivedMap),
-        ...Object.keys(paidMap)
-    ]);
-
-    document.getElementById('customersCount')
-    .textContent =
-    uniqueCustomers.size;
-
+    updateStats(totalReceived,totalPaid,new Set([...Object.keys(receivedMap),...Object.keys(paidMap)]).size);
 }
 
-reportDate.addEventListener('change',()=>{
-
-    generateReport(
-        reportDate.value
-    );
-
-});
-
-document.getElementById('fromTime')
-.addEventListener('change',()=>{
-
-    generateReport(
-        reportDate.value
-    );
-
-});
-
-document.getElementById('toTime')
-.addEventListener('change',()=>{
-
-    generateReport(
-        reportDate.value
-    );
-
-});
-document.getElementById('searchInput')
-.addEventListener('input',()=>{
-
-    const search =
-    document.getElementById('searchInput')
-    .value
-    .trim()
-    .toLowerCase();
-
-    const rows =
-    document.querySelectorAll('.report-row');
-
-    rows.forEach(row=>{
-
-        const text =
-        row.textContent.toLowerCase();
-
-        row.style.display =
-        text.includes(search)
-        ? 'block'
-        : 'none';
-
+function generateMonthlyReport(selectedMonth){
+    const receivedMap = {}, paidMap = {}, remainingMap = {};
+    let totalReceived=0,totalPaid=0;
+    const prefix=String(selectedMonth||reportMonth.value||'').slice(0,7);
+    Object.entries(allCustomers).forEach(([customerId,customer])=>{
+        const operations=customer.operations||[];
+        let paidAll=0, receivedAll=0;
+        operations.forEach(op=>{
+            if(op.type==='paid') paidAll += Number(op.amount||0);
+            if(op.type==='received') receivedAll += Number(op.amount||0);
+            const d=getOperationDate(op);
+            if(!String(d).startsWith(prefix)) return;
+            if(op.type==='received'){ totalReceived+=Number(op.amount||0); receivedMap[customerId]=(receivedMap[customerId]||0)+Number(op.amount||0); }
+            if(op.type==='paid'){ totalPaid+=Number(op.amount||0); paidMap[customerId]=(paidMap[customerId]||0)+Number(op.amount||0); }
+        });
+        remainingMap[customerId]=Number(customer.amount||0)+paidAll-receivedAll;
     });
+    renderReportLists(receivedMap,paidMap,remainingMap);
+    updateStats(totalReceived,totalPaid,new Set([...Object.keys(receivedMap),...Object.keys(paidMap)]).size);
+}
 
+function renderReportLists(receivedMap, paidMap, remainingMap){
+    const receivedList=document.getElementById('receivedList'), paidList=document.getElementById('paidList');
+    receivedList.innerHTML=''; paidList.innerHTML='';
+    const sortByAmount=(map,a,b)=>Number(map[b]||0)-Number(map[a]||0);
+    Object.keys(receivedMap).sort((a,b)=>sortByAmount(receivedMap,a,b)).forEach(customerId=>{
+        const customer=allCustomers[customerId]||{};
+        const name=escapeHtml(customer.name||'بدون اسم');
+        const amount=Number(receivedMap[customerId]||0);
+        const remaining=Math.round(Number(remainingMap[customerId]||0));
+        receivedList.innerHTML += `<div class="report-row report-operation" data-customer-id="${escapeHtml(customerId)}" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="person-link">${name}</span><span>${formatAmount(amount)} درهم</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px"><span style="color:#64748b">🟢 استلام</span><span style="font-weight:bold;color:${remaining>0?'red':'green'}">${remaining>0?`🔴 باقي : ${formatAmount(remaining)} درهم`:`🟢 خالص 0 درهم`}</span></div></div>`;
+    });
+    Object.keys(paidMap).sort((a,b)=>sortByAmount(paidMap,a,b)).forEach(customerId=>{
+        const customer=allCustomers[customerId]||{};
+        const name=escapeHtml(customer.name||'بدون اسم');
+        const amount=Number(paidMap[customerId]||0);
+        paidList.innerHTML += `<div class="report-row report-operation" data-customer-id="${escapeHtml(customerId)}" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="person-link">${name}</span><span>${formatAmount(amount)} درهم</span></div><div style="margin-top:7px;color:#64748b;font-size:13px">🔴 دفع</div></div>`;
+    });
+}
+
+function updateStats(totalReceived,totalPaid,count){
+    document.getElementById('totalReceived').textContent=formatAmount(totalReceived);
+    document.getElementById('totalPaid').textContent=formatAmount(totalPaid);
+    document.getElementById('netTotal').textContent=formatAmount(totalReceived-totalPaid);
+    document.getElementById('customersCount').textContent=count;
+}
+
+reportTypeBtn.addEventListener('click',()=>modePanel.classList.toggle('show'));
+dailyModeBtn.addEventListener('click',()=>setReportMode('daily'));
+monthlyModeBtn.addEventListener('click',()=>setReportMode('monthly'));
+reportDate.addEventListener('change',()=>{ if(reportMode==='daily'){generateReport(reportDate.value);updateChart();} });
+reportMonth.addEventListener('change',()=>{ if(reportMode==='monthly'){generateMonthlyReport(reportMonth.value);updateChart();} });
+document.getElementById('fromTime').addEventListener('change',()=>{if(reportMode==='daily')generateReport(reportDate.value);});
+document.getElementById('toTime').addEventListener('change',()=>{if(reportMode==='daily')generateReport(reportDate.value);});
+document.getElementById('searchInput').addEventListener('input',()=>{
+    const search=document.getElementById('searchInput').value.trim().toLowerCase();
+    document.querySelectorAll('.report-row').forEach(row=>{row.style.display=row.textContent.toLowerCase().includes(search)?'block':'none';});
 });
 
-document.getElementById('homeBtn')
-.addEventListener('click',()=>{
-
-    window.location.href =
-    'index.html';
-
+// الضغط على اسم الزبون يفتح الملف الشخصي ديالو مباشرة.
+document.addEventListener('click',e=>{
+    const row=e.target.closest('.report-operation');
+    if(!row) return;
+    const customerId=row.dataset.customerId;
+    if(customerId) window.location.href=`person.html?id=${encodeURIComponent(customerId)}`;
 });
 
-document.getElementById('whatsappBtn')
-.addEventListener('click',()=>{
+document.getElementById('homeBtn').addEventListener('click',()=>{window.location.href='index.html';});
 
-    const selectedDate =
-    reportDate.value;
-
-    let reportText =
-`📊 تقرير يوم ${selectedDate}
-
-`;
-
-    const receivedRows =
-    document.querySelectorAll(
-        '#receivedList .report-row'
-    );
-
-    if(receivedRows.length > 0){
-
-        reportText +=
-`🟢 الاستلامات
-
-`;
-
-        receivedRows.forEach(row=>{
-
-            const cols =
-            row.querySelectorAll('span');
-
-            reportText +=
-`${cols[0].textContent} - ${cols[1].textContent}
-`;
-
-        });
-
-    }
-
-    reportText += '\n';
-
-    const paidRows =
-    document.querySelectorAll(
-        '#paidList .report-row'
-    );
-
-    if(paidRows.length > 0){
-
-        reportText +=
-`🔴 الدفعات
-
-`;
-
-        paidRows.forEach(row=>{
-
-            const cols =
-            row.querySelectorAll('span');
-
-            reportText +=
-`${cols[0].textContent} - ${cols[1].textContent}
-`;
-
-        });
-
-    }
-
-    reportText += `
-
-📈 الصافي:
-${document.getElementById('netTotal').textContent} درهم
-
-👥 عدد الزبناء:
-${document.getElementById('customersCount').textContent}
-
-Karni Pro`;
-
-    window.open(
-        'https://wa.me/212708457258?text=' +
-        encodeURIComponent(reportText),
-        '_blank'
-    );
-
+document.getElementById('whatsappBtn').addEventListener('click',()=>{
+    const monthly=reportMode==='monthly';
+    const title=monthly?`📊 تقرير شهر ${reportMonth.value}`:`📊 تقرير يوم ${reportDate.value}`;
+    let reportText=title+'\n\n';
+    const receivedRows=document.querySelectorAll('#receivedList .report-row:not([style*="display: none"])');
+    if(receivedRows.length){reportText+='🟢 الاستلامات\n\n';receivedRows.forEach(row=>{const spans=row.querySelectorAll('span');reportText+=`${spans[0].textContent} - ${spans[1].textContent}\n`;});}
+    const paidRows=document.querySelectorAll('#paidList .report-row:not([style*="display: none"])');
+    if(paidRows.length){reportText+='\n🔴 الدفعات\n\n';paidRows.forEach(row=>{const spans=row.querySelectorAll('span');reportText+=`${spans[0].textContent} - ${spans[1].textContent}\n`;});}
+    reportText+=`\n📈 الصافي: ${document.getElementById('netTotal').textContent} درهم\n👥 عدد الزبناء: ${document.getElementById('customersCount').textContent}\n\nKarni Pro`;
+    window.open('https://wa.me/212708457258?text='+encodeURIComponent(reportText),'_blank');
 });
 
 document.getElementById('pdfBtn')
@@ -657,13 +581,12 @@ document.getElementById('pdfBtn')
 
     const doc = new jsPDF();
 
-    const selectedDate =
-    reportDate.value;
+    const selectedDate = reportMode === 'monthly' ? reportMonth.value : reportDate.value;
 
     let content =
 `Raport Pro
 
-Date: ${selectedDate}
+Report: ${selectedDate}
 
 Received:
 ${document.getElementById('receivedList').innerText}
