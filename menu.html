@@ -294,6 +294,8 @@
   import { db } from "./firebase.js";
   import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {}); }
+
   let allProducts = [];
   let filteredProducts = [];
   let currentCategory = 'الكل';
@@ -400,7 +402,7 @@
             loading="${isFirstRow? 'eager' : 'lazy'}"
             decoding="async"
             ${isFirstRow? 'fetchpriority="high"' : ''}
-            onerror="this.style.display='none'; this.previousElementSibling.style.display='none'; this.parentElement.style.background='#f1f5f9';"
+            onerror="this.onerror=null; this.classList.add('loaded'); this.previousElementSibling.style.display='none'; this.parentElement.style.background='#f1f5f9';"
             onload="this.classList.add('loaded'); this.previousElementSibling.style.display='none'"
           >
         </div>
