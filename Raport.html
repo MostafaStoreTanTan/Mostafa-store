@@ -159,23 +159,17 @@ transition:.2s;display:flex;align-items:center;justify-content:space-between;
 .mode-panel.show{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .mode-option{border:0;background:#f0fdfa;color:#0f766e;border-radius:12px;padding:12px;font-weight:800;font-size:15px;cursor:pointer;}
 .mode-option.active{background:linear-gradient(135deg,#0f766e,#14b8a6);color:white;}
-.filters-chart{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;direction:ltr;align-items:stretch;margin-bottom:15px;}
-.filters-panel{grid-column:2;direction:rtl;display:flex;flex-direction:column;gap:10px;min-width:0;}
-.chart-card{grid-column:1;direction:rtl;background:white;border:1px solid #dff7f3;border-radius:22px;min-height:100%;padding:10px;box-shadow:0 4px 14px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.chart-card svg{width:100%;height:100%;min-height:220px;display:block;}
-.chart-empty{width:100%;min-height:220px;display:flex;align-items:center;justify-content:center;color:#cbd5e1;font-size:46px;}
+
+.filters-chart{display:block;margin-bottom:20px;}
+.filters-panel{display:flex;flex-direction:column;gap:10px;}
+.filters-panel input{width:100%;padding:14px;border-radius:12px;border:2px solid #ccfbf1;font-size:16px;background:white;}
 .month-picker{display:none;}
 .month-picker.show{display:block;}
 .day-picker.hide{display:none;}
-.filters-panel input{width:100%;}
 .report-row{cursor:pointer;transition:background .15s,transform .15s;}
 .report-row:active{background:#f0fdfa;transform:scale(.995);}
 .report-row .person-link{color:#0f172a;font-weight:700;}
 @media(max-width:520px){
- .filters-chart{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;}
- .chart-card{padding:5px;border-radius:18px;}
- .chart-card svg,.chart-empty{min-height:205px;}
- .filters-panel{gap:8px;}
  .report-type-btn{font-size:16px;}
 }
 
@@ -228,7 +222,6 @@ transition:.2s;display:flex;align-items:center;justify-content:space-between;
     </div>
 
     <div class="filters-chart">
-      <div class="chart-card" id="chartCard" aria-hidden="true"></div>
       <div class="filters-panel">
         <input class="day-picker" type="date" id="reportDate">
         <input class="month-picker" type="month" id="reportMonth">
@@ -316,7 +309,6 @@ let reportMode = 'daily';
 
 const reportDate = document.getElementById('reportDate');
 const reportMonth = document.getElementById('reportMonth');
-const chartCard = document.getElementById('chartCard');
 const reportTypeBtn = document.getElementById('reportTypeBtn');
 const modePanel = document.getElementById('modePanel');
 const reportTypeLabel = document.getElementById('reportTypeLabel');
@@ -369,63 +361,6 @@ function monthLabel(year, monthIndex){
     return names[monthIndex] + ' ' + year;
 }
 
-function renderLineChart(values, labels){
-    const width = 460, height = 230;
-    const pad = {l:20,r:16,t:18,b:30};
-    const plotW = width-pad.l-pad.r, plotH = height-pad.t-pad.b;
-    const nums = values.map(v=>Number(v)||0);
-    const maxAbs = Math.max(...nums.map(v=>Math.abs(v)), 1);
-    const maxY = maxAbs * 1.15;
-    const minY = -maxAbs * 0.15;
-    const y = v => pad.t + (maxY-v)/(maxY-minY)*plotH;
-    const x = i => pad.l + (labels.length===1 ? plotW/2 : i*plotW/(labels.length-1));
-    const points = nums.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
-    const area = `${pad.l},${y(0).toFixed(1)} ${points} ${x(nums.length-1).toFixed(1)},${y(0).toFixed(1)}`;
-    const zeroY = y(0);
-    let circles='';
-    nums.forEach((v,i)=>{
-        circles += `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#14b8a6" stroke="white" stroke-width="2"><title>${labels[i]}: ${formatAmount(v)}</title></circle>`;
-    });
-    const every = labels.length > 8 ? 2 : 1;
-    let labelSvg='';
-    labels.forEach((lab,i)=>{
-        if(i % every !== 0 && i !== labels.length-1) return;
-        labelSvg += `<text x="${x(i)}" y="${height-8}" text-anchor="middle" font-size="10" fill="#94a3b8">${escapeHtml(lab)}</text>`;
-    });
-    return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="تقرير بياني">\n      <defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14b8a6" stop-opacity=".24"/><stop offset="1" stop-color="#14b8a6" stop-opacity="0"/></linearGradient></defs>
-      <line x1="${pad.l}" y1="${zeroY}" x2="${width-pad.r}" y2="${zeroY}" stroke="#e2e8f0" stroke-width="1"/>
-      <polygon points="${area}" fill="url(#chartFill)"/>
-      <polyline points="${points}" fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-      ${circles}${labelSvg}
-    </svg>`;
-}
-
-function updateChart(){
-    if(reportMode === 'daily'){
-        const endDate = reportDate.value || getLocalDateString();
-        const dates=[];
-        for(let i=6;i>=0;i--) dates.push(addLocalDays(endDate,-i));
-        const values=dates.map(date=>{
-            let net=0;
-            Object.values(allCustomers).forEach(c=>(c.operations||[]).forEach(op=>{ if(getOperationDate(op)===date) net += operationNet(op); }));
-            return net;
-        });
-        const labels=dates.map(d=>d.slice(5).replace('-','/'));
-        chartCard.innerHTML=renderLineChart(values,labels);
-    }else{
-        const monthValue=reportMonth.value || `${new Date().getFullYear()}-01`;
-        const year=Number(monthValue.slice(0,4));
-        const values=Array.from({length:12},(_,m)=>{
-            let net=0;
-            const prefix=`${year}-${String(m+1).padStart(2,'0')}-`;
-            Object.values(allCustomers).forEach(c=>(c.operations||[]).forEach(op=>{ if(String(getOperationDate(op)).startsWith(prefix)) net += operationNet(op); }));
-            return net;
-        });
-        const labels=['ينا','فبر','مار','أبر','ماي','يون','يول','غشت','شتن','أكت','نون','دجن'];
-        chartCard.innerHTML=renderLineChart(values,labels);
-    }
-}
-
 function setReportMode(mode){
     reportMode = mode;
     const monthly = mode === 'monthly';
@@ -439,7 +374,6 @@ function setReportMode(mode){
     modePanel.classList.remove('show');
     if(monthly) generateMonthlyReport(reportMonth.value);
     else generateReport(reportDate.value);
-    updateChart();
 }
 
 const today = getLocalDateString();
@@ -451,7 +385,6 @@ async function loadCustomers(){
     if(!snapshot.exists()) return;
     allCustomers = snapshot.val() || {};
     generateReport(today);
-    updateChart();
 }
 
 loadCustomers();
@@ -543,8 +476,8 @@ function updateStats(totalReceived,totalPaid,count){
 reportTypeBtn.addEventListener('click',()=>modePanel.classList.toggle('show'));
 dailyModeBtn.addEventListener('click',()=>setReportMode('daily'));
 monthlyModeBtn.addEventListener('click',()=>setReportMode('monthly'));
-reportDate.addEventListener('change',()=>{ if(reportMode==='daily'){generateReport(reportDate.value);updateChart();} });
-reportMonth.addEventListener('change',()=>{ if(reportMode==='monthly'){generateMonthlyReport(reportMonth.value);updateChart();} });
+reportDate.addEventListener('change',()=>{ if(reportMode==='daily'){generateReport(reportDate.value);} });
+reportMonth.addEventListener('change',()=>{ if(reportMode==='monthly'){generateMonthlyReport(reportMonth.value);} });
 document.getElementById('fromTime').addEventListener('change',()=>{if(reportMode==='daily')generateReport(reportDate.value);});
 document.getElementById('toTime').addEventListener('change',()=>{if(reportMode==='daily')generateReport(reportDate.value);});
 document.getElementById('searchInput').addEventListener('input',()=>{
