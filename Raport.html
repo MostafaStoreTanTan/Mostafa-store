@@ -412,15 +412,25 @@ function generateReport(selectedDate){
     });
     const receivedList=document.getElementById('receivedList'), paidList=document.getElementById('paidList');
     receivedList.innerHTML=''; paidList.innerHTML='';
-    Object.keys(receivedMap).sort((a,b)=>Number(receivedMap[b])-Number(receivedMap[a])).forEach(customerId=>{
+    Object.keys(receivedMap).sort((a,b)=>{
+        const aTimes=receivedTimesMap[a]||[], bTimes=receivedTimesMap[b]||[];
+        const aLatest=Math.max(...aTimes.map(timeToMinutes),-1);
+        const bLatest=Math.max(...bTimes.map(timeToMinutes),-1);
+        return bLatest-aLatest;
+    }).forEach(customerId=>{
         const customer=allCustomers[customerId]||{}, name=escapeHtml(customer.name||'بدون اسم');
-        const times=[...new Set(receivedTimesMap[customerId]||[])].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
+        const times=[...new Set(receivedTimesMap[customerId]||[])].sort((a,b)=>timeToMinutes(b)-timeToMinutes(a));
         const remaining=Math.round(Number(remainingMap[customerId]||0));
         receivedList.innerHTML += `<div class="report-row report-operation" data-customer-id="${escapeHtml(customerId)}" data-time="${times[0]||'00:00'}" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="person-link">${name}</span><span>${formatAmount(receivedMap[customerId])} درهم</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:13px"><span style="color:#64748b">🕐 ${times.length?times.join(' • '):'--:--'}</span><span style="font-weight:bold;color:${remaining>0?'red':'green'}">${remaining>0?`🔴 باقي : ${formatAmount(remaining)} درهم`:`🟢 خالص 0 درهم`}</span></div></div>`;
     });
-    Object.keys(paidMap).sort((a,b)=>Number(paidMap[b])-Number(paidMap[a])).forEach(customerId=>{
+    Object.keys(paidMap).sort((a,b)=>{
+        const aTimes=paidTimesMap[a]||[], bTimes=paidTimesMap[b]||[];
+        const aLatest=Math.max(...aTimes.map(timeToMinutes),-1);
+        const bLatest=Math.max(...bTimes.map(timeToMinutes),-1);
+        return bLatest-aLatest;
+    }).forEach(customerId=>{
         const customer=allCustomers[customerId]||{}, name=escapeHtml(customer.name||'بدون اسم');
-        const times=[...new Set(paidTimesMap[customerId]||[])].sort((a,b)=>timeToMinutes(a)-timeToMinutes(b));
+        const times=[...new Set(paidTimesMap[customerId]||[])].sort((a,b)=>timeToMinutes(b)-timeToMinutes(a));
         paidList.innerHTML += `<div class="report-row report-operation" data-customer-id="${escapeHtml(customerId)}" data-time="${times[0]||'00:00'}" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span class="person-link">${name}</span><span>${formatAmount(paidMap[customerId])} درهم</span></div><div style="margin-top:7px;color:#64748b;font-size:13px">🕐 ${times.length?times.join(' • '):'--:--'}</div></div>`;
     });
     updateStats(totalReceived,totalPaid,new Set([...Object.keys(receivedMap),...Object.keys(paidMap)]).size);
