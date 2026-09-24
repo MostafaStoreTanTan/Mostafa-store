@@ -60,7 +60,7 @@ body{background:var(--bg);min-height:100vh;color:var(--text)}
 .chip{font-size:9px;font-weight:800;padding:4px 9px;border-radius:20px;background:#f1f5f9;border:1px solid var(--border)}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .stat{padding:9px;border-radius:12px;text-align:center;background:#f8fafc;border:1px solid var(--border)}
-.stat b{font-size:13px;display:block} .stat span{font-size:9px;color:var(--muted);font-weight:700}
+.stat b{font-size:13px;display:block}.stat span{font-size:9px;color:var(--muted);font-weight:700}
 .stat.danger{background:#fef2f2;border-color:#fecaca}
 .debt{background:var(--card);border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--border);border-right:4px solid var(--primary);margin-bottom:8px;overflow:hidden}
 .debt.paid{opacity:.65;border-right-color:#22c55e}
@@ -73,14 +73,26 @@ body{background:var(--bg);min-height:100vh;color:var(--text)}
 .r-mini{font-size:9px;font-weight:800;padding:4px 8px;border-radius:20px;color:#fff}
 .r-mini.good{background:#22c55e}.r-mini.medium{background:#f59e0b}.r-mini.weak{background:#f97316}.r-mini.veryWeak{background:#ef4444}.r-mini.dangerous{background:#991b1b}.r-mini.paid{background:#16a34a}
 .arrow{color:var(--muted);transition:.3s;font-size:12px}
-.debt.open .arrow{transform:rotate(180deg)}
+.debt.open.arrow{transform:rotate(180deg)}
 .debt-body{max-height:0;overflow:hidden;transition:.35s;background:#f8fafc}
-.debt.open .debt-body{max-height:400px;padding:10px 12px}
+.debt.open.debt-body{max-height:400px;padding:10px 12px}
 .d-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .d-box{background:#fff;padding:8px;border-radius:10px;border:1px solid var(--border)}
 .d-box b{font-size:8px;color:var(--muted);display:block;margin-bottom:2px}
 .d-box span{font-size:12px;font-weight:800}
 .full{grid-column:span 2}
+.receipt-box{margin-top:8px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px}
+.receipt-label{font-size:8px;color:var(--muted);font-weight:800;display:block;margin-bottom:5px}
+.receipt-row{display:flex;gap:6px;align-items:center}
+.receipt-input{flex:1;min-width:0;padding:8px 9px;border:1px solid var(--border);border-radius:9px;background:#f8fafc;font-size:10px;direction:ltr;text-align:left}
+.receipt-save{padding:8px 10px;border:0;border-radius:9px;background:var(--gradient);color:#fff;font-size:9px;font-weight:800;cursor:pointer;white-space:nowrap}
+.receipt-preview{display:block;margin-top:8px;width:86px;height:70px;object-fit:cover;border-radius:10px;border:1px solid var(--border);cursor:zoom-in;background:#f1f5f9}
+.receipt-link{font-size:9px;color:var(--primary);text-decoration:none}
+.image-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+.image-modal.active{display:flex}
+.image-modal img{max-width:96vw;max-height:90vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.35);background:#fff}
+.image-close{position:absolute;top:16px;left:16px;width:42px;height:42px;border:0;border-radius:50%;background:#fff;color:#111;font-size:22px;cursor:pointer}
+
 .h-title{font-size:13px;font-weight:800;margin:16px 0 8px;display:flex;justify-content:space-between}
 .h-item{background:#f8fafc;border:1px solid var(--border);border-right:3px solid var(--primary);padding:10px;border-radius:12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .h-item.paid{border-right-color:#f87171}
@@ -105,7 +117,7 @@ body{background:var(--bg);min-height:100vh;color:var(--text)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .debts-scroll{max-height:230px;overflow-y:auto;overflow-x:hidden;padding:2px 4px 2px 2px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .debts-scroll::-webkit-scrollbar{width:5px}.debts-scroll::-webkit-scrollbar-track{background:#f1f5f9;border-radius:10px}.debts-scroll::-webkit-scrollbar-thumb{background:#99f6e4;border-radius:10px}.debts-scroll{scrollbar-width:thin;scrollbar-color:#99f6e4 #f1f5f9}
-.location-row{display:flex;gap:7px;align-items:center}.location-row .input{flex:1}.location-btn{min-width:88px;padding:11px 10px;border:0;border-radius:12px;background:var(--gradient);color:#fff;font-size:11px;font-weight:800;cursor:pointer;text-decoration:none;text-align:center}.location-btn.disabled{background:#e2e8f0;color:#94a3b8;pointer-events:none}
+.location-row{display:flex;gap:7px;align-items:center}.location-row.input{flex:1}.location-btn{min-width:88px;padding:11px 10px;border:0;border-radius:12px;background:var(--gradient);color:#fff;font-size:11px;font-weight:800;cursor:pointer;text-decoration:none;text-align:center}.location-btn.disabled{background:#e2e8f0;color:#94a3b8;pointer-events:none}
 .loading{text-align:center;padding:30px;color:var(--muted);font-size:12px}
 </style>
 </head>
@@ -140,6 +152,8 @@ body{background:var(--bg);min-height:100vh;color:var(--text)}
 </div>
 <label class="label">تاريخ الاستحقاق</label>
 <input type="date" id="date" class="input">
+<label class="label">🧾 رابط صورة البون (ImgBB)</label>
+<input type="url" id="receiptUrl" class="input" placeholder="الصق Direct Link للصورة هنا" dir="ltr">
 <div class="row">
 <div><label class="label">📥 تحصيل</label><input type="number" id="received" class="input received-input" placeholder="0"><div style="font-size:9px;color:var(--muted);margin-top:3px">يوزع على الأقدم أولاً</div></div>
 <div><label class="label">📤 دين جديد</label><input type="number" id="paid" class="input paid-input" placeholder="0"><div style="font-size:9px;color:var(--muted);margin-top:3px">دين مستقل</div></div>
@@ -166,6 +180,10 @@ body{background:var(--bg);min-height:100vh;color:var(--text)}
 <div class="modal" id="customModal"><div class="m-card"><div class="m-title"><i class="fas fa-circle-info" style="color:var(--primary)"></i> <span id="customTitleText">تنبيه</span></div><div class="m-desc" id="customDesc"></div><input type="text" id="customInput" class="m-input" style="display:none"><input type="text" id="customInput2" class="m-input" style="display:none"><div class="m-actions"><button class="m-btn cancel" id="customCancel" onclick="closeCustomModal()">إلغاء</button><button class="m-btn confirm" id="customConfirm">تأكيد</button></div></div></div>
 
 <div class="toast" id="toast"><i class="fas fa-check-circle" style="color:#10b981"></i><span id="toastMessage">تم</span></div>
+<div class="image-modal" id="imageModal" onclick="closeImageModal(event)">
+  <button class="image-close" onclick="closeImageModal(event)">×</button>
+  <img id="largeReceiptImage" src="" alt="صورة البون" onclick="event.stopPropagation()">
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -208,15 +226,49 @@ function daysBetween(a,b){ const da=toDateObj(a), db=toDateObj(b); if(!da||!db) 
 function getOpsArray(ops){ let arr=Array.isArray(ops)?ops:Object.values(ops||{}); return arr.filter(o=>o).sort((a,b)=> new Date(a.date||0)-new Date(b.date||0)); }
 function getAvgInterval(ops){ const rec=getOpsArray(ops).filter(o=>o.type==='received'); if(rec.length<2) return 14; let intervals=[]; for(let i=1;i<rec.length;i++){ const diff=daysBetween(rec[i-1].date, rec[i].date); if(diff && diff>0 && diff<90) intervals.push(diff); } if(intervals.length===0) return 14; intervals.sort((a,b)=>a-b); if(intervals.length>4) intervals=intervals.slice(1,-1); const avg=intervals.reduce((s,v)=>s+v,0)/intervals.length; return Math.max(3,Math.round(avg)); }
 function ensureDebts(customer){
-  if(customer.debts && Array.isArray(customer.debts) && customer.debts.length>0){ return customer.debts.map(d=>{ const sum=(d.payments||[]).reduce((s,p)=>s+Number(p.amount||0),0); return {...d, remainingAmount:Math.max(0,(Number(d.originalAmount)||0)-sum)}; }); }
+  if(customer.debts && Array.isArray(customer.debts) && customer.debts.length>0){
+    const paidOps=getOpsArray(customer.operations).filter(o=>o.type==='paid' && Number(o.amount)>0);
+    return customer.debts.map((d,di)=>{
+      const sum=(d.payments||[]).reduce((s,p)=>s+Number(p.amount||0),0);
+      const matchingOp=paidOps.find(o=>o.date===d.startDate && Number(o.amount)===Number(d.originalAmount));
+      const createdTime=(d.createdAt && String(d.createdAt).includes('T'))? String(d.createdAt).split('T')[1].slice(0,5) : '';
+      return {...d,
+        remainingAmount:Math.max(0,(Number(d.originalAmount)||0)-sum),
+        payments:d.payments||[],
+        startTime:d.startTime||matchingOp?.time||createdTime||'',
+        expectedTime:d.expectedTime||matchingOp?.expectedTime||'21:00',
+        receiptUrl:d.receiptUrl||d.bonImageUrl||d.imageUrl||matchingOp?.receiptUrl||''
+      };
+    });
+  }
   let debts=[]; const base=parseFloat(customer.amount)||0;
-  if(base>0){ debts.push({id:'debt_'+(customer.id||'base')+'_base', originalAmount:base, startDate:customer.date||customer.paymentDate||(customer.createdAt?customer.createdAt.split('T')[0]:new Date().toISOString().split('T')[0]), payments:[], createdAt:customer.createdAt||new Date().toISOString(), expectedDate:null}); }
+  if(base>0){
+    const created=customer.createdAt||new Date().toISOString();
+    const createdDate=customer.date||customer.paymentDate||(created.split('T')[0]);
+    const createdTime=(created.includes('T')?created.split('T')[1].slice(0,5):'');
+    debts.push({id:'debt_'+(customer.id||'base')+'_base', originalAmount:base, startDate:createdDate, startTime:createdTime, payments:[], createdAt:created, expectedDate:null, expectedTime:'21:00', receiptUrl:customer.receiptUrl||customer.bonImageUrl||customer.imageUrl||''});
+  }
   const ops=getOpsArray(customer.operations);
-  ops.forEach((op,idx)=>{ if(op.type==='paid' && Number(op.amount)>0){ debts.push({id:'debt_'+(customer.id||'c')+'_paid_'+idx+'_'+Date.now(), originalAmount:Number(op.amount), startDate:op.date||customer.date, payments:[], createdAt:op.date||new Date().toISOString(), expectedDate:null}); } });
-  if(debts.length===0){ debts.push({id:'debt_empty_'+Date.now(), originalAmount:0, startDate:new Date().toISOString().split('T')[0], payments:[], createdAt:new Date().toISOString()}); }
+  ops.forEach((op,idx)=>{
+    if(op.type==='paid' && Number(op.amount)>0){
+      debts.push({id:'debt_'+(customer.id||'c')+'_paid_'+idx+'_'+Date.now(), originalAmount:Number(op.amount), startDate:op.date||customer.date, startTime:op.time||'', payments:[], createdAt:(op.date||new Date().toISOString())+(op.time?('T'+op.time+':00'):''), expectedDate:null, expectedTime:op.expectedTime||'21:00', receiptUrl:op.receiptUrl||op.bonImageUrl||op.imageUrl||''});
+    }
+  });
+  if(debts.length===0){ debts.push({id:'debt_empty_'+Date.now(), originalAmount:0,startDate:new Date().toISOString().split('T')[0],startTime:'',payments:[],createdAt:new Date().toISOString(),expectedDate:null,expectedTime:'21:00',receiptUrl:''}); }
   debts.sort((a,b)=> new Date(a.startDate)-new Date(b.startDate));
   const received=ops.filter(o=>o.type==='received' && Number(o.amount)>0).sort((a,b)=> new Date(a.date)-new Date(b.date));
-  received.forEach(rec=>{ let left=Number(rec.amount); for(let debt of debts){ if(left<=0) break; const paidSum=(debt.payments||[]).reduce((s,p)=>s+Number(p.amount),0); const rem=debt.originalAmount-paidSum; if(rem<=0) continue; const take=Math.min(rem,left); debt.payments.push({amount:take, date:rec.date, time:rec.time||''}); left-=take; } });
+  received.forEach(rec=>{
+    let left=Number(rec.amount);
+    for(let debt of debts){
+      if(left<=0) break;
+      const paidSum=(debt.payments||[]).reduce((s,p)=>s+Number(p.amount),0);
+      const rem=debt.originalAmount-paidSum;
+      if(rem<=0) continue;
+      const take=Math.min(rem,left);
+      debt.payments.push({amount:take,date:rec.date,time:rec.time||''});
+      left-=take;
+    }
+  });
   debts.forEach(d=>{ const sum=(d.payments||[]).reduce((s,p)=>s+Number(p.amount),0); d.remainingAmount=Math.max(0,d.originalAmount-sum); });
   return debts;
 }
@@ -237,13 +289,49 @@ function showSmartSummary(debts, avg){
   div.innerHTML=`<div style="font-size:12px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="fas fa-chart-simple" style="color:var(--primary)"></i> الملخص</div><div class="chips"><span class="chip">⏱️ متوسط ${avg} يوم</span><span class="chip">📦 ${debts.length} ديون</span><span class="chip">💰 ${Math.round(total)} متبقي</span></div>${worst? `<div style="padding:8px;border-radius:10px;background:${worst.level==='dangerous'?'#fee2e2':'#f0fdf4'};font-size:11px;font-weight:800"><b>${worst.emoji} ${worst.label}</b> ${worst.daysLate>0? `• متأخر ${worst.daysLate} يوم`:''}</div>`:'<div style="padding:8px;border-radius:10px;background:#dcfce7;font-size:11px;font-weight:800">✅ لا ديون متبقية</div>'}<div class="grid3" style="margin-top:8px"><div class="stat ${riskCounts.dangerous>0?'danger':''}"><b>🚨 ${riskCounts.dangerous||0}</b><span>خطر</span></div><div class="stat ${riskCounts.veryWeak>0?'danger':''}"><b>🔴 ${riskCounts.veryWeak||0}</b><span>ضعيف جدا</span></div><div class="stat"><b>🟠 ${riskCounts.weak||0}</b><span>ضعيف</span></div><div class="stat"><b>🟡 ${riskCounts.medium||0}</b><span>متوسط</span></div><div class="stat"><b>🟢 ${riskCounts.good||0}</b><span>جيد</span></div><div class="stat"><b>✅ ${riskCounts.paid||0}</b><span>مسدد</span></div></div>`;
 }
 function toggleDebt(id){ const el=document.getElementById(id); if(el) el.classList.toggle('open'); }
+function escapeHtml(v){ return String(v??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m])); }
+function formatDateTime(date,time){ if(!date) return '-'; return time? `${date} • ${time}` : date; }
+window.openReceiptImage=function(url){ if(!url) return; const m=document.getElementById('imageModal'); const img=document.getElementById('largeReceiptImage'); img.src=url; m.classList.add('active'); };
+window.closeImageModal=function(e){ if(e) e.stopPropagation(); document.getElementById('imageModal').classList.remove('active'); document.getElementById('largeReceiptImage').src=''; };
+window.saveDebtReceipt=async function(index){
+  const input=document.getElementById('receiptInput_'+index); if(!input) return;
+  const url=input.value.trim();
+  if(url &&!/^https?:\/\//i.test(url)){ showToast('⚠️ ضع رابطاً يبدأ بـ https://'); return; }
+  customerDebts[index].receiptUrl=url;
+  try{
+    await update(customerRef,{debts:customerDebts,updatedAt:new Date().toISOString()});
+    customerDataCache.debts=customerDebts;
+    showDebts(customerDebts,getAvgInterval(customerOperations));
+    showToast(url?'✅ تم حفظ صورة البون':'🗑️ تم حذف رابط البون');
+  }catch(e){ showToast('⚠️ تعذر حفظ الرابط'); }
+};
 function showDebts(debts, avg){
   const list=document.getElementById('debtsList'); document.getElementById('debtCount').textContent=debts.length+' دين';
   if(debts.length===0){ list.innerHTML='<div style="text-align:center;color:#999;padding:14px;font-size:11px">لا ديون</div>'; return; }
   const sorted=[...debts].sort((a,b)=>{ const ra=calcRisk(a,avg), rb=calcRisk(b,avg); if(a.remainingAmount<=0.5 && b.remainingAmount>0.5) return 1; if(b.remainingAmount<=0.5 && a.remainingAmount>0.5) return -1; return rb.daysLate-ra.daysLate; });
   list.innerHTML=sorted.map((debt, idx)=>{
-    const risk=calcRisk(debt,avg); const isPaid=debt.remainingAmount<=0.5; const lastPay=debt.payments&&debt.payments.length>0? debt.payments[debt.payments.length-1].date:'-'; const accId='debtAcc_'+idx;
-    return `<div class="debt ${isPaid?'paid': risk.level==='dangerous'||risk.level==='veryWeak'?'overdue':''}" id="${accId}"><div class="debt-head" onclick="toggleDebt('${accId}')"><div class="debt-left"><div class="debt-num">#${idx+1}</div><div class="debt-amount">${Math.round(debt.remainingAmount)} DH</div></div><div class="debt-right"><div class="r-mini ${risk.css}">${risk.emoji} ${isPaid?'مسدد':risk.label}</div><div class="arrow"><i class="fas fa-chevron-down"></i></div></div></div><div class="debt-body"><div class="d-grid"><div class="d-box"><b>تاريخ البداية</b><span>${debt.startDate||'-'}</span></div><div class="d-box"><b>الموعد المتوقع</b><span>${risk.expectedDate||'-'}</span></div><div class="d-box"><b>آخر دفعة</b><span>${lastPay}</span></div><div class="d-box"><b>التأخر</b><span>${risk.daysLate>0? risk.daysLate+' يوم':'داخل الموعد'}</span></div><div class="d-box full"><b>الحالة</b><span>${risk.emoji} ${risk.label}</span></div></div></div></div>`;
+    const originalIndex=debts.indexOf(debt);
+    const risk=calcRisk(debt,avg); const isPaid=debt.remainingAmount<=0.5;
+    const payments=debt.payments||[];
+    const lastPay=payments.length>0? payments[payments.length-1] : null;
+    const accId='debtAcc_'+idx;
+    const receiptUrl=debt.receiptUrl||'';
+    const receiptHtml=receiptUrl? `<a class="receipt-link" href="${escapeHtml(receiptUrl)}" target="_blank" rel="noopener noreferrer">فتح الرابط الأصلي</a><img class="receipt-preview" src="${escapeHtml(receiptUrl)}" alt="صورة البون" loading="lazy" onclick="openReceiptImage('${escapeHtml(receiptUrl)}')" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/><div style="display:none;color:#ef4444;font-size:9px;margin-top:5px">الرابط ليس Direct Link للصورة. استعمل رابط Direct من ImgBB.</div>` : `<div style="font-size:9px;color:var(--muted);margin-top:3px">لا توجد صورة لهذا البون بعد</div>`;
+    const paymentsHtml=payments.length? payments.map((p,i)=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px dashed var(--border);font-size:9px"><span>دفعة ${i+1}</span><b>${Number(p.amount)||0} DH</b><span>${p.date||'-'} ${p.time||''}</span></div>`).join('') : '<div style="font-size:9px;color:var(--muted)">لم يتم تسجيل أداء بعد</div>';
+    return `<div class="debt ${isPaid?'paid': risk.level==='dangerous'||risk.level==='veryWeak'?'overdue':''}" id="${accId}">
+      <div class="debt-head" onclick="toggleDebt('${accId}')"><div class="debt-left"><div class="debt-num">#${idx+1}</div><div class="debt-amount">${Math.round(debt.remainingAmount)} DH</div></div><div class="debt-right"><div class="r-mini ${risk.css}">${risk.emoji} ${isPaid?'مسدد':risk.label}</div><div class="arrow"><i class="fas fa-chevron-down"></i></div></div></div>
+      <div class="debt-body"><div class="d-grid">
+        <div class="d-box"><b>💵 مبلغ البون</b><span>${Number(debt.originalAmount)||0} DH</span></div>
+        <div class="d-box"><b>💰 المتبقي</b><span>${Math.round(debt.remainingAmount)} DH</span></div>
+        <div class="d-box"><b>🕐 وقت أخذ السلعة</b><span>${formatDateTime(debt.startDate,debt.startTime)}</span></div>
+        <div class="d-box"><b>📅 الموعد التقريبي</b><span>${formatDateTime(risk.expectedDate,debt.expectedTime||'21:00')}</span></div>
+        <div class="d-box"><b>💳 آخر أداء</b><span>${lastPay?formatDateTime(lastPay.date,lastPay.time):'-'}</span></div>
+        <div class="d-box"><b>⏱️ التأخر</b><span>${risk.daysLate>0? risk.daysLate+' يوم':'داخل الموعد'}</span></div>
+        <div class="d-box full"><b>📋 الدفعات المرتبطة بهذا البون</b>${paymentsHtml}</div>
+        <div class="d-box full"><b>🧾 صورة البون</b><div class="receipt-row"><input id="receiptInput_${originalIndex}" class="receipt-input" type="url" placeholder="ImgBB Direct Link" value="${escapeHtml(receiptUrl)}"><button class="receipt-save" onclick="event.stopPropagation();saveDebtReceipt(${originalIndex})">حفظ</button></div>${receiptHtml}</div>
+        <div class="d-box full"><b>الحالة</b><span>${risk.emoji} ${risk.label}</span></div>
+      </div></div>
+    </div>`;
   }).join('');
 }
 function showHistory(data){
@@ -263,7 +351,7 @@ get(customerRef).then((snapshot)=>{
   loading.style.display='none'; content.style.display='block';
   if(snapshot.exists()){
     const data=snapshot.val(); customerDataCache=data;
-    const name=data.name||'بدون اسم'; document.getElementById('name').textContent=name; document.getElementById('phone').textContent=data.phone||'بدون هاتف'; document.getElementById('avatar').textContent=name.charAt(0).toUpperCase(); document.getElementById('amount').value=data.amount||0; document.getElementById('date').value=data.paymentDate||data.date||''; document.getElementById('paid').value=''; document.getElementById('received').value='';
+    const name=data.name||'بدون اسم'; document.getElementById('name').textContent=name; document.getElementById('phone').textContent=data.phone||'بدون هاتف'; document.getElementById('avatar').textContent=name.charAt(0).toUpperCase(); document.getElementById('amount').value=data.amount||0; document.getElementById('date').value=data.paymentDate||data.date||''; document.getElementById('receiptUrl').value=data.receiptUrl||data.bonImageUrl||data.imageUrl||''; document.getElementById('paid').value=''; document.getElementById('received').value='';
     const city=data.city||''; currentCity=city; document.getElementById('cityValue').value=city; if(city) selectCityPerson(city);
     const locationUrl=data.locationUrl||data.location||data.googleMapsUrl||''; document.getElementById('locationUrl').value=locationUrl; updateLocationLink(locationUrl);
     const avg=getAvgInterval(data.operations||[]); let debts=ensureDebts(data); debts.forEach(d=>{ if(!d.expectedDate){ const lastPay=(d.payments&&d.payments.length>0)? d.payments[d.payments.length-1].date : null; const base=lastPay||d.startDate; d.expectedDate=addDays(base, avg)||d.startDate; }});
@@ -274,15 +362,15 @@ get(customerRef).then((snapshot)=>{
 
 document.getElementById('saveBtn').addEventListener('click', ()=>{
   const btn=document.getElementById('saveBtn'); btn.textContent='⏳ جاري الحفظ...'; btn.disabled=true;
-  const date=document.getElementById('date').value; const paid=parseFloat(document.getElementById('paid').value)||0; const received=parseFloat(document.getElementById('received').value)||0; const city=document.getElementById('cityValue').value||currentCity||''; const locationUrl=document.getElementById('locationUrl').value.trim();
+  const date=document.getElementById('date').value; const paid=parseFloat(document.getElementById('paid').value)||0; const received=parseFloat(document.getElementById('received').value)||0; const city=document.getElementById('cityValue').value||currentCity||''; const locationUrl=document.getElementById('locationUrl').value.trim(); const receiptUrl=document.getElementById('receiptUrl').value.trim();
   const now=new Date(); const today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`; const currentTime=now.toTimeString().slice(0,5);
   let operations=[...customerOperations]; let debts=[...customerDebts]; debts.sort((a,b)=> new Date(a.startDate)-new Date(b.startDate)); const avgBefore=getAvgInterval(operations);
-  if(paid>0){ const newDebt={id:'debt_'+Date.now(), originalAmount:paid, startDate:today, expectedDate:addDays(today,avgBefore)||today, payments:[], remainingAmount:paid, createdAt:new Date().toISOString()}; debts.push(newDebt); operations.push({type:'paid', amount:paid, date:today, time:currentTime}); }
+  if(paid>0){ const newDebt={id:'debt_'+Date.now(), originalAmount:paid, startDate:today, startTime:currentTime, expectedDate:addDays(today,avgBefore)||today, expectedTime:'21:00', payments:[], remainingAmount:paid, createdAt:new Date().toISOString(), receiptUrl:receiptUrl}; debts.push(newDebt); operations.push({type:'paid', amount:paid, date:today, time:currentTime, expectedTime:'21:00', receiptUrl:receiptUrl}); }
   if(received>0){ let left=received; for(let debt of debts){ if(left<=0) break; const rem=Number(debt.remainingAmount||0); if(rem<=0.5) continue; const take=Math.min(rem,left); debt.payments=debt.payments||[]; debt.payments.push({amount:take, date:today, time:currentTime}); debt.remainingAmount=Math.max(0,rem-take); const newAvg=getAvgInterval([...operations,{type:'received', amount:received, date:today}]); debt.expectedDate=addDays(today,newAvg)||debt.expectedDate; left-=take; } operations.push({type:'received', amount:received, date:today, time:currentTime}); }
   debts.forEach(d=>{ const sum=(d.payments||[]).reduce((s,p)=>s+Number(p.amount),0); d.remainingAmount=Math.max(0,(Number(d.originalAmount)||0)-sum); });
-  const updateData={date:date, paymentDate:date, city:city, locationUrl:locationUrl, operations:operations, debts:debts, paid:0, received:0, updatedAt:new Date().toISOString()};
+  const updateData={date:date, paymentDate:date, city:city, locationUrl:locationUrl, receiptUrl:receiptUrl, operations:operations, debts:debts, paid:0, received:0, updatedAt:new Date().toISOString()};
   customerDebts=debts; customerOperations=operations;
-  update(customerRef, updateData).then(()=>{ btn.textContent='✅ تم الحفظ'; document.getElementById('paid').value=''; document.getElementById('received').value=''; const avg=getAvgInterval(operations); calculateTotal(debts); showSmartSummary(debts,avg); showDebts(debts,avg); showHistory({operations:operations}); setTimeout(()=>location.reload(),700); }).catch(()=>{ btn.textContent='💾 حفظ'; btn.disabled=false; showToast('⚠️ خطأ في الحفظ'); });
+  update(customerRef, updateData).then(()=>{ btn.textContent='✅ تم الحفظ'; document.getElementById('paid').value=''; document.getElementById('received').value=''; document.getElementById('receiptUrl').value=''; const avg=getAvgInterval(operations); calculateTotal(debts); showSmartSummary(debts,avg); showDebts(debts,avg); showHistory({operations:operations}); setTimeout(()=>location.reload(),700); }).catch(()=>{ btn.textContent='💾 حفظ'; btn.disabled=false; showToast('⚠️ خطأ في الحفظ'); });
 });
 
 window.deleteOperation=function(index){
@@ -306,14 +394,14 @@ window.sendReminderWhatsapp=function(index){
   const phone=document.getElementById('phone').textContent.trim(); const customerName=document.getElementById('name').textContent; const total=document.getElementById('totalAmount').textContent;
   if(!phone || phone==='بدون هاتف'){ showToast('⚠️ أضف رقم الهاتف أولاً'); return; }
   const cleanPhone=phone.replace(/\D/g,''); const avg=getAvgInterval(customerOperations); const worst=customerDebts.filter(d=>d.remainingAmount>0.5).map(d=>calcRisk(d,avg)).sort((a,b)=>b.daysLate-a.daysLate)[0];
-  const lateTxt=worst && worst.daysLate>0 ? `\n⏰ متأخر ${worst.daysLate} يوم` : '';
+  const lateTxt=worst && worst.daysLate>0? `\n⏰ متأخر ${worst.daysLate} يوم` : '';
   const message =
 
 `📌 إشعار أداء
 
 السلام عليكم ${customerName}
 
-🔔 هذا تذكير بموعد أداء .
+🔔 هذا تذكير بموعد أداء.
 
 💵 المبلغ المتبقي لكم:
 ${total}
@@ -360,5 +448,5 @@ function updateLocationLink(url){
 document.getElementById('locationUrl').addEventListener('input',(e)=>updateLocationLink(e.target.value));
 document.getElementById('backBtn').addEventListener('click',()=>{ window.location.href='index.html'; });
 </script>
-<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</body>
 </html>
