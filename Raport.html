@@ -514,7 +514,7 @@ document.getElementById('whatsappBtn').addEventListener('click',()=>{
     const paidRows=document.querySelectorAll('#paidList .report-row:not([style*="display: none"])');
     if(paidRows.length){reportText+='\n🔴 الدفعات\n\n';paidRows.forEach(row=>{const spans=row.querySelectorAll('span');reportText+=`${spans[0].textContent} - ${spans[1].textContent}\n`;});}
     reportText+=`\n📈 الصافي: ${document.getElementById('netTotal').textContent} درهم\n👥 عدد الزبناء: ${document.getElementById('customersCount').textContent}\n\nKarni Pro`;
-    window.open('https://wa.me/212708457258?text='+encodeURIComponent(reportText),'_blank');
+    window.open('https://wa.me/212695606911?text='+encodeURIComponent(reportText),'_blank');
 });
 
 document.getElementById('pdfBtn')
