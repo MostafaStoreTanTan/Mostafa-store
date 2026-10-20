@@ -1,4 +1,5 @@
-const CACHE_NAME = 'karni-pro-v18';
+
+const CACHE_NAME = 'karni-pro-v19';
 
 const urlsToCache = [
   './',
@@ -26,7 +27,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
       return Promise.all(keys.map(key => {
-        if(key !== CACHE_NAME) return caches.delete(key);
+        if (key !== CACHE_NAME) return caches.delete(key);
       }));
     })
   );
